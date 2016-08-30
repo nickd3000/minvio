@@ -14,12 +14,15 @@ public class TestLookupTable {
 	}
 	
 	public void runPerformanceTests() {		
-		long numTests = 105000;
-		testFunction(numTests, 3000, "TanH", (x) -> {return Math.tanh(x);});
-		testFunction(numTests, 3000, "Sin", (x) -> {return Math.sin(x);});
-		testFunction(numTests, 3000, "Square", (x) -> {return x*x;});
-		testFunction(numTests, 3000, "Sqrt", (x) -> {return Math.sqrt(x);});
-		testFunction(numTests, 3000, "double", (x) -> {return x+x;});
+		long numTests = 50000;
+		testFunction(numTests, 300, "TanH", (x) -> {return Math.tanh(x);});
+		testFunction(numTests, 300, "Sin", (x) -> {return Math.sin(x);});
+		testFunction(numTests, 300, "Square", (x) -> {return x*x;});
+		testFunction(numTests, 300, "Sqrt", (x) -> {return Math.sqrt(x);});
+		testFunction(numTests, 300, "double", (x) -> {return x+x;});
+		
+		for (int i=1;i<20;i++)
+			testFunction(numTests, 1000, "TanH", (x) -> {return Math.tanh(x);});
 	}
 	
 	public void testFunction(long numTests, int tableSize, String name, DoubleUnaryOperator uo) {

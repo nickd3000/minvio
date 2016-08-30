@@ -2,6 +2,10 @@ package ToolBox;
 
 import java.util.function.DoubleUnaryOperator;
 
+/**
+ * @author nick
+ *
+ */
 public class LookupTable {
 
 	int numItems;
@@ -24,15 +28,6 @@ public class LookupTable {
 			double pos=min+(i*step);
 			values[i] = func.applyAsDouble(pos);
 		}
-	}
-	
-
-
-	public void setValue(double position, double value) {
-		int ipos = (int)((position-min)*(numItems_range));
-		if (ipos<0) ipos=0;
-		if (ipos>=numItems) ipos=numItems-1;
-		values[ipos]=value;
 	}
 	
 	public double getValue(double position) {
