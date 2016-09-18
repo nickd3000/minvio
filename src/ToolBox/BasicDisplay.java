@@ -13,7 +13,9 @@ import javax.swing.*;
  */
 public class BasicDisplay extends JFrame {
 
-	BufferedImage img;
+	private static final long serialVersionUID = 2572035226143818479L;
+
+	BufferedImage bufferedImage;
 	Color currentColor;
 	int width, height;
 	static long timerStart = 0;
@@ -28,7 +30,7 @@ public class BasicDisplay extends JFrame {
 	/**
 	 * Constructor with user defined window size.
 	 * @param width		Width of window
-	 * @param height	Height of window
+	 * @param height		Height of window
 	 */
 	public BasicDisplay(int width, int height) {
 		super();
@@ -37,7 +39,7 @@ public class BasicDisplay extends JFrame {
 		setSize(width, height);
 		setVisible(true);
 
-		img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
@@ -47,7 +49,7 @@ public class BasicDisplay extends JFrame {
 	 */
 	@Override
 	public void paint(Graphics g) {
-		g.drawImage(img, 0, 0, null);
+		g.drawImage(bufferedImage, 0, 0, null);
 	}
 	
 	/**
@@ -66,30 +68,22 @@ public class BasicDisplay extends JFrame {
 	}
 
 	/**
-	 * Clear the display to supplied colour.
-	 * @param c		Colour to fill display with.
+	 * Clear the display to supplied color.
+	 * @param c		Color to fill display with.
 	 */
 	public void cls(Color c) {
-		Graphics g = img.getGraphics();
+		Graphics g = bufferedImage.getGraphics();
 		g.setColor(c);
 		g.fillRect(0, 0, width, height);
 		g.dispose();
 	}
 	
-	public void fillRect(int x, int y, int width, int height, Color c) {
-		Graphics g = img.getGraphics();
-		g.setColor(c);
-		g.fillRect(x, y, width, height);
-		g.dispose();
-	}
-	
-	
 	public Image getImage() {
-		return img;
+		return bufferedImage;
 	}
 	
 	public void drawImage(BufferedImage sourceImage, int x, int y) {
-		Graphics g = img.getGraphics();
+		Graphics g = bufferedImage.getGraphics();
 		g.drawImage(sourceImage,x,y,null);
 	}
 	
@@ -102,12 +96,19 @@ public class BasicDisplay extends JFrame {
 	 * @param c		Colour
 	 */
 	public void drawLine(int x1, int y1, int x2, int y2, Color c) {
-		Graphics g = img.getGraphics();
+		Graphics g = bufferedImage.getGraphics();
 		g.setColor(c);
 		g.drawLine(x1, y1, x2, y2);
 		g.dispose();
 	}
 	
+	public void fillRect(int x, int y, int width, int height, Color c) {
+		Graphics g = bufferedImage.getGraphics();
+		g.setColor(c);
+		g.fillRect(x, y, width, height);
+		g.dispose();
+	}
+
 	/**
 	 * Draw rectangle
 	 * @param x1	Start X
@@ -132,7 +133,7 @@ public class BasicDisplay extends JFrame {
 	 * @param c		Colour
 	 */
 	public void drawLine(float x1, float y1, float x2, float y2, Color c) {
-		Graphics g = img.getGraphics();
+		Graphics g = bufferedImage.getGraphics();
 		g.setColor(c);
 		g.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
 		g.dispose();
@@ -148,7 +149,7 @@ public class BasicDisplay extends JFrame {
 	 * @param thickness	Line thickness
 	 */
 	public void drawLine(double x1, double y1, double x2, double y2, Color c, double thickness) {
-		Graphics g = img.getGraphics();
+		Graphics g = bufferedImage.getGraphics();
 		Graphics2D g2d = (Graphics2D) g;
 
 		g2d.setColor(c);
@@ -161,14 +162,14 @@ public class BasicDisplay extends JFrame {
 
 	
 	/**
-	 * Draw a circle to display with supplied colour.
+	 * Draw a centered circle to display with supplied color.
 	 * @param x		x position
 	 * @param y		y position
 	 * @param d		diameter
-	 * @param c		colour
+	 * @param c		color
 	 */
 	public void drawCircle(double x, double y, double d, Color c) {
-		Graphics g = img.getGraphics();
+		Graphics g = bufferedImage.getGraphics();
 		g.setColor(c);
 		g.fillOval((int) (x - (d / 2)), (int) (y - (d / 2)), (int) (d), (int) (d));
 		g.dispose();
@@ -176,7 +177,7 @@ public class BasicDisplay extends JFrame {
 
 
 	public void drawText(String str, int x, int y, Color c) {
-		Graphics g = img.getGraphics();
+		Graphics g = bufferedImage.getGraphics();
 		g.setColor(c);
 		//g.fillOval((int) (x - (d / 2)), (int) (y - (d / 2)), (int) (d), (int) (d));
 		g.drawString(str, x, y);
