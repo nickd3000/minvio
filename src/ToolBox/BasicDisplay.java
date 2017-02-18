@@ -11,14 +11,27 @@ import javax.swing.*;
  * 
  * @author nickd3000
  */
-public class BasicDisplay extends JFrame {
+public class BasicDisplay {
 
-	private static final long serialVersionUID = 2572035226143818479L;
+	//private static final long serialVersionUID = 2572035226143818479L;
 
-	BufferedImage bufferedImage;
+	class BFrame extends JFrame {
+		private static final long serialVersionUID = 3096588689174149256L;
+		public BufferedImage bufferedImage;
+		
+		@Override
+		public void paint(Graphics g) {
+			g.drawImage(bufferedImage, 0, 0, null);
+		}
+	}
+	
+	BFrame frame = null;
+	
 	Color currentColor;
 	int width, height;
 	static long timerStart = 0;
+	
+	
 	
 	/**
 	 * Default constructor - creates display with default size
@@ -33,30 +46,20 @@ public class BasicDisplay extends JFrame {
 	 * @param height		Height of window
 	 */
 	public BasicDisplay(int width, int height) {
-		super();
 		this.width = width;
 		this.height = height;
-		setSize(width, height);
-		setVisible(true);
-
-		bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-	}
-
-	/* (non-Javadoc)
-	 * @see java.awt.Window#paint(java.awt.Graphics)
-	 */
-	@Override
-	public void paint(Graphics g) {
-		g.drawImage(bufferedImage, 0, 0, null);
+		frame = new BFrame();
+		frame.setSize(width, height);
+		frame.setVisible(true);
+		frame.bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
 	/**
 	 * Close display
 	 */
 	public void close() {
-		this.dispose();
+		frame.dispose();
 	}
 
 	
@@ -64,7 +67,9 @@ public class BasicDisplay extends JFrame {
 	 * Update the display with drawing changes.
 	 */
 	public void refresh() {
-		repaint();
+		//frame.getGraphics().drawImage(bufferedImage, 0, 0, null);
+		
+		frame.repaint();
 	}
 
 	/**
@@ -72,18 +77,18 @@ public class BasicDisplay extends JFrame {
 	 * @param c		Color to fill display with.
 	 */
 	public void cls(Color c) {
-		Graphics g = bufferedImage.getGraphics();
+		Graphics g = frame.bufferedImage.getGraphics();
 		g.setColor(c);
 		g.fillRect(0, 0, width, height);
 		g.dispose();
 	}
 	
 	public Image getImage() {
-		return bufferedImage;
+		return frame.bufferedImage;
 	}
 	
 	public void drawImage(BufferedImage sourceImage, int x, int y) {
-		Graphics g = bufferedImage.getGraphics();
+		Graphics g = frame.bufferedImage.getGraphics();
 		g.drawImage(sourceImage,x,y,null);
 	}
 	
@@ -96,14 +101,14 @@ public class BasicDisplay extends JFrame {
 	 * @param c		Colour
 	 */
 	public void drawLine(int x1, int y1, int x2, int y2, Color c) {
-		Graphics g = bufferedImage.getGraphics();
+		Graphics g = frame.bufferedImage.getGraphics();
 		g.setColor(c);
 		g.drawLine(x1, y1, x2, y2);
 		g.dispose();
 	}
 	
 	public void fillRect(int x, int y, int width, int height, Color c) {
-		Graphics g = bufferedImage.getGraphics();
+		Graphics g = frame.bufferedImage.getGraphics();
 		g.setColor(c);
 		g.fillRect(x, y, width, height);
 		g.dispose();
@@ -133,7 +138,7 @@ public class BasicDisplay extends JFrame {
 	 * @param c		Colour
 	 */
 	public void drawLine(float x1, float y1, float x2, float y2, Color c) {
-		Graphics g = bufferedImage.getGraphics();
+		Graphics g = frame.bufferedImage.getGraphics();
 		g.setColor(c);
 		g.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
 		g.dispose();
@@ -149,7 +154,7 @@ public class BasicDisplay extends JFrame {
 	 * @param thickness	Line thickness
 	 */
 	public void drawLine(double x1, double y1, double x2, double y2, Color c, double thickness) {
-		Graphics g = bufferedImage.getGraphics();
+		Graphics g = frame.bufferedImage.getGraphics();
 		Graphics2D g2d = (Graphics2D) g;
 
 		g2d.setColor(c);
@@ -169,7 +174,7 @@ public class BasicDisplay extends JFrame {
 	 * @param c		color
 	 */
 	public void drawCircle(double x, double y, double d, Color c) {
-		Graphics g = bufferedImage.getGraphics();
+		Graphics g = frame.bufferedImage.getGraphics();
 		g.setColor(c);
 		g.fillOval((int) (x - (d / 2)), (int) (y - (d / 2)), (int) (d), (int) (d));
 		g.dispose();
@@ -177,7 +182,7 @@ public class BasicDisplay extends JFrame {
 
 
 	public void drawText(String str, int x, int y, Color c) {
-		Graphics g = bufferedImage.getGraphics();
+		Graphics g = frame.bufferedImage.getGraphics();
 		g.setColor(c);
 		//g.fillOval((int) (x - (d / 2)), (int) (y - (d / 2)), (int) (d), (int) (d));
 		g.drawString(str, x, y);
