@@ -36,7 +36,8 @@ public class BasicGraph {
 		//double zoomSpan = Math.max(Math.abs(maxValue), Math.abs(minValue))*2;
 		double zoomSpan = Math.max(Math.abs(floatingMax), Math.abs(floatingMin))*2;
 		
-		d.drawLine(x, y+(height/2), x+width, y+(height/2), Color.black);
+		d.setDrawColor(Color.black);
+		d.drawLine(x, y+(height/2), x+width, y+(height/2));
 		int count = 0;
 		int readPos = headPos;
 		double rawValue = 0;
@@ -59,10 +60,11 @@ public class BasicGraph {
 			py = (rawValue/zoomSpan)*height;
 			py += y + (height/2);
 			if (py<=y || py>=y+height) continue;
-			d.fillRect((int)px, (int)py, 2, 2, c);
+			d.setDrawColor(c);
+			d.fillRect((int)px, (int)py, 2, 2);
 		}
 		
-		
-		d.drawRect(x,y,x+width,y+height, Color.black);
+		d.setDrawColor(Color.black);
+		d.drawRect(x,y,x+width,y+height);
 	}
 }

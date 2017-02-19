@@ -11,32 +11,33 @@ import javax.swing.*;
  * 
  * @author nickd3000
  */
+// TODO: should we use Graphics2D more?
+// This might help add some key/mouse input.
 public class BasicDisplay {
 
-	class BFrame extends JFrame {
+	class BPanel extends JPanel {
 		private static final long serialVersionUID = 3096588689174149256L;
 		public BufferedImage drawBuffer;
 		public Graphics g = null;
 		
-		public BFrame(int width, int height) {
+		public BPanel(int width, int height) {
 			setSize(width, height);
 			setVisible(true);
 			drawBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			setPreferredSize(new Dimension(width,height));
 			g = drawBuffer.getGraphics();
 		}
 		
-		
-		
 		@Override
-		public void paint(Graphics g) {
+		public void paintComponent(Graphics g) {
 			g.drawImage(drawBuffer, 0, 0, null);
 		}
 	}
 	
-	BFrame frame = null;
-	
-	Color currentColor;
+	JFrame mainFrame = null;
+	BPanel panel= null;
+	Color drawColor;
 	int width, height;
 	static long timerStart = 0;
 	
@@ -57,15 +58,24 @@ public class BasicDisplay {
 	public BasicDisplay(int width, int height) {
 		this.width = width;
 		this.height = height;
-		frame = new BFrame(width,height);
+		panel = new BPanel(width,height);
 		
+		mainFrame = new JFrame("HELLO");
+		mainFrame.getContentPane().add(panel);
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainFrame.pack();
+		mainFrame.setLocationRelativeTo(null);
+		mainFrame.setVisible(true);
+		mainFrame.setResizable(false);
+
+		drawColor = Color.BLACK;
 	}
 	
 	/**
 	 * Close display
 	 */
 	public void close() {
-		frame.dispose();
+		//panel.dispose();
 	}
 
 	
@@ -73,7 +83,7 @@ public class BasicDisplay {
 	 * Update the display with drawing changes.
 	 */
 	public void refresh() {
-		frame.repaint();
+		panel.repaint();
 	}
 
 	/**
@@ -81,18 +91,35 @@ public class BasicDisplay {
 	 * @param c		Color to fill display with.
 	 */
 	public void cls(Color c) {
-		//Graphics g = frame.drawBuffer.getGraphics();
-		frame.g.setColor(c);
-		frame.g.fillRect(0, 0, width, height);
-		//frame.g.dispose();
+		Color colOld = this.setDrawColor(c);
+		panel.g.fillRect(0, 0, width, height);
+		this.setDrawColor(colOld);
 	}
 	
+	public Color setDrawColor(Color newCol) {
+		Color oldCol = drawColor;
+		drawColor = newCol;
+		panel.g.setColor(newCol);
+		return oldCol;
+	}
+
 	public Image getDrawBuffer() {
-		return frame.drawBuffer;
+		return panel.drawBuffer;
 	}
 	
 	public void drawImage(BufferedImage sourceImage, int x, int y) {
-		frame.g.drawImage(sourceImage,x,y,null);
+		panel.g.drawImage(sourceImage,x,y,null);
+	}
+	
+	/**
+	 * Draw Line
+	 * @param x1	Start X
+	 * @param y1	Start Y
+	 * @param x2	End X
+	 * @param y2	End Y
+	 */
+	public void drawLine(int x1, int y1, int x2, int y2) {
+		panel.g.drawLine(x1, y1, x2, y2);
 	}
 	
 	/**
@@ -103,22 +130,8 @@ public class BasicDisplay {
 	 * @param y2	End Y
 	 * @param c		Colour
 	 */
-	public void drawLine(int x1, int y1, int x2, int y2, Color c) {
-		frame.g.setColor(c);
-		frame.g.drawLine(x1, y1, x2, y2);
-	}
-	
-	/**
-	 * Draw Line
-	 * @param x1	Start X
-	 * @param y1	Start Y
-	 * @param x2	End X
-	 * @param y2	End Y
-	 * @param c		Colour
-	 */
-	public void drawLine(float x1, float y1, float x2, float y2, Color c) {
-		frame.g.setColor(c);
-		frame.g.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
+	public void drawLine(float x1, float y1, float x2, float y2) {
+		panel.g.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
 	}
 
 	/**
@@ -127,26 +140,17 @@ public class BasicDisplay {
 	 * @param y1	Start Y
 	 * @param x2	End X
 	 * @param y2	End Y
-	 * @param c		Colour
 	 * @param thickness	Line thickness
 	 */
-	public void drawLine(double x1, double y1, double x2, double y2, Color c, double thickness) {
-		//Graphics g = frame.drawBuffer.getGraphics();
-		Graphics2D g2d = (Graphics2D) frame.g;
+	public void drawLine(double x1, double y1, double x2, double y2, double thickness) {
+		Graphics2D g2d = (Graphics2D) panel.g;
 	
-		g2d.setColor(c);
 		g2d.setStroke(new BasicStroke((float) thickness));
 		g2d.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
-		//g2d.dispose();
-	
-		//g.dispose();
 	}
 
-	public void fillRect(int x, int y, int width, int height, Color c) {
-		//Graphics g = frame.drawBuffer.getGraphics();
-		frame.g.setColor(c);
-		frame.g.fillRect(x, y, width, height);
-		//frame.g.dispose();
+	public void fillRect(int x, int y, int width, int height) {
+		panel.g.fillRect(x, y, width, height);
 	}
 
 	/**
@@ -155,36 +159,27 @@ public class BasicDisplay {
 	 * @param y1	Start Y
 	 * @param x2	End X
 	 * @param y2	End Y
-	 * @param c		Colour
 	 */
-	public void drawRect(int x1, int y1, int x2, int y2, Color c) {
-		drawLine(x1,y1,x2,y1,c);
-		drawLine(x2,y1,x2,y2,c);
-		drawLine(x2,y2,x1,y2,c);
-		drawLine(x1,y1,x1,y2,c);
+	public void drawRect(int x1, int y1, int x2, int y2) {
+		drawLine(x1,y1,x2,y1);
+		drawLine(x2,y1,x2,y2);
+		drawLine(x2,y2,x1,y2);
+		drawLine(x1,y1,x1,y2);
 	}
 
 	/**
-	 * Draw a centered circle to display with supplied color.
+	 * Draw a centered circle.
 	 * @param x		x position
 	 * @param y		y position
 	 * @param d		diameter
-	 * @param c		color
 	 */
-	public void drawCircle(double x, double y, double d, Color c) {
-		//Graphics g = frame.drawBuffer.getGraphics();
-		frame.g.setColor(c);
-		frame.g.fillOval((int) (x - (d / 2)), (int) (y - (d / 2)), (int) (d), (int) (d));
-		//g.dispose();
+	public void drawCircle(double x, double y, double d) {
+		panel.g.fillOval((int) (x - (d / 2)), (int) (y - (d / 2)), (int) (d), (int) (d));
 	}
 
 
-	public void drawText(String str, int x, int y, Color c) {
-		//Graphics g = frame.drawBuffer.getGraphics();
-		frame.g.setColor(c);
-		//g.fillOval((int) (x - (d / 2)), (int) (y - (d / 2)), (int) (d), (int) (d));
-		frame.g.drawString(str, x, y);
-		//g.dispose();
+	public void drawText(String str, int x, int y) {
+		panel.g.drawString(str, x, y);
 	}
 
 	
@@ -198,6 +193,12 @@ public class BasicDisplay {
 		return t;
 	}
 
-	
+	//
+	public Color getDistinctColor(int index, float saturation) {
+		
+		Color newCol = new Color(Color.HSBtoRGB((float)index*1.6180f, saturation, 1.0f));
+		
+		return newCol;
+	}
 	
 }
