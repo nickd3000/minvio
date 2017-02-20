@@ -11,6 +11,8 @@ import javax.swing.*;
  * 
  * @author nickd3000
  */
+// TODO: add filled and outline versions of circle
+// TODO: change all drawing operations to take int position values.
 // TODO: should we use Graphics2D more?
 // This might help add some key/mouse input.
 public class BasicDisplay {
@@ -19,6 +21,7 @@ public class BasicDisplay {
 		private static final long serialVersionUID = 3096588689174149256L;
 		public BufferedImage drawBuffer;
 		public Graphics g = null;
+		public Graphics2D g2d = null;
 		
 		public BPanel(int width, int height) {
 			setSize(width, height);
@@ -27,6 +30,7 @@ public class BasicDisplay {
 			//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			setPreferredSize(new Dimension(width,height));
 			g = drawBuffer.getGraphics();
+			g2d = (Graphics2D) g;
 		}
 		
 		@Override
@@ -40,8 +44,6 @@ public class BasicDisplay {
 	Color drawColor;
 	int width, height;
 	static long timerStart = 0;
-	
-	
 	
 	/**
 	 * Default constructor - creates display with default size
@@ -121,40 +123,24 @@ public class BasicDisplay {
 	public void drawLine(int x1, int y1, int x2, int y2) {
 		panel.g.drawLine(x1, y1, x2, y2);
 	}
-	
-	/**
-	 * Draw Line
-	 * @param x1	Start X
-	 * @param y1	Start Y
-	 * @param x2	End X
-	 * @param y2	End Y
-	 * @param c		Colour
-	 */
+
 	public void drawLine(float x1, float y1, float x2, float y2) {
 		panel.g.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
 	}
 
-	/**
-	 * Draw Line
-	 * @param x1	Start X
-	 * @param y1	Start Y
-	 * @param x2	End X
-	 * @param y2	End Y
-	 * @param thickness	Line thickness
-	 */
 	public void drawLine(double x1, double y1, double x2, double y2, double thickness) {
-		Graphics2D g2d = (Graphics2D) panel.g;
+		//Graphics2D g2d = (Graphics2D) panel.g;
 	
-		g2d.setStroke(new BasicStroke((float) thickness));
-		g2d.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
+		panel.g2d.setStroke(new BasicStroke((float) thickness));
+		panel.g2d.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
 	}
 
-	public void fillRect(int x, int y, int width, int height) {
+	public void drawFilledRect(int x, int y, int width, int height) {
 		panel.g.fillRect(x, y, width, height);
 	}
 
 	/**
-	 * Draw rectangle
+	 * Draw rectangle outline
 	 * @param x1	Start X
 	 * @param y1	Start Y
 	 * @param x2	End X
@@ -173,10 +159,13 @@ public class BasicDisplay {
 	 * @param y		y position
 	 * @param d		diameter
 	 */
-	public void drawCircle(double x, double y, double d) {
+	public void drawFilledCircle(double x, double y, double d) {
 		panel.g.fillOval((int) (x - (d / 2)), (int) (y - (d / 2)), (int) (d), (int) (d));
 	}
 
+	public void drawCircle(double x, double y, double d) {
+		panel.g.drawOval((int) (x - (d / 2)), (int) (y - (d / 2)), (int) (d), (int) (d));
+	}
 
 	public void drawText(String str, int x, int y) {
 		panel.g.drawString(str, x, y);
@@ -193,7 +182,7 @@ public class BasicDisplay {
 		return t;
 	}
 
-	//
+	// Returns a new distinct colour for each supplied index.
 	public Color getDistinctColor(int index, float saturation) {
 		
 		Color newCol = new Color(Color.HSBtoRGB((float)index*1.6180f, saturation, 1.0f));

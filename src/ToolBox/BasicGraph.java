@@ -55,13 +55,11 @@ public class BasicGraph {
 			
 			px = count * ((double)width/(double)numPoints);
 			px+=x;
-			//py = rawValue * height;
-			//py = (y + height)-py;
 			py = (rawValue/zoomSpan)*height;
 			py += y + (height/2);
 			if (py<=y || py>=y+height) continue;
 			d.setDrawColor(c);
-			d.fillRect((int)px, (int)py, 2, 2);
+			d.drawFilledRect((int)px, (int)py, 2, 2);
 		}
 		
 		d.setDrawColor(Color.black);
