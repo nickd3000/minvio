@@ -172,12 +172,12 @@ public class BasicDisplay {
 	}
 
 	
-	public static void startTimer() {
+	public void startTimer() {
 		timerStart = System.nanoTime();
 	}
 	
 	// Returns milliseconds since startTimr() was called.
-	public static long getEllapsedTime() {
+	public long getEllapsedTime() {
 		long t = (System.nanoTime() - timerStart) / 1_000_000;
 		return t;
 	}
@@ -185,7 +185,7 @@ public class BasicDisplay {
 	// Returns a new distinct colour for each supplied index.
 	public Color getDistinctColor(int index, float saturation) {
 		
-		Color newCol = new Color(Color.HSBtoRGB((float)index*1.6180f, saturation, 1.0f));
+		Color newCol = new Color(Color.HSBtoRGB(((float)index)*0.6180339887f, saturation, 1.0f));
 		
 		return newCol;
 	}
