@@ -2,6 +2,9 @@ package ToolBox;
 
 // Import the basic graphics classes.
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 
 import javax.swing.*;
@@ -14,28 +17,44 @@ import javax.swing.*;
 // TODO: add filled and outline versions of circle
 // TODO: change all drawing operations to take int position values.
 // TODO: should we use Graphics2D more?
+// TODO: add mouse functions to BPanel
+// TODO: move bpanel to it's own file as it's going to do more.
+// TODO: how to send mouse data to basicdisplay without lots of duplicate functions.
 // This might help add some key/mouse input.
 public class BasicDisplay {
 
-	class BPanel extends JPanel {
+	class BPanel extends JPanel implements MouseMotionListener {
 		private static final long serialVersionUID = 3096588689174149256L;
 		public BufferedImage drawBuffer;
 		public Graphics g = null;
 		public Graphics2D g2d = null;
+		public int mouseX=0, mouseY=0;
 		
 		public BPanel(int width, int height) {
 			setSize(width, height);
 			setVisible(true);
 			drawBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-			//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			setPreferredSize(new Dimension(width,height));
 			g = drawBuffer.getGraphics();
 			g2d = (Graphics2D) g;
+			this.addMouseMotionListener(this);
 		}
 		
 		@Override
 		public void paintComponent(Graphics g) {
 			g.drawImage(drawBuffer, 0, 0, null);
+		}
+
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			mouseX = e.getX();
+			mouseY = e.getY();
+		}
+
+		@Override
+		public void mouseMoved(MouseEvent e) {
+			mouseX = e.getX();
+			mouseY = e.getY();
 		}
 	}
 	
@@ -62,7 +81,7 @@ public class BasicDisplay {
 		this.height = height;
 		panel = new BPanel(width,height);
 		
-		mainFrame = new JFrame("HELLO");
+		mainFrame = new JFrame("TITLE");
 		mainFrame.getContentPane().add(panel);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.pack();
@@ -88,6 +107,15 @@ public class BasicDisplay {
 		panel.repaint();
 	}
 
+	// Refresh variant that delays to keep refresh rate at fps frames per second.
+	public void refresh(int fps) {
+		panel.repaint();
+		while (getEllapsedTime()<1000/fps) {};
+		startTimer();
+	}
+
+	//while (bd.getEllapsedTime()<1000/10) {};
+	
 	/**
 	 * Clear the display to supplied color.
 	 * @param c		Color to fill display with.
@@ -171,6 +199,7 @@ public class BasicDisplay {
 		panel.g.drawString(str, x, y);
 	}
 
+	/* TIMING ---------------------------------------------------------------*/ 
 	
 	public void startTimer() {
 		timerStart = System.nanoTime();
@@ -182,6 +211,8 @@ public class BasicDisplay {
 		return t;
 	}
 
+	/* COLOR ----------------------------------------------------------------*/
+	
 	// Returns a new distinct colour for each supplied index.
 	public Color getDistinctColor(int index, float saturation) {
 		
@@ -190,4 +221,6 @@ public class BasicDisplay {
 		return newCol;
 	}
 	
+	public int mouseX() { return panel.mouseX; }
+	public int mouseY() { return panel.mouseY; }
 }
