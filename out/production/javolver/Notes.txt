@@ -1,0 +1,18 @@
+Notes
+
+Test functions:
+	rosenbrock, schwefel, rastrigin
+
+Individual
+	stores state information, like score, generation etc
+	
+chromosome
+	stores data about dna
+	
+	user provides function to randomise one element
+		T randomise(T) 
+	user provides scoring mechanism
+		double calculateScore()
+	
+
+system should handle crossover
