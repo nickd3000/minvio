@@ -1,9 +1,12 @@
 package com.physmo.toolbox;
 
 import java.awt.*;
+import java.text.DecimalFormat;
 
 public class BasicGraph {
 
+	private static final double INERTIA = 0.1;
+	private static DecimalFormat df2 = new DecimalFormat(".##");
 	double [] values;
 	double maxValue,minValue,floatingMax,floatingMin;
 	int headPos = 0;
@@ -23,14 +26,12 @@ public class BasicGraph {
 		val=-val;
 		values[headPos++] = val;
 		if (headPos>=numPoints) headPos = 0;
-		//if (val>maxValue) maxValue=val;
-		//if (val<minValue) minValue=val;
 	}
 	
 	public void draw(BasicDisplay d, int x, int y, int width, int height, Color c) {
 		
-		floatingMax = floatingMax - ((floatingMax-maxValue)*0.01);
-		floatingMin = floatingMin - ((floatingMin-minValue)*0.01);
+		floatingMax = floatingMax - ((floatingMax-maxValue)*INERTIA);
+		floatingMin = floatingMin - ((floatingMin-minValue)*INERTIA);
 		//double zoomSpan = Math.max(Math.abs(maxValue), Math.abs(minValue))*2;
 		double zoomSpan = Math.max(Math.abs(floatingMax), Math.abs(floatingMin))*2;
 		
@@ -40,8 +41,8 @@ public class BasicGraph {
 		int readPos = headPos;
 		double rawValue = 0;
 		double px,py;
-		maxValue=0.01;
-		minValue=-0.01;
+		maxValue=0.001;
+		minValue=-0.001;
 		while (count<numPoints) {
 			rawValue = values[readPos++];
 			
@@ -63,7 +64,8 @@ public class BasicGraph {
 		d.setDrawColor(Color.black);
 		d.drawRect(x,y,x+width,y+height);
 		
-		String maxText = ""+floatingMax;
-		d.drawText(maxText, x+width-40, y+15);
+		String maxText = df2.format(Math.max(floatingMax,Math.abs(floatingMin)));
+		//d.drawText(maxText, x+width-40+15, y+15);
+		d.drawText(maxText, x+width-40+15, y+15);
 	}
 }

@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ToolBox.iml" filepath="$PROJECT_DIR$/ToolBox.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../javolver/javolver.iml" filepath="$PROJECT_DIR$/../javolver/javolver.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Evolver.iml" filepath="$PROJECT_DIR$/Evolver.iml" />
     </modules>
   </component>
 </project>

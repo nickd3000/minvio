@@ -2,6 +2,8 @@ package com.physmo.toolbox;
 
 // Import the basic graphics classes.
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -9,6 +11,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicSplitPaneUI.KeyboardDownRightHandler;
 
 /**
  * A basic display module with simplified drawing operations.
@@ -24,12 +27,15 @@ import javax.swing.*;
 // This might help add some key/mouse input.
 public class BasicDisplay {
 
-	class BPanel extends JPanel implements MouseMotionListener {
+	class BPanel extends JPanel implements MouseMotionListener, KeyListener {
 		private static final long serialVersionUID = 3096588689174149256L;
 		public BufferedImage drawBuffer;
 		public Graphics g = null;
 		public Graphics2D g2d = null;
 		public int mouseX=0, mouseY=0;
+		int numKeys = 1000;
+		public int keyDown[] = new int[numKeys];
+		public int keyDownPrevious[] = new int[numKeys];
 		
 		public BPanel(int width, int height) {
 			setSize(width, height);
@@ -41,8 +47,15 @@ public class BasicDisplay {
 			
 			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			
+			Font fnt = new Font("window", Font.BOLD, 20);
+			g.setFont(fnt);
 			
+			for (int i=0;i<numKeys;i++) keyDown[i]=0;
+			
+			this.addKeyListener(this);
 			this.addMouseMotionListener(this);
+			this.setFocusable(true);
+            this.requestFocusInWindow();
 		}
 		
 		@Override
@@ -61,6 +74,25 @@ public class BasicDisplay {
 			mouseX = e.getX();
 			mouseY = e.getY();
 		}
+
+		@Override
+		public void keyTyped(KeyEvent e) {
+		}
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			//System.out.println("Key Pressed:"+e.getKeyCode());
+			keyDown[e.getKeyCode()]=1;
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			//System.out.println("keyReleased "+e.getKeyCode());
+			keyDown[e.getKeyCode()]=0;
+		}
+		
+
+		
 	}
 	
 	JFrame mainFrame = null;
@@ -86,7 +118,7 @@ public class BasicDisplay {
 		this.height = height;
 		panel = new BPanel(width,height);
 		
-		mainFrame = new JFrame("TITLE");
+		mainFrame = new JFrame("...");
 		mainFrame.getContentPane().add(panel);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.pack();
@@ -119,6 +151,10 @@ public class BasicDisplay {
 		startTimer();
 	}
 
+	public void setTitle(String str) {
+		mainFrame.setTitle(str);
+	}
+	
 	//while (bd.getEllapsedTime()<1000/10) {};
 	
 	/**
@@ -138,6 +174,21 @@ public class BasicDisplay {
 		return oldCol;
 	}
 
+	public int[] getKeyState() {
+		return panel.keyDown;
+	}
+	public int[] getKeyStatePrevious() {
+		return panel.keyDownPrevious;
+	}
+
+	// Update previous keys with current keys so we can tell what changed next time.
+	public void tickInput() {
+		for (int i=0;i<panel.keyDown.length;i++) {
+			panel.keyDownPrevious[i] = panel.keyDown[i];
+		}
+	}
+	
+	
 	public Image getDrawBuffer() {
 		return panel.drawBuffer;
 	}
