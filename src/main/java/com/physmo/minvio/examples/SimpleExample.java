@@ -1,7 +1,7 @@
-package com.physmo.toolbox.examples;
+package com.physmo.minvio.examples;
 
-import com.physmo.toolbox.BasicDisplay;
-import com.physmo.toolbox.BasicDisplayAwt;
+import com.physmo.minvio.BasicDisplay;
+import com.physmo.minvio.BasicDisplayAwt;
 
 import java.awt.*;
 
