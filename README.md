@@ -1,2 +1,2 @@
-# ToolBox
-Simple Java Tools for rapid prototyping
+# minvio
+Simple Java Tools for rapid prototyping, visualization and input / output
