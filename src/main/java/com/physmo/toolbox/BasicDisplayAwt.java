@@ -150,7 +150,6 @@ public class BasicDisplayAwt implements BasicDisplay {
         panel.repaint();
         while (getEllapsedTime() < 1000 / fps) {
         }
-        ;
         startTimer();
     }
 
