@@ -1,5 +1,6 @@
 package com.physmo.toolbox;
 
+import com.physmo.minvio.BasicDisplayAwt;
 import org.junit.Test;
 
 public class TestBasicDisplay {

@@ -1,4 +1,4 @@
-package com.physmo.toolbox;
+package com.physmo.minvio;
 
 // Import the basic graphics classes.
 
