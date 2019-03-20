@@ -34,8 +34,6 @@ public interface BasicDisplay {
 
     void drawLine(int x1, int y1, int x2, int y2);
 
-    void drawLine(float x1, float y1, float x2, float y2);
-
     void drawLine(double x1, double y1, double x2, double y2, double thickness);
 
     void drawFilledRect(int x, int y, int width, int height);
@@ -54,7 +52,7 @@ public interface BasicDisplay {
     long getEllapsedTime();
 
     // Returns a new distinct colour for each supplied index.
-    Color getDistinctColor(int index, float saturation);
+    Color getDistinctColor(int index, double saturation);
 
     // Input and output.
     // Update previous keys with current keys so we can tell what changed next time.

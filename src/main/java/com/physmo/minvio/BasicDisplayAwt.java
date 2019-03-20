@@ -235,11 +235,6 @@ public class BasicDisplayAwt implements BasicDisplay {
     }
 
     @Override
-    public void drawLine(float x1, float y1, float x2, float y2) {
-        panel.g.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
-    }
-
-    @Override
     public void drawLine(double x1, double y1, double x2, double y2, double thickness) {
         //Graphics2D g2d = (Graphics2D) panel.g;
 
@@ -314,9 +309,9 @@ public class BasicDisplayAwt implements BasicDisplay {
 
     // Returns a new distinct colour for each supplied index.
     @Override
-    public Color getDistinctColor(int index, float saturation) {
+    public Color getDistinctColor(int index, double saturation) {
 
-        Color newCol = new Color(Color.HSBtoRGB(((float) index) * 0.6180339887f, saturation, 1.0f));
+        Color newCol = new Color(Color.HSBtoRGB(((float) index) * 0.6180339887f, (float)saturation, 1.0f));
 
         return newCol;
     }
