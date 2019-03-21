@@ -5,9 +5,10 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 target/
-.idea/
 .eclipse
 bin/
+**/.idea/workspace.xml
+**/.idea/tasks.xml
 
 # Package Files #
 *.jar

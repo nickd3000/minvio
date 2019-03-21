@@ -62,9 +62,12 @@ public interface BasicDisplay {
 
     int[] getKeyStatePrevious();
 
-    int mouseX();
+    int getMouseX();
 
-    int mouseY();
+    int getMouseY();
 
+    boolean getMouseButtonLeft();
+    boolean getMouseButtonMiddle();
+    boolean getMouseButtonRight();
 
 }

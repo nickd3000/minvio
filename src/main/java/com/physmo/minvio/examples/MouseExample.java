@@ -9,10 +9,10 @@ import java.awt.*;
 public class MouseExample {
 
 
-    public static void main(String ... args) {
+    public static void main(String... args) {
         int width = 400;
         int height = 400;
-        BasicDisplay bd = new BasicDisplayAwt(width,height);
+        BasicDisplay bd = new BasicDisplayAwt(width, height);
 
         bd.setTitle("Mouse Example");
 
@@ -20,36 +20,43 @@ public class MouseExample {
         bd.cls(Color.black);
         bd.setDrawColor(Color.BLUE);
 
-        int prevX = bd.mouseX();
-        int prevY = bd.mouseY();
+        int prevX = bd.getMouseX();
+        int prevY = bd.getMouseY();
+        int count = 0;
 
         // Loop forever.
-        while (true)
-        {
+        while (true) {
             bd.refresh(30);
             int dst;
-            dst = dist(prevX,prevY,bd.mouseX(),bd.mouseY());
+            dst = dist(prevX, prevY, bd.getMouseX(), bd.getMouseY());
 
             // Draw the point.
-            bd.drawFilledCircle(bd.mouseX(),bd.mouseY(), dst/2);
+            bd.drawFilledCircle(bd.getMouseX(), bd.getMouseY(), dst / 2);
 
             // Chose a random distinct colour every so often.
-            bd.setDrawColor(bd.getDistinctColor((int)(Math.random()*100), 0.7));
+            //bd.setDrawColor(bd.getDistinctColor((int)(Math.random()*100), 0.7));
+            count++;
+            bd.setDrawColor(bd.getDistinctColor(count, 0.7));
 
-            prevX=bd.mouseX();
-            prevY=bd.mouseY();
+            prevX = bd.getMouseX();
+            prevY = bd.getMouseY();
 
             // Fade
-            bd.cls(new Color(0,0,0,10));
+            bd.cls(new Color(0, 0, 0, 10));
+
+            // Clear on mouse click.
+            if (bd.getMouseButtonLeft()==true) {
+                bd.cls(Color.black);
+            }
 
         }
     }
 
     // TODO: add distance functions to utilities
     static int dist(int x1, int y1, int x2, int y2) {
-        int dx = x2-x1;
-        int dy = y2-y1;
-        int dist = (int)Math.sqrt(((dx*dx)+(dy*dy)));
+        int dx = x2 - x1;
+        int dy = y2 - y1;
+        int dist = (int) Math.sqrt(((dx * dx) + (dy * dy)));
         return dist;
     }
 }

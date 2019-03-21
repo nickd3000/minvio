@@ -4,10 +4,7 @@ package com.physmo.minvio;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 
@@ -25,17 +22,22 @@ import java.awt.image.BufferedImage;
 // This might help add some key/mouse input.
 public class BasicDisplayAwt implements BasicDisplay {
 
-    class BPanel extends JPanel implements MouseMotionListener, KeyListener {
-        private static final long serialVersionUID = 3096588689174149256L;
-        public BufferedImage drawBuffer;
-        public Graphics g = null;
-        public Graphics2D g2d = null;
-        public int mouseX = 0, mouseY = 0;
-        int numKeys = 1000;
-        public int keyDown[] = new int[numKeys];
-        public int keyDownPrevious[] = new int[numKeys];
+    private static final int MAX_BUTTONS = 4;
 
-        public BPanel(int width, int height) {
+    class BPanel extends JPanel implements MouseMotionListener, KeyListener, MouseListener {
+        private static final long serialVersionUID = 3096588689174149256L;
+        BufferedImage drawBuffer;
+        Graphics g = null;
+        Graphics2D g2d = null;
+        int mouseX = 0;
+        int mouseY = 0;
+        int numKeys = 1000;
+        int[] keyDown = new int[numKeys];
+        int[] keyDownPrevious = new int[numKeys];
+        boolean [] mouseButtonStates = new boolean[MAX_BUTTONS];
+
+
+        BPanel(int width, int height) {
             setSize(width, height);
             setVisible(true);
             drawBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -52,6 +54,7 @@ public class BasicDisplayAwt implements BasicDisplay {
 
             this.addKeyListener(this);
             this.addMouseMotionListener(this);
+            this.addMouseListener(this);
             this.setFocusable(true);
             this.requestFocusInWindow();
         }
@@ -90,13 +93,47 @@ public class BasicDisplayAwt implements BasicDisplay {
         }
 
 
+        @Override
+        public void mouseClicked(MouseEvent e) {
+//            int bid = e.getButton();
+//            if (bid<MAX_BUTTONS) {
+//                mouseButtonStates[bid]=true;
+//            }
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            int bid = e.getButton();
+            if (bid<MAX_BUTTONS) {
+                mouseButtonStates[bid]=true;
+            }
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            int bid = e.getButton();
+            if (bid<MAX_BUTTONS) {
+                mouseButtonStates[bid]=false;
+            }
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+
+        }
     }
 
-    JFrame mainFrame = null;
-    BPanel panel = null;
-    Color drawColor;
-    int width, height;
-    static long timerStart = 0;
+    private JFrame mainFrame = null;
+    private BPanel panel = null;
+    private Color drawColor;
+    private int width;
+    private int height;
+    private static long timerStart = 0;
 
     /**
      * Default constructor - creates display with default size
@@ -211,14 +248,14 @@ public class BasicDisplayAwt implements BasicDisplay {
 
     @Override
     public Color getColorAtPoint(int x, int y) {
-        int rgb = panel.drawBuffer.getRGB(x,y);
+        int rgb = panel.drawBuffer.getRGB(x, y);
         Color c = new Color(rgb);
         return c;
     }
 
     @Override
     public int getRGBAtPoint(int x, int y) {
-        return panel.drawBuffer.getRGB(x,y);
+        return panel.drawBuffer.getRGB(x, y);
     }
 
     /**
@@ -311,19 +348,38 @@ public class BasicDisplayAwt implements BasicDisplay {
     @Override
     public Color getDistinctColor(int index, double saturation) {
 
-        Color newCol = new Color(Color.HSBtoRGB(((float) index) * 0.6180339887f, (float)saturation, 1.0f));
+        Color newCol = new Color(Color.HSBtoRGB(((float) index) * 0.6180339887f, (float) saturation, 1.0f));
 
         return newCol;
     }
 
     @Override
-    public int mouseX() {
+    public int getMouseX() {
         return panel.mouseX;
     }
 
     @Override
-    public int mouseY() {
+    public int getMouseY() {
         return panel.mouseY;
+    }
+
+    private static int MOUSE_BUTTON_ID_LEFT = 1;
+    private static int MOUSE_BUTTON_ID_RIGHT = 2;
+    private static int MOUSE_BUTTON_ID_MIDDLE = 3;
+
+    @Override
+    public boolean getMouseButtonLeft() {
+        return panel.mouseButtonStates[MOUSE_BUTTON_ID_LEFT];
+    }
+
+    @Override
+    public boolean getMouseButtonMiddle() {
+        return panel.mouseButtonStates[MOUSE_BUTTON_ID_MIDDLE];
+    }
+
+    @Override
+    public boolean getMouseButtonRight() {
+        return panel.mouseButtonStates[MOUSE_BUTTON_ID_RIGHT];
     }
 
     @Override
