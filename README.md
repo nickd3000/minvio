@@ -4,7 +4,7 @@ Minvio is a small Java library that offers very simple window, graphics and inpu
 
 **Minimal example**
 
-'''java
+```java
 package com.physmo.minvio.examples;
 
 import com.physmo.minvio.BasicDisplay;
@@ -34,5 +34,4 @@ public class SimpleExample {
     }
 
 }
-
-'''
+```
