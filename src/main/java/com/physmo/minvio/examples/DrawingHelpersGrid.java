@@ -6,7 +6,7 @@ import com.physmo.minvio.DrawingHelpers;
 
 import java.awt.*;
 
-public class DrawingHelpersGrid {
+class DrawingHelpersGrid {
 
     public static void main(String ... args) {
         BasicDisplay bd = new BasicDisplayAwt(300,300);

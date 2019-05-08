@@ -7,10 +7,10 @@ import java.awt.*;
 
 import static java.awt.event.KeyEvent.*;
 
-public class KeyboardExample {
+class KeyboardExample {
 
-    static double force = 0.5;
-    static double friction = 0.05;
+    private static final double force = 0.5;
+    private static final double friction = 0.05;
 
     public static void main(String ... args) {
         BasicDisplay bd = new BasicDisplayAwt(400, 400);

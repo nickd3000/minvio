@@ -5,7 +5,7 @@ import com.physmo.minvio.BasicDisplayAwt;
 
 import java.awt.*;
 
-public class Gasket {
+class Gasket {
 
 
     public static void main(String ... args) {

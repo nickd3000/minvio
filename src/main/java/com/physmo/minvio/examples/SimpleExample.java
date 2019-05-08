@@ -5,7 +5,7 @@ import com.physmo.minvio.BasicDisplayAwt;
 
 import java.awt.*;
 
-public class SimpleExample {
+class SimpleExample {
 
     public static void main(String ... args) {
         BasicDisplay bd = new BasicDisplayAwt(200,200);

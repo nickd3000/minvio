@@ -3,7 +3,7 @@ package com.physmo.minvio.examples;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
 
-public class DistinctColorExample {
+class DistinctColorExample {
     public static void main(String ... args) {
 
         int width = 400;

@@ -26,15 +26,15 @@ public class BasicDisplayAwt implements BasicDisplay {
 
     class BPanel extends JPanel implements MouseMotionListener, KeyListener, MouseListener {
         private static final long serialVersionUID = 3096588689174149256L;
-        BufferedImage drawBuffer;
-        Graphics g = null;
-        Graphics2D g2d = null;
+        final BufferedImage drawBuffer;
+        Graphics g;
+        Graphics2D g2d;
         int mouseX = 0;
         int mouseY = 0;
-        int numKeys = 1000;
-        int[] keyDown = new int[numKeys];
-        int[] keyDownPrevious = new int[numKeys];
-        boolean[] mouseButtonStates = new boolean[MAX_BUTTONS];
+        final int numKeys = 1000;
+        final int[] keyDown = new int[numKeys];
+        final int[] keyDownPrevious = new int[numKeys];
+        final boolean[] mouseButtonStates = new boolean[MAX_BUTTONS];
 
 
         BPanel(int width, int height) {
@@ -128,11 +128,11 @@ public class BasicDisplayAwt implements BasicDisplay {
         }
     }
 
-    private JFrame mainFrame = null;
-    private BPanel panel = null;
+    private JFrame mainFrame;
+    private BPanel panel;
     private Color drawColor;
-    private int width;
-    private int height;
+    private final int width;
+    private final int height;
     private static long timerStart = 0;
 
     /**
@@ -249,8 +249,7 @@ public class BasicDisplayAwt implements BasicDisplay {
     @Override
     public Color getColorAtPoint(int x, int y) {
         int rgb = panel.drawBuffer.getRGB(x, y);
-        Color c = new Color(rgb);
-        return c;
+        return new Color(rgb);
     }
 
     @Override
@@ -338,8 +337,7 @@ public class BasicDisplayAwt implements BasicDisplay {
     // Returns milliseconds since startTimr() was called.
     @Override
     public long getEllapsedTime() {
-        long t = (System.nanoTime() - timerStart) / 1_000_000;
-        return t;
+        return (System.nanoTime() - timerStart) / 1_000_000;
     }
 
     /* COLOR ----------------------------------------------------------------*/
@@ -348,9 +346,7 @@ public class BasicDisplayAwt implements BasicDisplay {
     @Override
     public Color getDistinctColor(int index, double saturation) {
 
-        Color newCol = new Color(Color.HSBtoRGB(((float) index) * 0.6180339887f, (float) saturation, 1.0f));
-
-        return newCol;
+        return new Color(Color.HSBtoRGB(((float) index) * 0.6180339887f, (float) saturation, 1.0f));
     }
 
     @Override
@@ -363,22 +359,21 @@ public class BasicDisplayAwt implements BasicDisplay {
         return panel.mouseY;
     }
 
-    private static int MOUSE_BUTTON_ID_LEFT = 1;
-    private static int MOUSE_BUTTON_ID_RIGHT = 2;
-    private static int MOUSE_BUTTON_ID_MIDDLE = 3;
-
     @Override
     public boolean getMouseButtonLeft() {
+        int MOUSE_BUTTON_ID_LEFT = 1;
         return panel.mouseButtonStates[MOUSE_BUTTON_ID_LEFT];
     }
 
     @Override
     public boolean getMouseButtonMiddle() {
+        int MOUSE_BUTTON_ID_MIDDLE = 3;
         return panel.mouseButtonStates[MOUSE_BUTTON_ID_MIDDLE];
     }
 
     @Override
     public boolean getMouseButtonRight() {
+        int MOUSE_BUTTON_ID_RIGHT = 2;
         return panel.mouseButtonStates[MOUSE_BUTTON_ID_RIGHT];
     }
 

@@ -6,7 +6,7 @@ import com.physmo.minvio.BasicDisplayAwt;
 import java.awt.*;
 
 // TODO: mouse clicks... is this supported yet?
-public class MouseExample {
+class MouseExample {
 
 
     public static void main(String... args) {
@@ -53,7 +53,7 @@ public class MouseExample {
     }
 
     // TODO: add distance functions to utilities
-    static int dist(int x1, int y1, int x2, int y2) {
+    private static int dist(int x1, int y1, int x2, int y2) {
         int dx = x2 - x1;
         int dy = y2 - y1;
         int dist = (int) Math.sqrt(((dx * dx) + (dy * dy)));

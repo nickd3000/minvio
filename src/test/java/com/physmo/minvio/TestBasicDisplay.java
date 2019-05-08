@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import java.awt.*;
 
+import static org.junit.Assert.assertEquals;
+
 public class TestBasicDisplay {
 
     @Test
@@ -16,12 +18,12 @@ public class TestBasicDisplay {
         bd.drawFilledRect(0, 0, 100, 100);
         Color expectingWhite = bd.getColorAtPoint(1,1);
 
-        org.junit.Assert.assertEquals(expectingBlack.getRed(),0);
-        org.junit.Assert.assertEquals(expectingBlack.getGreen(),0);
-        org.junit.Assert.assertEquals(expectingBlack.getBlue(),0);
-        org.junit.Assert.assertEquals(expectingWhite.getRed(),0xff);
-        org.junit.Assert.assertEquals(expectingWhite.getGreen(),0xff);
-        org.junit.Assert.assertEquals(expectingWhite.getBlue(),0xff);
+        assertEquals(expectingBlack.getRed(),0);
+        assertEquals(expectingBlack.getGreen(),0);
+        assertEquals(expectingBlack.getBlue(),0);
+        assertEquals(expectingWhite.getRed(),0xff);
+        assertEquals(expectingWhite.getGreen(),0xff);
+        assertEquals(expectingWhite.getBlue(),0xff);
 
     }
 }

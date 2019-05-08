@@ -8,12 +8,14 @@ import java.util.function.DoubleUnaryOperator;
  * It's recommended to benchmark how you use this to ensure it's faster than
  * the operation you are replacing.
  */
-public class LookupTable {
+class LookupTable {
 
-	int numItems;
-	double [] values;
-	double min, max, range;
-	double numItems_range;
+	private final int numItems;
+	private final double [] values;
+	private final double min;
+    private final double max;
+    private final double range;
+	private final double numItems_range;
 	
 	/**
 	 * @param min		Smallest possible input value.

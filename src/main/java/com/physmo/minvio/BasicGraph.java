@@ -3,14 +3,17 @@ package com.physmo.minvio;
 import java.awt.*;
 import java.text.DecimalFormat;
 
-public class BasicGraph {
+class BasicGraph {
 
 	private static final double INERTIA = 0.1;
-	private static DecimalFormat df2 = new DecimalFormat(".##");
-	double [] values;
-	double maxValue,minValue,floatingMax,floatingMin;
-	int headPos = 0;
-	int numPoints = 0;
+	private static final DecimalFormat df2 = new DecimalFormat(".##");
+	private final double [] values;
+	private double maxValue;
+	private double minValue;
+	private double floatingMax;
+	private double floatingMin;
+	private int headPos;
+	private int numPoints;
 	
 	public BasicGraph(int numPoints) {
 		this.numPoints = numPoints;
@@ -39,7 +42,7 @@ public class BasicGraph {
 		d.drawLine(x, y+(height/2), x+width, y+(height/2));
 		int count = 0;
 		int readPos = headPos;
-		double rawValue = 0;
+		double rawValue;
 		double px,py;
 		maxValue=0.001;
 		minValue=-0.001;
