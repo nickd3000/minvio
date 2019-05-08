@@ -45,7 +45,7 @@ public class MouseExample {
             bd.cls(new Color(0, 0, 0, 10));
 
             // Clear on mouse click.
-            if (bd.getMouseButtonLeft()==true) {
+            if (bd.getMouseButtonLeft()) {
                 bd.cls(Color.black);
             }
 

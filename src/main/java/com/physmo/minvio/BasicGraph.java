@@ -28,7 +28,7 @@ public class BasicGraph {
 		if (headPos>=numPoints) headPos = 0;
 	}
 	
-	public void draw(BasicDisplayAwt d, int x, int y, int width, int height, Color c) {
+	public void draw(BasicDisplay d, int x, int y, int width, int height, Color c) {
 		
 		floatingMax = floatingMax - ((floatingMax-maxValue)*INERTIA);
 		floatingMin = floatingMin - ((floatingMin-minValue)*INERTIA);
@@ -66,6 +66,6 @@ public class BasicGraph {
 		
 		String maxText = df2.format(Math.max(floatingMax,Math.abs(floatingMin)));
 		//d.drawText(maxText, x+width-40+15, y+15);
-		d.drawText(maxText, x+width-40+15, y+15);
+		d.drawText(maxText, x+width-70+15, y+15);
 	}
 }

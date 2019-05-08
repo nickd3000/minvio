@@ -34,7 +34,7 @@ public class BasicDisplayAwt implements BasicDisplay {
         int numKeys = 1000;
         int[] keyDown = new int[numKeys];
         int[] keyDownPrevious = new int[numKeys];
-        boolean [] mouseButtonStates = new boolean[MAX_BUTTONS];
+        boolean[] mouseButtonStates = new boolean[MAX_BUTTONS];
 
 
         BPanel(int width, int height) {
@@ -82,7 +82,7 @@ public class BasicDisplayAwt implements BasicDisplay {
 
         @Override
         public void keyPressed(KeyEvent e) {
-            //System.out.println("Key Pressed:"+e.getKeyCode());
+            System.out.println("Key Pressed:" + e.getKeyCode());
             keyDown[e.getKeyCode()] = 1;
         }
 
@@ -104,16 +104,16 @@ public class BasicDisplayAwt implements BasicDisplay {
         @Override
         public void mousePressed(MouseEvent e) {
             int bid = e.getButton();
-            if (bid<MAX_BUTTONS) {
-                mouseButtonStates[bid]=true;
+            if (bid < MAX_BUTTONS) {
+                mouseButtonStates[bid] = true;
             }
         }
 
         @Override
         public void mouseReleased(MouseEvent e) {
             int bid = e.getButton();
-            if (bid<MAX_BUTTONS) {
-                mouseButtonStates[bid]=false;
+            if (bid < MAX_BUTTONS) {
+                mouseButtonStates[bid] = false;
             }
         }
 
