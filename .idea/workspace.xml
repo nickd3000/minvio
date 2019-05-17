@@ -1,21 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f54c5ef7-623a-4f3a-b7c1-c0a4eebb4869" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/minvio/BasicDisplayAwt.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/minvio/BasicDisplayAwt.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/minvio/BasicGraph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/minvio/BasicGraph.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/minvio/LookupTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/minvio/LookupTable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/minvio/examples/DistinctColorExample.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/minvio/examples/DistinctColorExample.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/minvio/examples/DrawingHelpersGrid.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/minvio/examples/DrawingHelpersGrid.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/minvio/examples/Gasket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/minvio/examples/Gasket.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/minvio/examples/KeyboardExample.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/minvio/examples/KeyboardExample.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/minvio/examples/MouseExample.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/minvio/examples/MouseExample.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/minvio/examples/MouseListenerExample.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/minvio/examples/MouseListenerExample.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/minvio/examples/SimpleExample.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/minvio/examples/SimpleExample.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/physmo/minvio/TestBasicDisplay.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/physmo/minvio/TestBasicDisplay.java" afterDir="false" />
-    </list>
+    <list default="true" id="f54c5ef7-623a-4f3a-b7c1-c0a4eebb4869" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -439,7 +425,7 @@
     <frame x="0" y="23" width="1440" height="829" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26801154" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17795388" />
       <window_info id="Image Layers" order="1" />
       <window_info id="Designer" order="2" />
       <window_info id="UI Designer" order="3" />
@@ -457,7 +443,7 @@
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50072044" side_tool="true" weight="0.3286908" />
       <window_info anchor="bottom" id="Messages" order="10" sideWeight="0.4985591" weight="0.32729805" />
       <window_info anchor="bottom" id="Inspection Results" order="11" sideWeight="0.49927953" visible="true" weight="0.33704737" />
-      <window_info anchor="right" id="Maven" order="0" sideWeight="0.49789914" visible="true" weight="0.3299712" />
+      <window_info anchor="right" id="Maven" order="0" sideWeight="0.49789914" visible="true" weight="0.21397695" />
       <window_info anchor="right" id="Commander" order="1" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
@@ -466,7 +452,7 @@
       <window_info anchor="right" id="Theme Preview" order="6" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info anchor="right" id="Maven Projects" order="8" sideWeight="0.7660167" visible="true" weight="0.16930836" />
-      <window_info anchor="right" id="Structure" order="9" sideWeight="0.5021008" side_tool="true" visible="true" weight="0.3299712" />
+      <window_info anchor="right" id="Structure" order="9" sideWeight="0.5021008" side_tool="true" visible="true" weight="0.21397695" />
     </layout>
   </component>
   <component name="editorHistoryManager">
