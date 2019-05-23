@@ -230,9 +230,7 @@ public class BasicDisplayAwt implements BasicDisplay {
     // Update previous keys with current keys so we can tell what changed next time.
     @Override
     public void tickInput() {
-        for (int i = 0; i < panel.keyDown.length; i++) {
-            panel.keyDownPrevious[i] = panel.keyDown[i];
-        }
+        System.arraycopy(panel.keyDown, 0, panel.keyDownPrevious, 0, panel.keyDown.length);
     }
 
 

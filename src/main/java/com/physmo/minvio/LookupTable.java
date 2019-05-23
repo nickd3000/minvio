@@ -13,9 +13,7 @@ class LookupTable {
 	private final int numItems;
 	private final double [] values;
 	private final double min;
-    private final double max;
-    private final double range;
-	private final double numItems_range;
+    private final double numItems_range;
 	
 	/**
 	 * @param min		Smallest possible input value.
@@ -25,14 +23,13 @@ class LookupTable {
 	 */
 	public LookupTable(double min, double max, int numItems, DoubleUnaryOperator func) {
 		this.min = min;
-		this.max = max;
-		this.numItems = numItems;
-		this.range = max-min;
-		numItems_range = numItems/range;
+        this.numItems = numItems;
+        double range = max - min;
+		numItems_range = numItems/ range;
 		values = new double[numItems];
 		
 		for (int i=0;i<numItems;i++) {
-			double step = range/(double)numItems;
+			double step = range /(double)numItems;
 			double pos=min+(i*step);
 			values[i] = func.applyAsDouble(pos);
 		}
