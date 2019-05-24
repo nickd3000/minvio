@@ -173,9 +173,7 @@ public class BasicDisplayAwt implements BasicDisplay {
     }
 
 
-    /**
-     * Update the display with drawing changes.
-     */
+
     @Override
     public void refresh() {
         panel.repaint();
@@ -253,6 +251,13 @@ public class BasicDisplayAwt implements BasicDisplay {
     @Override
     public int getRGBAtPoint(int x, int y) {
         return panel.drawBuffer.getRGB(x, y);
+    }
+
+    @Override
+    public void drawPoint(int x, int y) {
+        panel.g.drawLine(x,y,x,y);
+        //panel.g.drawLine(x1, y1, x2, y2);
+
     }
 
     /**

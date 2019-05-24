@@ -3,6 +3,10 @@ package com.physmo.minvio.examples;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
 
+/***
+ * minvio provides support for generating unique colors, useful for quickly
+ * creating distinct colours when the specific color isn't important.
+ */
 class DistinctColorExample {
     public static void main(String ... args) {
 
