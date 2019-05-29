@@ -3,7 +3,7 @@ package com.physmo.minvio;
 import java.awt.*;
 import java.text.DecimalFormat;
 
-class BasicGraph {
+public class BasicGraph {
 
 	private static final double INERTIA = 0.1;
 	private static final DecimalFormat df2 = new DecimalFormat(".##");
@@ -36,7 +36,7 @@ class BasicGraph {
 		floatingMax = floatingMax - ((floatingMax-maxValue)*INERTIA);
 		floatingMin = floatingMin - ((floatingMin-minValue)*INERTIA);
 		//double zoomSpan = Math.max(Math.abs(maxValue), Math.abs(minValue))*2;
-		double zoomSpan = Math.max(Math.abs(floatingMax), Math.abs(floatingMin))*2;
+		double zoomSpan = Math.max(Math.abs(floatingMax), Math.abs(floatingMin))*2.2;
 		
 		d.setDrawColor(Color.black);
 		d.drawLine(x, y+(height/2), x+width, y+(height/2));
@@ -69,6 +69,8 @@ class BasicGraph {
 		
 		String maxText = df2.format(Math.max(floatingMax,Math.abs(floatingMin)));
 		//d.drawText(maxText, x+width-40+15, y+15);
-		d.drawText(maxText, x+width-70+15, y+15);
+
+		//d.drawText(maxText, x+width-70+15, y+15);
+		d.drawText(maxText, 5, y+15+5);
 	}
 }
