@@ -82,7 +82,7 @@ public class BasicDisplayAwt implements BasicDisplay {
 
         @Override
         public void keyPressed(KeyEvent e) {
-            System.out.println("Key Pressed:" + e.getKeyCode());
+            //System.out.println("Key Pressed:" + e.getKeyCode());
             keyDown[e.getKeyCode()] = 1;
         }
 
@@ -240,6 +240,11 @@ public class BasicDisplayAwt implements BasicDisplay {
     @Override
     public void drawImage(BufferedImage sourceImage, int x, int y) {
         panel.g.drawImage(sourceImage, x, y, null);
+    }
+
+    @Override
+    public void drawImage(BufferedImage sourceImage, int x, int y, int w, int h) {
+        panel.g.drawImage(sourceImage, x, y,w,h,null);
     }
 
     @Override

@@ -65,6 +65,8 @@ public interface BasicDisplay {
      */
     void drawImage(BufferedImage sourceImage, int x, int y);
 
+    void drawImage(BufferedImage sourceImage, int x, int y, int w, int h);
+
     /**
      * Get the colour at the defined position.
      * @param x
