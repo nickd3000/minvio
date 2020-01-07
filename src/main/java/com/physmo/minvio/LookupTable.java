@@ -34,7 +34,7 @@ class LookupTable {
 			values[i] = func.applyAsDouble(pos);
 		}
 	}
-	
+
 	public double getValue(double x) {
 		int index = (int)((x-min)*(numItems_range));
 		if (index<0) index=0;

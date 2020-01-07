@@ -9,7 +9,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 
 /**
- * A basic display module with simplified drawing operations.
+ * A basic display module implemented using AWT.
  *
  * @author nickd3000
  */

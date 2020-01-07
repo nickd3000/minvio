@@ -44,7 +44,7 @@ public interface BasicDisplay {
 
     /**
      * Set the color to use with drawing operations.
-     * @param newCol
+     * @param newCol The color that future draw operations will use.
      * @return  The previous color.
      */
     Color setDrawColor(Color newCol);
@@ -65,6 +65,14 @@ public interface BasicDisplay {
      */
     void drawImage(BufferedImage sourceImage, int x, int y);
 
+    /**
+     * Draw an image to the display.
+     * @param sourceImage
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     */
     void drawImage(BufferedImage sourceImage, int x, int y, int w, int h);
 
     /**
