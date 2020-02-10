@@ -8,7 +8,7 @@ import java.util.function.DoubleUnaryOperator;
  * It's recommended to benchmark how you use this to ensure it's faster than
  * the operation you are replacing.
  */
-class LookupTable {
+public class LookupTable {
 
 	private final int numItems;
 	private final double [] values;
