@@ -26,4 +26,22 @@ public class TestBasicDisplay {
         assertEquals(expectingWhite.getBlue(),0xff);
 
     }
+
+    @Test
+    public void testDrawFiledPolygon() {
+        BasicDisplayAwt bd = new BasicDisplayAwt(200,200);
+
+        int[] xPoints = {100, 200, 0};
+        int[] yPoints = {0, 200, 200};
+        int numPoints = 3;
+
+        bd.cls(new Color(0,0,0));
+        Color expectingBlack = bd.getColorAtPoint(1,1);
+        bd.setDrawColor(new Color(0xff,0xff,0xff));
+        bd.drawFilledPolygon(xPoints,yPoints,numPoints);
+        bd.refresh();
+        Color expectingWhite = bd.getColorAtPoint(1,1);
+
+
+    }
 }

@@ -331,6 +331,12 @@ public class BasicDisplayAwt implements BasicDisplay {
     }
 
     @Override
+    public void drawFilledPolygon(int[] xPoints, int[] yPoints, int numPoints) {
+        panel.g2d.fillPolygon(xPoints, yPoints, numPoints);
+    }
+
+
+    @Override
     public void drawText(String str, int x, int y) {
         panel.g.drawString(str, x, y);
     }

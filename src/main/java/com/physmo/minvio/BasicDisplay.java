@@ -121,6 +121,8 @@ public interface BasicDisplay {
 
     void drawRect(int x1, int y1, int x2, int y2);
 
+    void drawFilledPolygon(int[] xPoints, int[] yPoints, int numPoints);
+
     void drawFilledCircle(double x, double y, double r);
 
     /**
