@@ -72,7 +72,7 @@ class CubeWave {
     public static void main(String... args) {
         BasicDisplay bd = new BasicDisplayAwt(400, 400);
 
-        bd.setTitle("Gasket");
+        bd.setTitle("CubeWave");
 
         // Define 3 points representing the 3 points of the triangle.
         double[] pointList = {0.5, 0, 0, 1, 1, 1};
@@ -92,8 +92,8 @@ class CubeWave {
             time += 0.05;
 
             //drawColumn(bd,0,0,30,200);
-            drawColumns(bd, 0, 250);
-            drawColumns(bd, 0, 150);
+            drawColumns(bd, 5, 200+45);
+            drawColumns(bd, 5, 200-45);
 
             bd.refresh(60);
             loopCount++;
