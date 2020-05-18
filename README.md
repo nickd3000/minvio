@@ -2,7 +2,7 @@
 Minvio is a small Java library that offers very simple window, graphics and input support.  It's useful when you want to rapidly prototype an idea or add some simple graphics to a program without having to lookup complicated libraries.
 
 ![Image Minvio example CubeWave]
-(docs/cubeWave.png)
+(../docs/cubeWave.png)
 
 ![Image Minvio example MouseExample]
 (docs/mouseExample.png)
