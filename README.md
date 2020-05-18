@@ -5,7 +5,7 @@ Minvio is a small Java library that offers very simple window, graphics and inpu
 (../docs/cubeWave.png)
 
 ![Image Minvio example MouseExample]
-(docs/mouseExample.png)
+(/docs/mouseExample.png)
 
 **Minimal example**
 
