@@ -13,7 +13,7 @@ public class BasicGraph {
 	private double floatingMax;
 	private double floatingMin;
 	private int headPos;
-	private int numPoints;
+	private final int numPoints;
 	
 	public BasicGraph(int numPoints) {
 		this.numPoints = numPoints;

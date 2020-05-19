@@ -13,7 +13,7 @@ class SimpleExample2 {
 
         bd.setTitle("Simple Example");
 
-        double x = 0, y = 0, x2 = 0, y2 = 0, a = 0, r1 = 60, r2 = 40;
+        double x, y, x2, y2, a = 0, r1 = 60, r2 = 40;
         int count = 0;
 
         bd.cls(Color.lightGray);

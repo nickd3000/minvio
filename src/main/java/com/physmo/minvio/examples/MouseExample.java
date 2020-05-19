@@ -56,7 +56,6 @@ class MouseExample {
     private static int dist(int x1, int y1, int x2, int y2) {
         int dx = x2 - x1;
         int dy = y2 - y1;
-        int dist = (int) Math.sqrt(((dx * dx) + (dy * dy)));
-        return dist;
+        return (int) Math.sqrt(((dx * dx) + (dy * dy)));
     }
 }

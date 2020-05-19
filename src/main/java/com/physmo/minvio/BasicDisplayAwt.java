@@ -24,11 +24,11 @@ public class BasicDisplayAwt implements BasicDisplay {
 
     private static final int MAX_BUTTONS = 4;
 
-    class BPanel extends JPanel implements MouseMotionListener, KeyListener, MouseListener {
+    static class BPanel extends JPanel implements MouseMotionListener, KeyListener, MouseListener {
         private static final long serialVersionUID = 3096588689174149256L;
         final BufferedImage drawBuffer;
-        Graphics g;
-        Graphics2D g2d;
+        final Graphics g;
+        final Graphics2D g2d;
         int mouseX = 0;
         int mouseY = 0;
         final int numKeys = 1000;
@@ -128,8 +128,8 @@ public class BasicDisplayAwt implements BasicDisplay {
         }
     }
 
-    private JFrame mainFrame;
-    private BPanel panel;
+    private final JFrame mainFrame;
+    private final BPanel panel;
     private Color drawColor;
     private final int width;
     private final int height;
