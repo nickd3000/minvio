@@ -135,6 +135,8 @@ public interface BasicDisplay {
 
     void drawText(String str, int x, int y);
 
+    void setFont(Font font);
+
     void startTimer();
 
     // Returns milliseconds since startTimr() was called.
