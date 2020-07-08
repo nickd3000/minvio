@@ -7,6 +7,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A basic display module implemented using AWT.
@@ -23,6 +25,7 @@ import java.awt.image.BufferedImage;
 public class BasicDisplayAwt implements BasicDisplay {
 
     private static final int MAX_BUTTONS = 4;
+    Map<Integer, Font> builtInFonts = new HashMap<>();
 
     static class BPanel extends JPanel implements MouseMotionListener, KeyListener, MouseListener {
         private static final long serialVersionUID = 3096588689174149256L;
@@ -35,7 +38,6 @@ public class BasicDisplayAwt implements BasicDisplay {
         final int[] keyDown = new int[numKeys];
         final int[] keyDownPrevious = new int[numKeys];
         final boolean[] mouseButtonStates = new boolean[MAX_BUTTONS];
-
 
         BPanel(int width, int height) {
             setSize(width, height);
@@ -345,6 +347,19 @@ public class BasicDisplayAwt implements BasicDisplay {
     @Override
     public void setFont(Font font) {
         panel.g.setFont(font);
+    }
+
+    @Override
+    public void setFont(int size) {
+        String builtInFontName = "Verdana";
+        if (!builtInFonts.containsKey(size)) {
+            Font newFont = new Font (builtInFontName, Font.PLAIN, size);
+            builtInFonts.put(size, newFont);
+        }
+
+        if (builtInFonts.containsKey(size)) {
+            setFont(builtInFonts.get(size));
+        }
     }
 
     /* TIMING ---------------------------------------------------------------*/

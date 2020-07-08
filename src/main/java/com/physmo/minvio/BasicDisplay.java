@@ -137,6 +137,9 @@ public interface BasicDisplay {
 
     void setFont(Font font);
 
+    // Use a built in font.
+    void setFont(int size);
+
     void startTimer();
 
     // Returns milliseconds since startTimr() was called.
