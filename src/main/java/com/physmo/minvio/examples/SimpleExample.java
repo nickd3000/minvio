@@ -11,13 +11,13 @@ class SimpleExample {
         BasicDisplay bd = new BasicDisplayAwt(200,200);
 
         bd.setTitle("Simple Example");
-
+        bd.setFont(10);
 
         while (true)
         {
             bd.cls(Color.lightGray);
             bd.setDrawColor(Color.WHITE);
-            bd.drawFilledRect(100-25,100-25,50, 50);
+            bd.drawFilledRect(75,75,50, 50);
             bd.setDrawColor(Color.BLUE);
             bd.drawCircle(100,100,70);
 

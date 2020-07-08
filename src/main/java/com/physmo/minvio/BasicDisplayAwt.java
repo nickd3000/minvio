@@ -402,13 +402,13 @@ public class BasicDisplayAwt implements BasicDisplay {
 
     @Override
     public boolean getMouseButtonMiddle() {
-        int MOUSE_BUTTON_ID_MIDDLE = 3;
+        int MOUSE_BUTTON_ID_MIDDLE = 2;
         return panel.mouseButtonStates[MOUSE_BUTTON_ID_MIDDLE];
     }
 
     @Override
     public boolean getMouseButtonRight() {
-        int MOUSE_BUTTON_ID_RIGHT = 2;
+        int MOUSE_BUTTON_ID_RIGHT = 3;
         return panel.mouseButtonStates[MOUSE_BUTTON_ID_RIGHT];
     }
 

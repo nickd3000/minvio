@@ -36,7 +36,7 @@ class Gasket {
             y = (y + pointList[(pointIndex*2)+1])/2;
 
             // Draw the point.
-            bd.drawFilledRect((int)(x*400),(int)(y*400),1,1);
+            bd.drawFilledRect((int)(x*400),(int)(y*400),2,2);
 
             // Refresh screen every 200 pixels drawn.
             if (loopCount%200==0)
