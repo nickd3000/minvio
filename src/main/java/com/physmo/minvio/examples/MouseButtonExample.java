@@ -5,7 +5,9 @@ import com.physmo.minvio.BasicDisplayAwt;
 
 import java.awt.*;
 
-// TODO: mouse clicks... is this supported yet?
+// BasicDisplay.getMouseButtonLeft()
+// BasicDisplay.getMouseButtonMiddle()
+// BasicDisplay.getMouseButtonRight()
 class MouseButtonExample {
 
 
@@ -25,16 +27,16 @@ class MouseButtonExample {
             bd.cls(Color.lightGray);
 
             // Draw rectangles representing mouse buttons.
-            int span = width/3;
-            int pad = (bd.getMouseX()*50/width);
-            for (int i=0;i<3;i++) {
+            int span = width / 3;
+            int pad = (bd.getMouseX() * 50 / width);
+            for (int i = 0; i < 3; i++) {
 
-                if (i==0 && bd.getMouseButtonLeft()) bd.setDrawColor(colOn);
-                else if (i==1 && bd.getMouseButtonMiddle()) bd.setDrawColor(colOn);
-                else if (i==2 && bd.getMouseButtonRight()) bd.setDrawColor(colOn);
+                if (i == 0 && bd.getMouseButtonLeft()) bd.setDrawColor(colOn);
+                else if (i == 1 && bd.getMouseButtonMiddle()) bd.setDrawColor(colOn);
+                else if (i == 2 && bd.getMouseButtonRight()) bd.setDrawColor(colOn);
                 else bd.setDrawColor(colOff);
 
-                bd.drawFilledRect((i*span)+pad,0+pad,(span)-(pad*2),(height)-pad*2);
+                bd.drawFilledRect((i * span) + pad, 0 + pad, (span) - (pad * 2), (height) - pad * 2);
             }
 
             // Draw the message.
@@ -44,7 +46,7 @@ class MouseButtonExample {
 
             // Refresh the display.
             bd.refresh(30);
-         }
+        }
     }
 
 }

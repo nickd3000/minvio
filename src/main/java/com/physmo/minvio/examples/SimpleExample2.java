@@ -32,17 +32,17 @@ class SimpleExample2 {
 
             //bd.drawFilledRect(100+(int)(x+x2),100+(int)(y+y2),2, 2);
             bd.setDrawColor(Color.YELLOW);
-            bd.drawPoint(200 + (int) (x ), 200 + (int) (y ));
+            bd.drawPoint(200 + (int) (x), 200 + (int) (y));
             bd.setDrawColor(Color.MAGENTA);
-            bd.drawPoint(200 + (int) (x2 ), 200 + (int) (y2 ));
+            bd.drawPoint(200 + (int) (x2), 200 + (int) (y2));
             bd.setDrawColor(Color.BLUE);
             bd.drawPoint(200 + (int) (x + x2), 200 + (int) (y + y2));
 
 
             if ((count % 1000) == 0) {
                 bd.refresh(60);
-                r1 = (double)(bd.getMouseX()/2);
-                r2 = 200-r1;
+                r1 = bd.getMouseX() / 2;
+                r2 = 200 - r1;
                 bd.cls(Color.lightGray);
             }
 

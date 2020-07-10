@@ -8,7 +8,7 @@ import com.physmo.minvio.BasicDisplayAwt;
  * creating distinct colours when the specific color isn't important.
  */
 class DistinctColorExample {
-    public static void main(String ... args) {
+    public static void main(String... args) {
 
         int width = 400;
         int height = 400;
@@ -18,18 +18,17 @@ class DistinctColorExample {
         bd.setTitle("Distinct Color Example");
 
         int numRows = 5;
-        int space = width/numRows;
-        int halfSpace = space/2;
+        int space = width / numRows;
+        int halfSpace = space / 2;
 
-        for (int y=0;y<numRows;y++) {
-            for (int x=0;x<numRows;x++) {
-                bd.setDrawColor(bd.getDistinctColor(x+(y*numRows), 0.5f));
-                bd.drawFilledCircle(halfSpace+x*space,halfSpace+y*space,halfSpace);
+        for (int y = 0; y < numRows; y++) {
+            for (int x = 0; x < numRows; x++) {
+                bd.setDrawColor(bd.getDistinctColor(x + (y * numRows), 0.5f));
+                bd.drawFilledCircle(halfSpace + x * space, halfSpace + y * space, halfSpace);
             }
         }
 
-        while (true)
-        {
+        while (true) {
 
             bd.refresh(30);
         }
