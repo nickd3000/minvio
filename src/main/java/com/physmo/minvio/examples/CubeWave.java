@@ -7,6 +7,7 @@ import java.awt.*;
 
 class CubeWave {
 
+    public static final int FPS = 30;
     static double time = 0;
     static final Color backCol = new Color(92, 108, 113);
     static final Color topCol = new Color(252, 252, 253);
@@ -52,7 +53,7 @@ class CubeWave {
 
     public static void drawColumns(BasicDisplay bd, int xx, int yy) {
         double oblique = 0.5;
-        int columnWidth = 30;
+        int columnWidth = 20;
         int columnHeight = 30;
         int gridSize = (bd.getWidth()/columnWidth)-1;
 
@@ -95,7 +96,7 @@ class CubeWave {
             drawColumns(bd, 5, 200+45);
             drawColumns(bd, 5, 200-45);
 
-            bd.refresh(60);
+            bd.refresh(FPS);
             loopCount++;
 
 
