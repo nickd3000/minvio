@@ -5,6 +5,11 @@ import java.awt.image.BufferedImage;
 
 public interface BasicDisplay {
 
+    int TEXTSIZE_WIDTH = 0;
+    int TEXTSIZE_ASCENT = 1;
+    int TEXTSIZE_DESCENT = 2;
+
+
     /**
      * @return The width of the display.
      */
@@ -32,26 +37,29 @@ public interface BasicDisplay {
     void refresh(int fps);
 
     /**
-     * @param str   Text to set the window title.
+     * @param str Text to set the window title.
      */
     void setTitle(String str);
 
     /**
      * Clear the display to the supplied color.
-     * @param c     AWT color to clear the display to.
+     *
+     * @param c AWT color to clear the display to.
      */
     void cls(Color c);
 
     /**
      * Set the color to use with drawing operations.
+     *
      * @param newCol The color that future draw operations will use.
-     * @return  The previous color.
+     * @return The previous color.
      */
     Color setDrawColor(Color newCol);
 
 
     /**
      * Get the draw buffer for the display.
+     *
      * @return Image representing the draw buffer.
      */
     Image getDrawBuffer();
@@ -59,6 +67,7 @@ public interface BasicDisplay {
 
     /**
      * Draw an image to the display.
+     *
      * @param sourceImage
      * @param x
      * @param y
@@ -67,6 +76,7 @@ public interface BasicDisplay {
 
     /**
      * Draw an image to the display.
+     *
      * @param sourceImage
      * @param x
      * @param y
@@ -77,6 +87,7 @@ public interface BasicDisplay {
 
     /**
      * Get the colour at the defined position.
+     *
      * @param x
      * @param y
      * @return Color value
@@ -85,6 +96,7 @@ public interface BasicDisplay {
 
     /**
      * Get the color in RGB notation at the defined position.
+     *
      * @param x
      * @param y
      * @return
@@ -93,6 +105,7 @@ public interface BasicDisplay {
 
     /**
      * Draw a single point.
+     *
      * @param x
      * @param y
      */
@@ -100,6 +113,7 @@ public interface BasicDisplay {
 
     /**
      * Draw a line.
+     *
      * @param x1
      * @param y1
      * @param x2
@@ -109,6 +123,7 @@ public interface BasicDisplay {
 
     /**
      * Draw a line with more control, and non-integer position.
+     *
      * @param x1
      * @param y1
      * @param x2
@@ -127,6 +142,7 @@ public interface BasicDisplay {
 
     /**
      * Draw a centred circle.
+     *
      * @param x x position of circle center
      * @param y y position of circle center
      * @param r radius
@@ -136,6 +152,16 @@ public interface BasicDisplay {
     void drawText(String str, int x, int y);
 
     void setFont(Font font);
+
+    // Use a built in font.
+    void setFont(int size);
+
+    // Returns 3 values representing the width, ascent and descent values of the font
+    // Use the supplied index variables to access them:
+    // TEXTSIZE_WIDTH
+    // TEXTSIZE_ASCENT
+    // TEXTSIZE_DESCENT
+    int[] getTextSize(String str);
 
     void startTimer();
 
@@ -158,7 +184,9 @@ public interface BasicDisplay {
     int getMouseY();
 
     boolean getMouseButtonLeft();
+
     boolean getMouseButtonMiddle();
+
     boolean getMouseButtonRight();
 
 }

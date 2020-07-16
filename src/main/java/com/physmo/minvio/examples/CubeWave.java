@@ -55,7 +55,7 @@ class CubeWave {
         double oblique = 0.5;
         int columnWidth = 20;
         int columnHeight = 30;
-        int gridSize = (bd.getWidth()/columnWidth)-1;
+        int gridSize = (bd.getWidth() / columnWidth) - 1;
 
         for (int x = gridSize; x > 0; x--) {
             for (int y = 0; y < gridSize; y++) {
@@ -63,9 +63,9 @@ class CubeWave {
                 int p2 = -(int) (x * ((columnWidth / 2) * oblique));
                 int p1 = (int) (y * ((columnWidth / 2) * oblique));
 
-                int h = (int) ((Math.sin(x/2.0+time)*10)+(Math.cos(y/1.5+time)*10));
-                h += (int) ((Math.cos(x/3.0+time)*5)+(Math.sin(x/2.5+time)*5));
-                drawColumn(bd, (xx + (x * (columnWidth / 2))) + (int) (y * ((columnWidth / 2))), h+yy + p1 + p2, columnWidth, columnHeight);
+                int h = (int) ((Math.sin(x / 2.0 + time) * 10) + (Math.cos(y / 1.5 + time) * 10));
+                h += (int) ((Math.cos(x / 3.0 + time) * 5) + (Math.sin(x / 2.5 + time) * 5));
+                drawColumn(bd, (xx + (x * (columnWidth / 2))) + (y * ((columnWidth / 2))), h + yy + p1 + p2, columnWidth, columnHeight);
             }
         }
     }
@@ -93,8 +93,8 @@ class CubeWave {
             time += 0.05;
 
             //drawColumn(bd,0,0,30,200);
-            drawColumns(bd, 5, 200+45);
-            drawColumns(bd, 5, 200-45);
+            drawColumns(bd, 5, 200 + 45);
+            drawColumns(bd, 5, 200 - 45);
 
             bd.refresh(FPS);
             loopCount++;

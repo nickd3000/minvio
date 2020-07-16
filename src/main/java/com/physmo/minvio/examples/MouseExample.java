@@ -34,7 +34,6 @@ class MouseExample {
             bd.drawFilledCircle(bd.getMouseX(), bd.getMouseY(), dst / 2);
 
             // Chose a random distinct colour every so often.
-            //bd.setDrawColor(bd.getDistinctColor((int)(Math.random()*100), 0.7));
             count++;
             bd.setDrawColor(bd.getDistinctColor(count, 0.7));
 
