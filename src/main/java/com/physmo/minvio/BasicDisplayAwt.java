@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +33,7 @@ public class BasicDisplayAwt implements BasicDisplay {
     private final int height;
     Map<Integer, Font> builtInFonts = new HashMap<>();
     private Color drawColor;
+
     /**
      * Default constructor - creates display with default size
      */
@@ -71,15 +73,32 @@ public class BasicDisplayAwt implements BasicDisplay {
 
     @Override
     public void refresh() {
-        panel.repaint();
+        panel.paintImmediately(0, 0, width, height);
     }
 
     // Refresh variant that delays to keep refresh rate at fps frames per second.
     @Override
     public void refresh(int fps) {
-        panel.repaint();
-        while (getEllapsedTime() < 1000 / fps) {
+
+
+        int msPerFrame = 1000 / fps; // e.g.g 33.3 for 30fps
+        while (getEllapsedTime() < msPerFrame) {
+
+            int remainingTime = (int) (msPerFrame - getEllapsedTime());
+
+            if (remainingTime < 5) continue;
+            try {
+                Thread.sleep(5);
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
         }
+
+        //panel.repaint(); // <-- Old method
+        panel.paintImmediately(0, 0, width, height);
+
         startTimer();
     }
 
@@ -96,11 +115,11 @@ public class BasicDisplayAwt implements BasicDisplay {
     @Override
     public void cls(Color c) {
         Color colOld = this.setDrawColor(c);
+
         panel.g.fillRect(0, 0, width, height);
+
         this.setDrawColor(colOld);
     }
-
-    //while (bd.getEllapsedTime()<1000/10) {};
 
     @Override
     public Color setDrawColor(Color newCol) {
@@ -149,7 +168,7 @@ public class BasicDisplayAwt implements BasicDisplay {
 
     @Override
     public int getRGBAtPoint(int x, int y) {
-        return panel.drawBuffer.getRGB(x, y);
+        return panel.drawBuffer1.getRGB(x, y);
     }
 
     @Override
@@ -325,9 +344,18 @@ public class BasicDisplayAwt implements BasicDisplay {
 
     static class BPanel extends JPanel implements MouseMotionListener, KeyListener, MouseListener {
         private static final long serialVersionUID = 3096588689174149256L;
-        final BufferedImage drawBuffer;
-        final Graphics g;
-        final Graphics2D g2d;
+        BufferedImage drawBuffer;
+        BufferedImage drawBuffer1;
+        BufferedImage drawBuffer2;
+        Graphics g;
+        Graphics2D g2d;
+
+        private Graphics graphics_1;
+        private Graphics2D graphics2D_1;
+        private Graphics graphics_2;
+        private Graphics2D graphics2D_2;
+        private int activeBuffer = 1;
+
         final int numKeys = 1000;
         final int[] keyDown = new int[numKeys];
         final int[] keyDownPrevious = new int[numKeys];
@@ -335,15 +363,42 @@ public class BasicDisplayAwt implements BasicDisplay {
         int mouseX = 0;
         int mouseY = 0;
 
+        // Switch between our two drawing buffer interfaces,
+        private void flipBuffers() {
+
+            if (activeBuffer == 1) activeBuffer = 2;
+            else activeBuffer = 1;
+
+            if (activeBuffer == 1) {
+                g = graphics_1;
+                g2d = graphics2D_1;
+                drawBuffer = drawBuffer1;
+            } else {
+                g = graphics_2;
+                g2d = graphics2D_2;
+                drawBuffer = drawBuffer2;
+            }
+
+
+        }
+
         BPanel(int width, int height) {
             setSize(width, height);
             setVisible(true);
-            drawBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            drawBuffer1 = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            drawBuffer2 = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
             setPreferredSize(new Dimension(width, height));
-            g = drawBuffer.getGraphics();
-            g2d = (Graphics2D) g;
 
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            graphics_1 = drawBuffer1.getGraphics();
+            graphics_2 = drawBuffer2.getGraphics();
+            graphics2D_1 = (Graphics2D) graphics_1;
+            graphics2D_2 = (Graphics2D) graphics_2;
+            graphics2D_1.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            graphics2D_2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            g = graphics_1;
+            g2d = graphics2D_1;
+            drawBuffer = drawBuffer1;
 
             Font fnt = new Font("window", Font.BOLD, 20);
             g.setFont(fnt);
@@ -355,11 +410,13 @@ public class BasicDisplayAwt implements BasicDisplay {
             this.addMouseListener(this);
             this.setFocusable(true);
             this.requestFocusInWindow();
+            this.setDoubleBuffered(true);
         }
 
         @Override
         public void paintComponent(Graphics g) {
             g.drawImage(drawBuffer, 0, 0, null);
+            flipBuffers();
         }
 
         @Override
