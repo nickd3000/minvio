@@ -7,7 +7,7 @@ import java.awt.*;
 
 class CubeWave {
 
-    public static final int FPS = 30;
+    public static final int FPS = 60;
     static double time = 0;
     static final Color backCol = new Color(92, 108, 113);
     static final Color topCol = new Color(252, 252, 253);
@@ -89,6 +89,7 @@ class CubeWave {
 
         // Loop forever.
         while (true) {
+
             bd.cls(backCol);
             time += 0.05;
 
@@ -96,9 +97,9 @@ class CubeWave {
             drawColumns(bd, 5, 200 + 45);
             drawColumns(bd, 5, 200 - 45);
 
-            bd.refresh(FPS);
-            loopCount++;
 
+            loopCount++;
+            bd.refresh(FPS);
 
         }
     }
