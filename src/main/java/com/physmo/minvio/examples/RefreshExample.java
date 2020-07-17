@@ -35,7 +35,7 @@ class RefreshExample {
                 }
             }
 
-            bd.refresh();
+            bd.refresh(30);
         }
     }
 
