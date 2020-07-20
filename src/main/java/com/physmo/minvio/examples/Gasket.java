@@ -14,7 +14,7 @@ class Gasket {
         bd.setTitle("Gasket");
 
         // Define 3 points representing the 3 points of the triangle.
-        double[] pointList = {0.5, 0, 0, 1, 1, 1};
+        double[] pointList = {0.5, 0.1, 0.1, 0.9, 0.9, 0.9};
 
         // Set the initial position for the point.
         double x = pointList[0];

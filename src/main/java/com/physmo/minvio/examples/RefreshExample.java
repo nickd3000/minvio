@@ -10,6 +10,7 @@ class RefreshExample {
     public static void main(String... args) {
         BasicDisplay bd = new BasicDisplayAwt(400, 400);
 
+        int framesPerSecond = 60;
         bd.setTitle("Refresh Example");
         bd.setFont(10);
 
@@ -35,7 +36,7 @@ class RefreshExample {
                 }
             }
 
-            bd.refresh(30);
+            bd.refresh(framesPerSecond);
         }
     }
 
