@@ -8,11 +8,11 @@ import java.awt.*;
 class CubeWave {
 
     public static final int FPS = 60;
-    static double time = 0;
     static final Color backCol = new Color(92, 108, 113);
     static final Color topCol = new Color(252, 252, 253);
     static final Color leftCol = new Color(96, 159, 184);
     static final Color rightCol = new Color(159, 209, 245);
+    static double time = 0;
 
     public static void drawColumn(BasicDisplay bd, int x, int y, int w, int h) {
         double oblique = 0.5; // 1==45 degree slopes.
@@ -99,7 +99,7 @@ class CubeWave {
 
 
             loopCount++;
-            bd.refresh(FPS);
+            bd.repaint(FPS);
 
         }
     }

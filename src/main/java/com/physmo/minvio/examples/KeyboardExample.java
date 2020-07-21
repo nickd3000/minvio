@@ -73,7 +73,7 @@ class KeyboardExample {
             bd.drawText("WASD", (int) x, (int) y);
 
             // Refresh screen at 60 frames per second.
-            bd.refresh(60);
+            bd.repaint(60);
         }
 
     }

@@ -48,7 +48,7 @@ class TextExample {
                     20, 160 + textSizeDescent,
                     20 + textSizeWidth, 160 - textSizeAscent);
 
-            bd.refresh(30);
+            bd.repaint(30);
         }
     }
 

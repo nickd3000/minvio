@@ -45,7 +45,7 @@ class MouseButtonExample {
             bd.drawText("Click Left, Middle and Right mouse button.", 40, height - 30);
 
             // Refresh the display.
-            bd.refresh(30);
+            bd.repaint(60);
         }
     }
 

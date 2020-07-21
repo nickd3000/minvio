@@ -39,7 +39,7 @@ public class TestBasicDisplay {
         Color expectingBlack = bd.getColorAtPoint(1,1);
         bd.setDrawColor(new Color(0xff,0xff,0xff));
         bd.drawFilledPolygon(xPoints,yPoints,numPoints);
-        bd.refresh();
+        bd.repaint();
         Color expectingWhite = bd.getColorAtPoint(1,1);
 
 

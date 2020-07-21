@@ -39,7 +39,7 @@ class Gasket {
 
             // Refresh screen every 200 pixels drawn.
             if (loopCount % 200 == 0)
-                bd.refresh(60);
+                bd.repaint(60);
 
             // Chose a random distinct colour every so often.
             if (loopCount % 50000 == 0)

@@ -3,50 +3,91 @@ package com.physmo.minvio;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public interface BasicDisplay {
+// Implements common functionality and alternative types methods for drawing operations.
+public abstract class BasicDisplay {
 
-    int TEXTSIZE_WIDTH = 0;
-    int TEXTSIZE_ASCENT = 1;
-    int TEXTSIZE_DESCENT = 2;
+    public static final int TEXTSIZE_WIDTH = 0;
+    public static final int TEXTSIZE_ASCENT = 1;
+    public static final int TEXTSIZE_DESCENT = 2;
+
+
+    /* TIMING ---------------------------------------------------------------*/
+    private static long timerStart = 0;
+
+    public void startTimer() {
+        timerStart = System.nanoTime();
+    }
+
+    // Returns milliseconds since startTimr() was called.
+    public long getEllapsedTime() {
+        return (System.nanoTime() - timerStart) / 1_000_000;
+    }
+
+    /* COLOR ----------------------------------------------------------------*/
+    // Returns a new distinct colour for each supplied index.
+    public Color getDistinctColor(int index, double saturation) {
+        return new Color(Color.HSBtoRGB(((float) index) * 0.6180339887f, (float) saturation, 1.0f));
+    }
 
 
     /**
      * @return The width of the display.
      */
-    int getWidth();
+    public abstract int getWidth();
 
     /**
      * @return The height of the display.
      */
-    int getHeight();
+    public abstract int getHeight();
 
     /**
      * Close the window.
      */
-    void close();
+    public abstract void close();
 
     /**
      * Update the display with drawing changes.
      */
-    void refresh();
+    public abstract void repaint();
 
     /**
      * Update the display with drawing changes.
-     * This variant delays execuition to keep the refresh rate at fps frames per second.
+     * This variant delays execution to keep the refresh rate at fps frames per second.
      */
-    void refresh(int fps);
+    public void repaint(int fps) {
+
+
+        int msPerFrame = 1000 / fps; // e.g.g 33.3 for 30fps
+        while (getEllapsedTime() < msPerFrame) {
+
+            int remainingTime = (int) (msPerFrame - getEllapsedTime());
+
+            if (remainingTime < 5) continue;
+            try {
+                Thread.sleep(5);
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        repaint();
+
+        startTimer();
+    }
 
     /**
      * @param str Text to set the window title.
      */
-    void setTitle(String str);
+    public abstract void setTitle(String str);
 
     /**
      * Clear the display to the supplied color.
      *
      * @param c AWT color to clear the display to.
      */
-    void cls(Color c);
+    public abstract void cls(Color c);
 
     /**
      * Set the color to use with drawing operations.
@@ -54,7 +95,7 @@ public interface BasicDisplay {
      * @param newCol The color that future draw operations will use.
      * @return The previous color.
      */
-    Color setDrawColor(Color newCol);
+    public abstract Color setDrawColor(Color newCol);
 
 
     /**
@@ -62,7 +103,7 @@ public interface BasicDisplay {
      *
      * @return Image representing the draw buffer.
      */
-    Image getDrawBuffer();
+    public abstract Image getDrawBuffer();
 
 
     /**
@@ -72,7 +113,7 @@ public interface BasicDisplay {
      * @param x
      * @param y
      */
-    void drawImage(BufferedImage sourceImage, int x, int y);
+    public abstract void drawImage(BufferedImage sourceImage, int x, int y);
 
     /**
      * Draw an image to the display.
@@ -83,7 +124,7 @@ public interface BasicDisplay {
      * @param w
      * @param h
      */
-    void drawImage(BufferedImage sourceImage, int x, int y, int w, int h);
+    public abstract void drawImage(BufferedImage sourceImage, int x, int y, int w, int h);
 
     /**
      * Get the colour at the defined position.
@@ -92,7 +133,11 @@ public interface BasicDisplay {
      * @param y
      * @return Color value
      */
-    Color getColorAtPoint(int x, int y);
+    public abstract Color getColorAtPoint(int x, int y);
+
+    public Color getColorAtPoint(Point pos) {
+        return getColorAtPoint((int) pos.x, (int) pos.y);
+    }
 
     /**
      * Get the color in RGB notation at the defined position.
@@ -101,92 +146,90 @@ public interface BasicDisplay {
      * @param y
      * @return
      */
-    int getRGBAtPoint(int x, int y);
+    public abstract int getRGBAtPoint(int x, int y);
 
-    /**
-     * Draw a single point.
-     *
-     * @param x
-     * @param y
-     */
-    void drawPoint(int x, int y);
 
-    /**
-     * Draw a line.
-     *
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
-     */
-    void drawLine(int x1, int y1, int x2, int y2);
+    // Draw a single point.
+    public abstract void drawPoint(int x, int y);
 
-    /**
-     * Draw a line with more control, and non-integer position.
-     *
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
-     * @param thickness
-     */
-    void drawLine(double x1, double y1, double x2, double y2, double thickness);
+    public void drawPoint(Point pos) {
+        drawPoint((int) pos.x, (int) pos.y);
+    }
 
-    void drawFilledRect(int x, int y, int width, int height);
+    /* LINE ---------------------------------------------------------------*/
 
-    void drawRect(int x1, int y1, int x2, int y2);
+    public abstract void drawLine(int x1, int y1, int x2, int y2);
 
-    void drawFilledPolygon(int[] xPoints, int[] yPoints, int numPoints);
+    public void drawLine(double x1, double y1, double x2, double y2) {
+        drawLine((int) x1, (int) y1, (int) x2, (int) y2);
+    }
 
-    void drawFilledCircle(double x, double y, double r);
+    public void drawLine(Point pos1, Point pos2) {
+        drawLine((int) pos1.x, (int) pos1.y, (int) pos2.x, (int) pos2.y);
+    }
 
-    /**
-     * Draw a centred circle.
-     *
-     * @param x x position of circle center
-     * @param y y position of circle center
-     * @param r radius
-     */
-    void drawCircle(double x, double y, double r);
+    public abstract void drawLine(double x1, double y1, double x2, double y2, double thickness);
 
-    void drawText(String str, int x, int y);
+    public void drawLine(Point pos1, Point pos2, double thickness) {
+        drawLine(pos1.x, pos1.y, pos2.x, pos2.y, thickness);
+    }
 
-    void setFont(Font font);
+    /* RECT ---------------------------------------------------------------*/
+
+    public abstract void drawFilledRect(int x, int y, int width, int height);
+
+    public abstract void drawRect(int x1, int y1, int x2, int y2);
+
+    /* POLYGON ---------------------------------------------------------------*/
+
+    public abstract void drawFilledPolygon(int[] xPoints, int[] yPoints, int numPoints);
+
+    /* CIRCLE ---------------------------------------------------------------*/
+
+    public abstract void drawFilledCircle(double x, double y, double r);
+
+    public void drawFilledCircle(Point pos, double r) {
+        drawFilledCircle(pos.x, pos.y, r);
+    }
+
+    public abstract void drawCircle(double x, double y, double r);
+
+    public void drawCircle(Point pos, double r) {
+        drawCircle(pos.x, pos.y, r);
+    }
+
+    /* TEXT ---------------------------------------------------------------*/
+
+    public abstract void drawText(String str, int x, int y);
+
+    public abstract void setFont(Font font);
 
     // Use a built in font.
-    void setFont(int size);
+    public abstract void setFont(int size);
 
     // Returns 3 values representing the width, ascent and descent values of the font
     // Use the supplied index variables to access them:
     // TEXTSIZE_WIDTH
     // TEXTSIZE_ASCENT
     // TEXTSIZE_DESCENT
-    int[] getTextSize(String str);
+    public abstract int[] getTextSize(String str);
 
-    void startTimer();
-
-    // Returns milliseconds since startTimr() was called.
-    long getEllapsedTime();
-
-    // Returns a new distinct colour for each supplied index.
-    Color getDistinctColor(int index, double saturation);
 
     // Input and output.
     // Update previous keys with current keys so we can tell what changed next time.
-    void tickInput();
+    public abstract void tickInput();
 
-    int[] getKeyState();
+    public abstract int[] getKeyState();
 
-    int[] getKeyStatePrevious();
+    public abstract int[] getKeyStatePrevious();
 
-    int getMouseX();
+    public abstract int getMouseX();
 
-    int getMouseY();
+    public abstract int getMouseY();
 
-    boolean getMouseButtonLeft();
+    public abstract boolean getMouseButtonLeft();
 
-    boolean getMouseButtonMiddle();
+    public abstract boolean getMouseButtonMiddle();
 
-    boolean getMouseButtonRight();
-
+    public abstract boolean getMouseButtonRight();
 }

@@ -30,7 +30,7 @@ class DistinctColorExample {
 
         while (true) {
 
-            bd.refresh(30);
+            bd.repaint(30);
         }
     }
 }

@@ -17,7 +17,7 @@ class DrawingHelpersGrid {
             bd.cls(Color.lightGray);
             bd.setDrawColor(Color.WHITE);
             DrawingHelpers.drawGrid(bd, 10, 10, 280, 280, 5);
-            bd.refresh(30);
+            bd.repaint(30);
         }
     }
 

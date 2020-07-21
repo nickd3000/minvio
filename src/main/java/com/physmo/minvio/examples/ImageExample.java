@@ -24,12 +24,12 @@ class ImageExample {
         while (true) {
             bd.cls(Color.lightGray);
 
-            bd.drawImage(image,0,0);
-            bd.drawImage(image,image.getWidth(),0,100,100);
+            bd.drawImage(image, 0, 0);
+            bd.drawImage(image, image.getWidth(), 0, 100, 100);
 
             ringOfImages(bd, image);
 
-            bd.refresh(60);
+            bd.repaint(60);
         }
     }
 
@@ -37,7 +37,7 @@ class ImageExample {
         URL file = ImageExample.class.getResource(name);
         BufferedImage image = null;
         try {
-             image = ImageIO.read(file);
+            image = ImageIO.read(file);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -46,15 +46,15 @@ class ImageExample {
 
     // Draw many small scaled images in a rotating ring formation.
     public static void ringOfImages(BasicDisplay bd, BufferedImage image) {
-        t+=0.01;
+        t += 0.01;
 
-        int numSprites = 30*5;
-        double angleSpan = (Math.PI*2)/(double)numSprites;
+        int numSprites = 30 * 5;
+        double angleSpan = (Math.PI * 2) / (double) numSprites;
         double radius = 170;
-        for (int i = 0; i<numSprites; i++) {
-            int x = (int) (Math.sin(t+i*angleSpan)*radius);
-            int y = (int) (Math.cos(t+i*angleSpan)*radius);
-            bd.drawImage(image,x+(bd.getWidth()/2)-16,y+(bd.getHeight()/2)-16,32,32);
+        for (int i = 0; i < numSprites; i++) {
+            int x = (int) (Math.sin(t + i * angleSpan) * radius);
+            int y = (int) (Math.cos(t + i * angleSpan) * radius);
+            bd.drawImage(image, x + (bd.getWidth() / 2) - 16, y + (bd.getHeight() / 2) - 16, 32, 32);
         }
 
     }

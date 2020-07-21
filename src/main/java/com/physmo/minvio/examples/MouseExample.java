@@ -26,7 +26,7 @@ class MouseExample {
 
         // Loop forever.
         while (true) {
-            bd.refresh(30);
+            bd.repaint(30);
             int dst;
             dst = dist(prevX, prevY, bd.getMouseX(), bd.getMouseY());
 

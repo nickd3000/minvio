@@ -40,7 +40,7 @@ class SimpleExample2 {
 
 
             if ((count % 1000) == 0) {
-                bd.refresh(60);
+                bd.repaint(60);
                 r1 = bd.getMouseX() / 2;
                 r2 = 200 - r1;
                 bd.cls(Color.lightGray);
