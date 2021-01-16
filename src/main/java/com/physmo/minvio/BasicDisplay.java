@@ -26,7 +26,8 @@ public abstract class BasicDisplay {
     /* COLOR ----------------------------------------------------------------*/
     // Returns a new distinct colour for each supplied index.
     public Color getDistinctColor(int index, double saturation) {
-        return new Color(Color.HSBtoRGB(((float) index) * 0.6180339887f, (float) saturation, 1.0f));
+        float magicNumber = 0.6180339887f;
+        return new Color(Color.HSBtoRGB(((float) index) * magicNumber, (float) saturation, 1.0f));
     }
 
 
@@ -175,10 +176,9 @@ public abstract class BasicDisplay {
     }
 
     /* RECT ---------------------------------------------------------------*/
-
     public abstract void drawFilledRect(int x, int y, int width, int height);
 
-    public abstract void drawRect(int x1, int y1, int x2, int y2);
+    public abstract void drawRect(int x, int y, int width, int height);
 
     /* POLYGON ---------------------------------------------------------------*/
 
@@ -226,6 +226,10 @@ public abstract class BasicDisplay {
     public abstract int getMouseX();
 
     public abstract int getMouseY();
+
+    public Point getMousePoint() {
+        return new Point(getMouseX(),getMouseY());
+    }
 
     public abstract boolean getMouseButtonLeft();
 

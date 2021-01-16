@@ -5,11 +5,13 @@ import com.physmo.minvio.BasicDisplayAwt;
 
 import java.awt.*;
 
-class RefreshExample {
+
+class RepaintExample {
 
     public static void main(String... args) {
         BasicDisplay bd = new BasicDisplayAwt(400, 400);
-
+        Color colDots = new Color(59, 59, 59);
+        Color colBackground = new Color(181, 129, 72);
         int framesPerSecond = 60;
         bd.setTitle("Refresh Example");
         bd.setFont(10);
@@ -25,14 +27,16 @@ class RefreshExample {
 
             scroll += deltaTime;
 
-            bd.cls(Color.lightGray);
+
+            bd.cls(colBackground);
+            bd.setDrawColor(colDots);
 
             int rows = 5;
             for (int y = 0; y < rows; y++) {
                 for (int x = 0; x < rows; x++) {
                     int span = bd.getWidth() / rows;
 
-                    bd.drawFilledCircle(x * span + ((scroll * 60) % span), y * span, 5);
+                    bd.drawFilledCircle( x * span + ((scroll * 60) % span), (span/2) + y * span, 15);
                 }
             }
 

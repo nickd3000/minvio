@@ -179,11 +179,8 @@ public class BasicDisplayAwt extends BasicDisplay {
      * @param y2 End Y
      */
     @Override
-    public void drawRect(int x1, int y1, int x2, int y2) {
-        drawLine(x1, y1, x2, y1);
-        drawLine(x2, y1, x2, y2);
-        drawLine(x2, y2, x1, y2);
-        drawLine(x1, y1, x1, y2);
+    public void drawRect(int x, int y, int width, int height) {
+        panel.g.drawRect(x, y, width, height);
     }
 
     /**
