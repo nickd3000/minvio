@@ -13,7 +13,7 @@ class RepaintExample {
         Color colDots = new Color(59, 59, 59);
         Color colBackground = new Color(181, 129, 72);
         int framesPerSecond = 60;
-        bd.setTitle("Refresh Example");
+        bd.setTitle("Repaint Example");
         bd.setFont(10);
 
         double previousTime = (double) System.nanoTime() / 1_000_000_000.0;
@@ -25,8 +25,7 @@ class RepaintExample {
             double deltaTime = newTime - previousTime;
             previousTime = newTime;
 
-            scroll += deltaTime;
-
+            scroll += deltaTime * 2;
 
             bd.cls(colBackground);
             bd.setDrawColor(colDots);
@@ -36,11 +35,12 @@ class RepaintExample {
                 for (int x = 0; x < rows; x++) {
                     int span = bd.getWidth() / rows;
 
-                    bd.drawFilledCircle( x * span + ((scroll * 60) % span), (span/2) + y * span, 15);
+                    bd.drawFilledCircle(x * span + ((scroll * 60) % span), (span / 2) + y * span, 15);
                 }
             }
 
-            bd.repaint(framesPerSecond);
+            if (bd.getMouseButtonLeft()) bd.repaint(framesPerSecond/3);
+            else bd.repaint(framesPerSecond);
         }
     }
 

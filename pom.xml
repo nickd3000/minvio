@@ -3,12 +3,13 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.physmo.minvio</groupId>
+    <groupId>com.github.nickd3000</groupId>
     <artifactId>minvio</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <name>minvio</name>
-    <url></url>
+    <url>https://github.com/nickd3000/minvio</url>
+
     <description>Simple graphics library for java</description>
 
     <licenses>

@@ -13,6 +13,11 @@ public class Point {
         this.y = y;
     }
 
+    public Point(Point p) {
+        this.x = p.x;
+        this.y = p.y;
+    }
+
     public void add(Point other) {
         this.x += other.x;
         this.y += other.y;
@@ -39,7 +44,7 @@ public class Point {
     }
 
     public String toString() {
-        return new String("["+x+","+y+"]");
+        return "[" + x + "," + y + "]";
     }
 
 }

@@ -5,7 +5,10 @@ import com.physmo.minvio.BasicDisplayAwt;
 
 import java.awt.*;
 
-import static java.awt.event.KeyEvent.*;
+import static java.awt.event.KeyEvent.VK_A;
+import static java.awt.event.KeyEvent.VK_D;
+import static java.awt.event.KeyEvent.VK_S;
+import static java.awt.event.KeyEvent.VK_W;
 
 class KeyboardExample {
 

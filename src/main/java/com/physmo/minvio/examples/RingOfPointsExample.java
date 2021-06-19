@@ -18,15 +18,17 @@ public class RingOfPointsExample {
         bd.setTitle("Ring Of Points Example");
         bd.setFont(10);
 
-        double angle=0;
+        double angle = 0;
 
         while (true) {
-            angle+=0.01;
+            angle += 0.01;
             bd.cls(Color.lightGray);
             bd.setDrawColor(Color.WHITE);
 
-            BasicUtils.ringOfPoints(10,100,100,70,angle,
-                    (Point p) -> { bd.drawFilledCircle(p.x, p.y, 3); });
+            BasicUtils.ringOfPoints(10, 100, 100, 70, angle,
+                    (Point p) -> {
+                        bd.drawFilledCircle(p.x, p.y, 3);
+                    });
 
 
             bd.repaint(30);

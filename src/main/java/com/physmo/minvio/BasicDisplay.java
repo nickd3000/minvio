@@ -14,22 +14,12 @@ public abstract class BasicDisplay {
     /* TIMING ---------------------------------------------------------------*/
     private static long timerStart = 0;
 
-    public void startTimer() {
-        timerStart = System.nanoTime();
-    }
-
-    // Returns milliseconds since startTimr() was called.
-    public long getEllapsedTime() {
-        return (System.nanoTime() - timerStart) / 1_000_000;
-    }
-
     /* COLOR ----------------------------------------------------------------*/
     // Returns a new distinct colour for each supplied index.
     public Color getDistinctColor(int index, double saturation) {
         float magicNumber = 0.6180339887f;
         return new Color(Color.HSBtoRGB(((float) index) * magicNumber, (float) saturation, 1.0f));
     }
-
 
     /**
      * @return The width of the display.
@@ -45,11 +35,6 @@ public abstract class BasicDisplay {
      * Close the window.
      */
     public abstract void close();
-
-    /**
-     * Update the display with drawing changes.
-     */
-    public abstract void repaint();
 
     /**
      * Update the display with drawing changes.
@@ -77,6 +62,20 @@ public abstract class BasicDisplay {
 
         startTimer();
     }
+
+    public void startTimer() {
+        timerStart = System.nanoTime();
+    }
+
+    // Returns milliseconds since startTimer() was called.
+    public long getEllapsedTime() {
+        return (System.nanoTime() - timerStart) / 1_000_000;
+    }
+
+    /**
+     * Update the display with drawing changes.
+     */
+    public abstract void repaint();
 
     /**
      * @param str Text to set the window title.
@@ -127,6 +126,10 @@ public abstract class BasicDisplay {
      */
     public abstract void drawImage(BufferedImage sourceImage, int x, int y, int w, int h);
 
+    public Color getColorAtPoint(Point pos) {
+        return getColorAtPoint((int) pos.x, (int) pos.y);
+    }
+
     /**
      * Get the colour at the defined position.
      *
@@ -135,10 +138,6 @@ public abstract class BasicDisplay {
      * @return Color value
      */
     public abstract Color getColorAtPoint(int x, int y);
-
-    public Color getColorAtPoint(Point pos) {
-        return getColorAtPoint((int) pos.x, (int) pos.y);
-    }
 
     /**
      * Get the color in RGB notation at the defined position.
@@ -149,31 +148,30 @@ public abstract class BasicDisplay {
      */
     public abstract int getRGBAtPoint(int x, int y);
 
-
-    // Draw a single point.
-    public abstract void drawPoint(int x, int y);
-
     public void drawPoint(Point pos) {
         drawPoint((int) pos.x, (int) pos.y);
     }
 
-    /* LINE ---------------------------------------------------------------*/
+    // Draw a single point.
+    public abstract void drawPoint(int x, int y);
 
-    public abstract void drawLine(int x1, int y1, int x2, int y2);
+    /* LINE ---------------------------------------------------------------*/
 
     public void drawLine(double x1, double y1, double x2, double y2) {
         drawLine((int) x1, (int) y1, (int) x2, (int) y2);
     }
 
+    public abstract void drawLine(int x1, int y1, int x2, int y2);
+
     public void drawLine(Point pos1, Point pos2) {
         drawLine((int) pos1.x, (int) pos1.y, (int) pos2.x, (int) pos2.y);
     }
 
-    public abstract void drawLine(double x1, double y1, double x2, double y2, double thickness);
-
     public void drawLine(Point pos1, Point pos2, double thickness) {
         drawLine(pos1.x, pos1.y, pos2.x, pos2.y, thickness);
     }
+
+    public abstract void drawLine(double x1, double y1, double x2, double y2, double thickness);
 
     /* RECT ---------------------------------------------------------------*/
     public abstract void drawFilledRect(int x, int y, int width, int height);
@@ -186,17 +184,17 @@ public abstract class BasicDisplay {
 
     /* CIRCLE ---------------------------------------------------------------*/
 
-    public abstract void drawFilledCircle(double x, double y, double r);
-
     public void drawFilledCircle(Point pos, double r) {
         drawFilledCircle(pos.x, pos.y, r);
     }
 
-    public abstract void drawCircle(double x, double y, double r);
+    public abstract void drawFilledCircle(double x, double y, double r);
 
     public void drawCircle(Point pos, double r) {
         drawCircle(pos.x, pos.y, r);
     }
+
+    public abstract void drawCircle(double x, double y, double r);
 
     /* TEXT ---------------------------------------------------------------*/
 
@@ -223,13 +221,13 @@ public abstract class BasicDisplay {
 
     public abstract int[] getKeyStatePrevious();
 
+    public Point getMousePoint() {
+        return new Point(getMouseX(), getMouseY());
+    }
+
     public abstract int getMouseX();
 
     public abstract int getMouseY();
-
-    public Point getMousePoint() {
-        return new Point(getMouseX(),getMouseY());
-    }
 
     public abstract boolean getMouseButtonLeft();
 

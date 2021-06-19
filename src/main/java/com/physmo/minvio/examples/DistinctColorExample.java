@@ -20,15 +20,14 @@ class DistinctColorExample {
         bd.setTitle("Distinct Color Example");
 
         int numRows;
-        int space ;
+        int space;
         int halfSpace;
-
 
 
         while (true) {
             bd.cls(Color.white);
-            numRows = 5+(int)(bd.getMouseX()/20);
-            if (numRows<1) numRows=1;
+            numRows = 5 + (bd.getMouseX() / 20);
+            if (numRows < 1) numRows = 1;
             space = width / numRows;
             halfSpace = space / 2;
             for (int y = 0; y < numRows; y++) {

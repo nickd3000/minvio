@@ -14,7 +14,7 @@ public class PointExample {
 
         Color colBackground = new Color(27, 74, 121);
         Color colDots = new Color(75, 190, 190);
-        Color colLines = new Color(19, 33, 52);
+        Color colLines = new Color(243, 221, 154);
         Point mousePos;
 
         BasicDisplay bd = new BasicDisplayAwt(300, 300);
@@ -24,8 +24,8 @@ public class PointExample {
         List<Point> points = new ArrayList<Point>();
 
         // Create a list of random points within a circle.
-        for (int i=0;i<100;i++) {
-            points.add(BasicUtils.createRandomPointInCircle(bd.getWidth()/2,bd.getHeight()/2,130));
+        for (int i = 0; i < 100; i++) {
+            points.add(BasicUtils.createRandomPointInCircle(bd.getWidth() / 2, bd.getHeight() / 2, 130));
         }
 
         while (true) {
@@ -49,7 +49,7 @@ public class PointExample {
             }
 
             // Refresh the window.
-            bd.repaint(30);
+            bd.repaint(60);
         }
     }
 }

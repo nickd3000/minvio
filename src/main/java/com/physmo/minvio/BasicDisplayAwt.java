@@ -4,7 +4,11 @@ package com.physmo.minvio;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
@@ -24,7 +28,7 @@ public class BasicDisplayAwt extends BasicDisplay {
     private final BPanel panel;
     private final int width;
     private final int height;
-    Map<Integer, Font> builtInFonts = new HashMap<>();
+    final Map<Integer, Font> builtInFonts = new HashMap<>();
     private Color drawColor;
 
     /**
@@ -173,10 +177,10 @@ public class BasicDisplayAwt extends BasicDisplay {
     /**
      * Draw rectangle outline
      *
-     * @param x1 Start X
-     * @param y1 Start Y
-     * @param x2 End X
-     * @param y2 End Y
+     * @param x Start X
+     * @param y Start Y
+     * @param width Width
+     * @param height Height
      */
     @Override
     public void drawRect(int x, int y, int width, int height) {
@@ -216,11 +220,6 @@ public class BasicDisplayAwt extends BasicDisplay {
     /* TEXT ---------------------------------------------------------------*/
 
     @Override
-    public void setFont(Font font) {
-        panel.g.setFont(font);
-    }
-
-    @Override
     public void setFont(int size) {
         String builtInFontName = "Verdana";
         if (!builtInFonts.containsKey(size)) {
@@ -231,6 +230,11 @@ public class BasicDisplayAwt extends BasicDisplay {
         if (builtInFonts.containsKey(size)) {
             setFont(builtInFonts.get(size));
         }
+    }
+
+    @Override
+    public void setFont(Font font) {
+        panel.g.setFont(font);
     }
 
     @Override
@@ -286,9 +290,9 @@ public class BasicDisplayAwt extends BasicDisplay {
         final int[] keyDown = new int[numKeys];
         final int[] keyDownPrevious = new int[numKeys];
         final boolean[] mouseButtonStates = new boolean[MAX_BUTTONS];
-        BufferedImage drawBuffer;
-        Graphics g;
-        Graphics2D g2d;
+        final BufferedImage drawBuffer;
+        final Graphics g;
+        final Graphics2D g2d;
         int mouseX = 0;
         int mouseY = 0;
 
