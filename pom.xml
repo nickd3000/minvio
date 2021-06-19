@@ -3,7 +3,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.nickd3000</groupId>
+    <groupId>io.github.nickd3000</groupId>
     <artifactId>minvio</artifactId>
     <version>1.0-SNAPSHOT</version>
 
