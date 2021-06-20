@@ -6,9 +6,9 @@
     <groupId>io.github.nickd3000</groupId>
     <artifactId>minvio</artifactId>
     <version>1.0</version>
-<!--    <version>1.0-SNAPSHOT</version>-->
+    <!--    <version>1.0-SNAPSHOT</version>-->
 
-    <name>minvio</name>
+    <name>${project.groupId}:${project.artifactId}</name>
     <url>https://github.com/nickd3000/minvio</url>
     <description>Simple graphics library for java</description>
 
@@ -19,6 +19,21 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
+    <developers>
+        <developer>
+            <name>Nick Donnelly</name>
+            <email>nickd3000@hotmail.com</email>
+            <organization>github</organization>
+            <organizationUrl>https://github.com/nickd3000</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/simpligility/ossrh-demo.git</connection>
+        <developerConnection>scm:git:ssh://github.com:nickd3000/minvio.git</developerConnection>
+        <url>https://github.com/nickd3000/minvio/tree/master</url>
+    </scm>
 
     <distributionManagement>
         <snapshotRepository>
@@ -85,7 +100,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.5</version>
+                <version>3.0.1</version>
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>
