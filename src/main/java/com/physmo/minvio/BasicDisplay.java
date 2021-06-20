@@ -39,6 +39,7 @@ public abstract class BasicDisplay {
     /**
      * Update the display with drawing changes.
      * This variant delays execution to keep the refresh rate at fps frames per second.
+     * @param fps frames per second
      */
     public void repaint(int fps) {
 
@@ -109,20 +110,20 @@ public abstract class BasicDisplay {
     /**
      * Draw an image to the display.
      *
-     * @param sourceImage
-     * @param x
-     * @param y
+     * @param sourceImage Source image as a Buffered Image
+     * @param x x position
+     * @param y y position
      */
     public abstract void drawImage(BufferedImage sourceImage, int x, int y);
 
     /**
      * Draw an image to the display.
      *
-     * @param sourceImage
-     * @param x
-     * @param y
-     * @param w
-     * @param h
+     * @param sourceImage  Source image as a Buffered Image
+     * @param x position
+     * @param y position
+     * @param w width
+     * @param h height
      */
     public abstract void drawImage(BufferedImage sourceImage, int x, int y, int w, int h);
 
@@ -133,8 +134,8 @@ public abstract class BasicDisplay {
     /**
      * Get the colour at the defined position.
      *
-     * @param x
-     * @param y
+     * @param x x position
+     * @param y y position
      * @return Color value
      */
     public abstract Color getColorAtPoint(int x, int y);
@@ -142,9 +143,9 @@ public abstract class BasicDisplay {
     /**
      * Get the color in RGB notation at the defined position.
      *
-     * @param x
-     * @param y
-     * @return
+     * @param x x position
+     * @param y y position
+     * @return integer RGB value
      */
     public abstract int getRGBAtPoint(int x, int y);
 
