@@ -65,7 +65,7 @@ public class BasicGraph {
         }
 
         d.setDrawColor(Color.black);
-        d.drawRect(x, y, x + width, y + height);
+        d.drawRect(x, y, width, height);
 
         String maxText = df2.format(Math.max(floatingMax, Math.abs(floatingMin)));
         //d.drawText(maxText, x+width-40+15, y+15);

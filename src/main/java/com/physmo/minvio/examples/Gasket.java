@@ -14,7 +14,7 @@ class Gasket {
         bd.setTitle("Gasket");
 
         // Define 3 points representing the 3 points of the triangle.
-        double[] pointList = {0.5, 0, 0, 1, 1, 1};
+        double[] pointList = {0.5, 0.1, 0.1, 0.9, 0.9, 0.9};
 
         // Set the initial position for the point.
         double x = pointList[0];
@@ -39,7 +39,7 @@ class Gasket {
 
             // Refresh screen every 200 pixels drawn.
             if (loopCount % 200 == 0)
-                bd.refresh(60);
+                bd.repaint(60);
 
             // Chose a random distinct colour every so often.
             if (loopCount % 50000 == 0)

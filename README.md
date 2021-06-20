@@ -2,6 +2,14 @@
 Minvio is a small Java library that offers very simple window, graphics and input support.  It's useful when you want to rapidly prototype an idea or add some simple graphics to a program without having to involve heavy weight libraries.
 
 
+Add maven dependency:
+
+    <dependency>
+        <groupId>io.github.nickd3000</groupId>
+        <artifactId>minvio</artifactId>
+        <version>1.0</version>
+    </dependency>
+
 ![Image Minvio example CubeWave](docs/cubeWave.png)
 ![Image Minvio example MouseExample](docs/mouseExample.png)
 
@@ -32,7 +40,7 @@ public class SimpleExample {
             bd.drawCircle(100,100,70);
 
             bd.drawText("X:"+bd.getMouseX()+" Y:"+bd.getMouseY(),10,190);
-            bd.refresh(30);
+            bd.repaint(30);
         }
     }
 

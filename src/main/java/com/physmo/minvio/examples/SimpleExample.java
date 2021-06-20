@@ -21,7 +21,7 @@ class SimpleExample {
             bd.drawCircle(100, 100, 70);
 
             bd.drawText("X:" + bd.getMouseX() + " Y:" + bd.getMouseY(), 10, 190);
-            bd.refresh(30);
+            bd.repaint(30);
         }
     }
 
