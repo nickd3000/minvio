@@ -18,4 +18,11 @@ public class BasicUtils {
             function.process(new Point(xx, yy));
         }
     }
+
+    // Map one value range to another range.
+    public static double mapper(double value, double inMin, double inMax, double outMin, double outMax) {
+        if (outMax - outMin == 0) return 0;
+        value = (value - inMin) / ((inMax - inMin) / (outMax - outMin));
+        return value + outMin;
+    }
 }
