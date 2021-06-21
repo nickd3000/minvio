@@ -2,8 +2,17 @@ package com.physmo.minvio;
 
 // Import the basic graphics classes.
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -57,7 +66,9 @@ public class BasicDisplayAwt extends BasicDisplay {
         mainFrame.setVisible(true);
         mainFrame.setResizable(false);
 
-        drawColor = Color.BLACK;
+        drawColor = Color.white;
+
+        cls(Color.BLACK);
     }
 
     /**
@@ -130,12 +141,6 @@ public class BasicDisplayAwt extends BasicDisplay {
     @Override
     public void drawImage(BufferedImage sourceImage, int x, int y, int w, int h) {
         panel.g.drawImage(sourceImage, x, y, w, h, null);
-    }
-
-    @Override
-    public Color getColorAtPoint(int x, int y) {
-        int rgb = panel.drawBuffer.getRGB(x, y);
-        return new Color(rgb);
     }
 
     @Override
