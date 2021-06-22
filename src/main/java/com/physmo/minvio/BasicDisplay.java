@@ -1,6 +1,8 @@
 package com.physmo.minvio;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 // Implements common functionality and alternative types methods for drawing operations.
@@ -12,13 +14,20 @@ public abstract class BasicDisplay {
 
 
     /* TIMING ---------------------------------------------------------------*/
-    private static long timerStart = 0;
+    private static long repaintTimerStart = 0;
 
     /* COLOR ----------------------------------------------------------------*/
     // Returns a new distinct colour for each supplied index.
     public Color getDistinctColor(int index, double saturation) {
         float magicNumber = 0.6180339887f;
         return new Color(Color.HSBtoRGB(((float) index) * magicNumber, (float) saturation, 1.0f));
+    }
+
+    /**
+     * @return The width and height of display as a Point object.
+     */
+    public Point getDisplaySize() {
+        return new Point(getWidth(), getHeight());
     }
 
     /**
@@ -44,7 +53,6 @@ public abstract class BasicDisplay {
      */
     public void repaint(int fps) {
 
-
         int msPerFrame = 1000 / fps; // e.g.g 33.3 for 30fps
         while (getEllapsedTime() < msPerFrame) {
 
@@ -62,16 +70,12 @@ public abstract class BasicDisplay {
 
         repaint();
 
-        startTimer();
-    }
-
-    public void startTimer() {
-        timerStart = System.nanoTime();
+        repaintTimerStart = System.nanoTime();
     }
 
     // Returns milliseconds since startTimer() was called.
     public long getEllapsedTime() {
-        return (System.nanoTime() - timerStart) / 1_000_000;
+        return (System.nanoTime() - repaintTimerStart) / 1_000_000;
     }
 
     /**
@@ -128,6 +132,12 @@ public abstract class BasicDisplay {
      */
     public abstract void drawImage(BufferedImage sourceImage, int x, int y, int w, int h);
 
+    /**
+     * Get the colour at the defined position.
+     *
+     * @param pos Position
+     * @return Color value
+     */
     public Color getColorAtPoint(Point pos) {
         return getColorAtPoint((int) pos.x, (int) pos.y);
     }
@@ -157,15 +167,14 @@ public abstract class BasicDisplay {
         drawPoint((int) pos.x, (int) pos.y);
     }
 
-    // Draw a single point.
+    // Draw a single point using the current draw colour..
     public abstract void drawPoint(int x, int y);
-
-    /* LINE ---------------------------------------------------------------*/
 
     public void drawLine(double x1, double y1, double x2, double y2) {
         drawLine((int) x1, (int) y1, (int) x2, (int) y2);
     }
 
+    /* LINE ---------------------------------------------------------------*/
     public abstract void drawLine(int x1, int y1, int x2, int y2);
 
     public void drawLine(Point pos1, Point pos2) {
@@ -187,7 +196,12 @@ public abstract class BasicDisplay {
 
     public abstract void drawFilledPolygon(int[] xPoints, int[] yPoints, int numPoints);
 
+    public void drawCircle(Point pos, double r) {
+        drawCircle(pos.x, pos.y, r);
+    }
+
     /* CIRCLE ---------------------------------------------------------------*/
+    public abstract void drawCircle(double x, double y, double r);
 
     public void drawFilledCircle(Point pos, double r) {
         drawFilledCircle(pos.x, pos.y, r);
@@ -195,11 +209,8 @@ public abstract class BasicDisplay {
 
     public abstract void drawFilledCircle(double x, double y, double r);
 
-    public void drawCircle(Point pos, double r) {
-        drawCircle(pos.x, pos.y, r);
-    }
 
-    public abstract void drawCircle(double x, double y, double r);
+
 
     /* TEXT ---------------------------------------------------------------*/
 
