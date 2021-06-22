@@ -48,6 +48,8 @@ public class PointExample {
                 bd.drawFilledCircle(p, 3);
             }
 
+            BasicUtils.drawCursorPosition(bd, 5, 5);
+
             // Refresh the window.
             bd.repaint(60);
         }

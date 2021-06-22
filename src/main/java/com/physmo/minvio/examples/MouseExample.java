@@ -3,7 +3,7 @@ package com.physmo.minvio.examples;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
 
-import java.awt.*;
+import java.awt.Color;
 
 // TODO: mouse clicks... is this supported yet?
 class MouseExample {
@@ -26,6 +26,7 @@ class MouseExample {
 
         // Loop forever.
         while (true) {
+
             bd.repaint(30);
             int dst;
             dst = dist(prevX, prevY, bd.getMouseX(), bd.getMouseY());
