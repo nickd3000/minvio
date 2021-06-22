@@ -1,6 +1,11 @@
 package com.physmo.minvio;
 
+import java.awt.Color;
+import java.awt.Font;
+
 public class BasicUtils {
+
+    private static Font font10 = new Font("Verdana", Font.PLAIN, 10);
 
     public static Point createRandomPointInCircle(double x, double y, double radius) {
         double angle = Math.random() * Math.PI * 2;
@@ -24,5 +29,17 @@ public class BasicUtils {
         if (outMax - outMin == 0) return 0;
         value = (value - inMin) / ((inMax - inMin) / (outMax - outMin));
         return value + outMin;
+    }
+
+    public static void drawCursorPosition(BasicDisplay bd, int x, int y) {
+        int mouseX = bd.getMouseX();
+        int mouseY = bd.getMouseY();
+        int yOffset = 10;
+        String str = "(" + mouseX + "," + mouseY + ")";
+        bd.setFont(font10);
+        bd.setDrawColor(Color.BLACK);
+        bd.drawText(str, x + 1, y + 1 + yOffset);
+        bd.setDrawColor(Color.WHITE);
+        bd.drawText(str, x, y + yOffset);
     }
 }
