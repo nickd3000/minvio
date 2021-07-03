@@ -14,6 +14,8 @@ Add maven dependency:
 ![Image Minvio example CubeWave](docs/cubeWave.png)
 ![Image Minvio example MouseExample](docs/mouseExample.png)
 
+http://cc.coolbubble.com:8099
+
 **Minimal example**
 
 ```java
