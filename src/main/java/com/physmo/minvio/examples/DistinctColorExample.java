@@ -2,6 +2,7 @@ package com.physmo.minvio.examples;
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
+import com.physmo.minvio.MinvioApp;
 
 import java.awt.*;
 
@@ -9,36 +10,31 @@ import java.awt.*;
  * minvio provides support for generating unique colors, useful for quickly
  * creating distinct colours when the specific color isn't important.
  */
-class DistinctColorExample {
+class DistinctColorExample extends MinvioApp {
+
     public static void main(String... args) {
+        MinvioApp app = new DistinctColorExample();
+        app.start(new BasicDisplayAwt(400, 400), "Distinct Color Example", 30);
+    }
 
-        int width = 400;
-        int height = 400;
-
-        BasicDisplay bd = new BasicDisplayAwt(width, height);
-
-        bd.setTitle("Distinct Color Example");
-
+    @Override
+    public void draw(BasicDisplay bd, double delta) {
         int numRows;
         int space;
         int halfSpace;
 
+        bd.cls(Color.GRAY);
+        numRows = 5 + (bd.getMouseX() / 20);
+        if (numRows < 1) numRows = 1;
+        space = 400 / numRows;
+        halfSpace = space / 2;
+        double saturation = ((double) bd.getMouseY() / (double) bd.getHeight());
 
-        while (true) {
-            bd.cls(Color.white);
-            numRows = 5 + (bd.getMouseX() / 20);
-            if (numRows < 1) numRows = 1;
-            space = width / numRows;
-            halfSpace = space / 2;
-            for (int y = 0; y < numRows; y++) {
-                for (int x = 0; x < numRows; x++) {
-                    double saturation = ((double) bd.getMouseY() / (double) bd.getHeight());
-                    bd.setDrawColor(bd.getDistinctColor(x + (y * numRows), saturation));
-                    bd.drawFilledCircle(halfSpace + x * space, halfSpace + y * space, halfSpace);
-                }
+        for (int y = 0; y < numRows; y++) {
+            for (int x = 0; x < numRows; x++) {
+                bd.setDrawColor(bd.getDistinctColor(x + (y * numRows), saturation));
+                bd.drawFilledCircle(halfSpace + x * space, halfSpace + y * space, halfSpace);
             }
-
-            bd.repaint(30);
         }
     }
 }

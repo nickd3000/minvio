@@ -33,6 +33,7 @@ class ImageExample {
         }
     }
 
+    // TODO: Move this to utils?
     public static BufferedImage loadImage(String name) {
         URL file = ImageExample.class.getResource(name);
         BufferedImage image = null;

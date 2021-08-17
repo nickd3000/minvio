@@ -48,7 +48,7 @@ public class BasicDisplayAwt extends BasicDisplay {
     }
 
     /**
-     * Constructor with user defined window size.
+     * Constructor with user-defined window size.
      *
      * @param width  Width of window
      * @param height Height of window
@@ -85,7 +85,11 @@ public class BasicDisplayAwt extends BasicDisplay {
     }
 
 
-    //@Override
+    /**
+     * Set window title.
+     *
+     * @param str Text representing the new window title.
+     */
     public void setTitle(String str) {
         mainFrame.setTitle(str);
     }

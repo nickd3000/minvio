@@ -2,6 +2,7 @@ package com.physmo.minvio.examples;
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
+import com.physmo.minvio.BasicUtils;
 
 import java.awt.Color;
 
@@ -29,7 +30,7 @@ class MouseExample {
 
             bd.repaint(30);
             int dst;
-            dst = dist(prevX, prevY, bd.getMouseX(), bd.getMouseY());
+            dst = BasicUtils.distance(prevX, prevY, bd.getMouseX(), bd.getMouseY());
 
             // Draw the point.
             bd.drawFilledCircle(bd.getMouseX(), bd.getMouseY(), dst / 2);
@@ -52,10 +53,5 @@ class MouseExample {
         }
     }
 
-    // TODO: add distance functions to utilities
-    private static int dist(int x1, int y1, int x2, int y2) {
-        int dx = x2 - x1;
-        int dy = y2 - y1;
-        return (int) Math.sqrt(((dx * dx) + (dy * dy)));
-    }
+
 }

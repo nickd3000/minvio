@@ -5,7 +5,7 @@
 
     <groupId>io.github.nickd3000</groupId>
     <artifactId>minvio</artifactId>
-    <version>1.01</version>
+    <version>1.02</version>
     <!--    <version>1.0-SNAPSHOT</version>-->
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -57,17 +57,17 @@
                     <target>11</target>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.8</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                </configuration>
-            </plugin>
+            <!--            <plugin>-->
+            <!--                <groupId>org.sonatype.plugins</groupId>-->
+            <!--                <artifactId>nexus-staging-maven-plugin</artifactId>-->
+            <!--                <version>1.6.8</version>-->
+            <!--                <extensions>true</extensions>-->
+            <!--                <configuration>-->
+            <!--                    <serverId>ossrh</serverId>-->
+            <!--                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>-->
+            <!--                    <autoReleaseAfterClose>true</autoReleaseAfterClose>-->
+            <!--                </configuration>-->
+            <!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>

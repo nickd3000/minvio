@@ -3,7 +3,7 @@ package com.physmo.minvio.examples;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
 
-import java.awt.*;
+import java.awt.Color;
 
 class MouseFollowExample {
 
