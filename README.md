@@ -1,4 +1,7 @@
 # Minvio
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/cz.jirutka.rsql/rsql-parser/badge.svg)](https://maven-badges.herokuapp.com/maven-central/cz.jirutka.rsql/rsql-parser)
+
+
 Minvio is a Lightweight Java framework for developing graphical applications.
 
 Minvio handles creating the application window and timed draw loop, and exposes a host of drawing and input functionality.
