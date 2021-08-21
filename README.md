@@ -1,6 +1,7 @@
 # Minvio
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.nickd3000/minvio/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.nickd3000/minvio)
 
+https://img.shields.io/github/license/nickd3000/minvio
 
 Minvio is a Lightweight Java framework for developing graphical applications.
 
