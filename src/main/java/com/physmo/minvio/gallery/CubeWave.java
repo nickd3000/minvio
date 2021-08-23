@@ -1,56 +1,45 @@
-package com.physmo.minvio.examples;
+package com.physmo.minvio.gallery;
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
+import com.physmo.minvio.MinvioApp;
 
-import java.awt.*;
+import java.awt.Color;
 
-class CubeWave {
+class CubeWave extends MinvioApp {
 
     public static final int FPS = 60;
-    static final Color backCol = new Color(92, 108, 113);
-    static final Color topCol = new Color(249, 249, 238, 224);
-    static final Color leftCol = new Color(96, 159, 184);
-    static final Color rightCol = new Color(159, 209, 245);
+    static int alpha = 100;
+    static final Color backCol = new Color(92, 108, 113, alpha);
+    static final Color topCol = new Color(249, 249, 238, alpha);
+    static final Color leftCol = new Color(96, 159, 184, alpha);
+    static final Color rightCol = new Color(159, 209, 245, alpha);
     static double time = 0;
 
+    // Define 3 points representing the 3 points of the triangle.
+    double[] pointList = {0.5, 0, 0, 1, 1, 1};
+
+    // Set the initial position for the point.
+    double x = pointList[0];
+    double y = pointList[1];
+
     public static void main(String... args) {
-        BasicDisplay bd = new BasicDisplayAwt(400, 400);
+        MinvioApp app = new CubeWave();
+        app.start(new BasicDisplayAwt(400, 400), "Cube Wave", FPS);
+    }
 
-        bd.setTitle("CubeWave");
+    @Override
+    public void draw(BasicDisplay bd, double delta) {
+        bd.cls(backCol);
+        time += delta * 2;
 
-        // Define 3 points representing the 3 points of the triangle.
-        double[] pointList = {0.5, 0, 0, 1, 1, 1};
-
-        // Set the initial position for the point.
-        double x = pointList[0];
-        double y = pointList[1];
-
-        // Clear the screen to dark gray.
-        bd.cls(Color.darkGray);
-        bd.setDrawColor(Color.BLUE);
-        int loopCount = 0;
-
-        // Loop forever.
-        while (true) {
-
-            bd.cls(backCol);
-            time += 0.05;
-
-            //drawColumn(bd,0,0,30,200);
-            drawColumns(bd, 5, 200 + 45);
-            drawColumns(bd, 5, 200 - 45);
-
-
-            loopCount++;
-            bd.repaint(FPS);
-
-        }
+        drawColumns(bd, 5, 200 + 45);
+        drawColumns(bd, 5, 200 - 45);
     }
 
     public static void drawColumns(BasicDisplay bd, int xx, int yy) {
         double oblique = 0.5;
-        int columnWidth = 20;
+        int columnWidth = 30;
         int columnHeight = 30;
         int gridSize = (bd.getWidth() / columnWidth) - 1;
 
@@ -72,15 +61,11 @@ class CubeWave {
         //    b      |
         // a     c   | drop (half width)*oblique
         //    d
-        //
         // e     g
         //    f
         int drop = (int) ((w / 2) * oblique);
         int hw = w / 2;
-        int hh = h / 2;
 
-        // Bounding rect for testing.
-        //bd.drawRect(x,y,(x+w),(y+h));
         int[] xPoints, yPoints;
 
         // Right.
@@ -100,7 +85,5 @@ class CubeWave {
         xPoints = new int[]{x, x + hw, x + w, x + hw, x};
         yPoints = new int[]{y + drop, y, y + drop, y + drop * 2, y + drop};
         bd.drawFilledPolygon(xPoints, yPoints, 5);
-
-
     }
 }
