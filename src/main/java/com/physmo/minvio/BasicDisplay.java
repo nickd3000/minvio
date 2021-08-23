@@ -1,9 +1,12 @@
 package com.physmo.minvio;
 
+import javax.imageio.ImageIO;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 // Implements common functionality and alternative types methods for drawing operations.
 public abstract class BasicDisplay {
@@ -43,12 +46,14 @@ public abstract class BasicDisplay {
 
     /**
      * Get the width of the applicaton window as an int
+     *
      * @return The width of the display.
      */
     public abstract int getWidth();
 
     /**
      * * Get the height of the applicaton window as an int
+     *
      * @return The height of the display.
      */
     public abstract int getHeight();
@@ -102,6 +107,7 @@ public abstract class BasicDisplay {
 
     /**
      * Set the title of the application window.
+     *
      * @param str Text representing the new window title.
      */
     public abstract void setTitle(String str);
@@ -113,6 +119,8 @@ public abstract class BasicDisplay {
      */
     public abstract void cls(Color c);
 
+    public abstract void cls();
+
     /**
      * Set the color to use for drawing operations.
      *
@@ -121,14 +129,7 @@ public abstract class BasicDisplay {
      */
     public abstract Color setDrawColor(Color newCol);
 
-
-    /**
-     * Get the draw buffer for the display as an Image object.
-     *
-     * @return Image representing the draw buffer.
-     */
-    public abstract Image getDrawBuffer();
-
+    public abstract Color setBackgroundColor(Color newCol);
 
     /**
      * Draw an image to the display.
@@ -174,7 +175,7 @@ public abstract class BasicDisplay {
 
     /**
      * Get the color in RGB packed integer format at the defined position.
-     *
+     * <p>
      * Format in hex: 0xAARRGGBB
      *
      * @param x x-coordinate
@@ -193,8 +194,6 @@ public abstract class BasicDisplay {
     public void drawLine(double x1, double y1, double x2, double y2) {
         drawLine((int) x1, (int) y1, (int) x2, (int) y2);
     }
-
-    /* LINE ---------------------------------------------------------------*/
 
     /**
      * Drawing function - draw a line
@@ -215,6 +214,8 @@ public abstract class BasicDisplay {
     public void drawLine(Point pos1, Point pos2) {
         drawLine((int) pos1.x, (int) pos1.y, (int) pos2.x, (int) pos2.y);
     }
+
+    /* LINE ---------------------------------------------------------------*/
 
     /**
      * Drawing function - draw a line
@@ -238,8 +239,6 @@ public abstract class BasicDisplay {
      */
     public abstract void drawLine(double x1, double y1, double x2, double y2, double thickness);
 
-    /* RECT ---------------------------------------------------------------*/
-
     /**
      * Drawing function - draw a filled rectangle
      *
@@ -260,7 +259,7 @@ public abstract class BasicDisplay {
      */
     public abstract void drawRect(int x, int y, int width, int height);
 
-    /* POLYGON ---------------------------------------------------------------*/
+    /* RECT ---------------------------------------------------------------*/
 
     /**
      * Drawing function - draw a filled polygon
@@ -281,7 +280,7 @@ public abstract class BasicDisplay {
         drawCircle(pos.x, pos.y, r);
     }
 
-    /* CIRCLE ---------------------------------------------------------------*/
+    /* POLYGON ---------------------------------------------------------------*/
 
     /**
      * Drawing function - draw a filled circle
@@ -302,6 +301,8 @@ public abstract class BasicDisplay {
         drawFilledCircle(pos.x, pos.y, r);
     }
 
+    /* CIRCLE ---------------------------------------------------------------*/
+
     /**
      * Drawing function - draw a filled circle
      *
@@ -310,11 +311,6 @@ public abstract class BasicDisplay {
      * @param r radius
      */
     public abstract void drawFilledCircle(double x, double y, double r);
-
-
-
-
-    /* TEXT ---------------------------------------------------------------*/
 
     /**
      * Draw the supplied string using the active font.
@@ -334,6 +330,18 @@ public abstract class BasicDisplay {
      */
     public abstract void setFont(Font font);
 
+
+
+
+    /* TEXT ---------------------------------------------------------------*/
+
+    /**
+     * Obtain the current font used by BasicDisplay
+     *
+     * @return the current font.
+     */
+    public abstract Font getFont();
+
     /**
      * Set current font to the built-in font at the specified size.
      *
@@ -341,13 +349,20 @@ public abstract class BasicDisplay {
      */
     public abstract void setFont(int size);
 
-    // Returns 3 values representing the width, ascent and descent values of the font
-    // Use the supplied index variables to access them:
-    // TEXTSIZE_WIDTH
-    // TEXTSIZE_ASCENT
-    // TEXTSIZE_DESCENT
+    /**
+     * Retrieve font metrics of the supplied string in an int array
+     * This is useful for accurate text layout.
+     * <p>
+     * 3 values representing the width, ascent and descent values of the font
+     * The provided index variables can be used to access them:
+     * TEXTSIZE_WIDTH
+     * TEXTSIZE_ASCENT
+     * TEXTSIZE_DESCENT
+     *
+     * @param str string to retrieve metrics from
+     * @return an integer array containing various measurements.
+     */
     public abstract int[] getTextSize(String str);
-
 
     // Input and output.
     // Update previous keys with current keys so we can tell what changed next time.
@@ -370,4 +385,33 @@ public abstract class BasicDisplay {
     public abstract boolean getMouseButtonMiddle();
 
     public abstract boolean getMouseButtonRight();
+
+    public abstract Color getDrawColor();
+
+    public abstract Color getBackgroundColor();
+
+    public void saveScreenshot() {
+        String filePath = System.getProperty("user.home");
+        filePath += File.separator + getTitle().replaceAll("\\s+", "") + ".png";
+        saveScreenshot(filePath);
+    }
+
+    public abstract String getTitle();
+
+    public void saveScreenshot(String fullPath) {
+        try {
+            BufferedImage bi = (BufferedImage) getDrawBuffer();
+            File outputFile = new File(fullPath);
+            ImageIO.write(bi, "png", outputFile);
+        } catch (IOException e) {
+
+        }
+    }
+
+    /**
+     * Get the draw buffer for the display as an Image object.
+     *
+     * @return Image representing the draw buffer.
+     */
+    public abstract Image getDrawBuffer();
 }

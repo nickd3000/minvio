@@ -39,6 +39,7 @@ public class BasicDisplayAwt extends BasicDisplay {
     private final int height;
     final Map<Integer, Font> builtInFonts = new HashMap<>();
     private Color drawColor;
+    private Color backgroundColor;
 
     /**
      * Default constructor - creates display with default size
@@ -94,6 +95,11 @@ public class BasicDisplayAwt extends BasicDisplay {
         mainFrame.setTitle(str);
     }
 
+    @Override
+    public String getTitle() {
+        return mainFrame.getTitle();
+    }
+
     /**
      * Clear the display to supplied color.
      *
@@ -108,12 +114,41 @@ public class BasicDisplayAwt extends BasicDisplay {
         this.setDrawColor(colOld);
     }
 
+    /**
+     * Clear the display to background color.
+     */
+    @Override
+    public void cls() {
+        Color colOld = this.setDrawColor(backgroundColor);
+
+        panel.g.fillRect(0, 0, width, height);
+
+        this.setDrawColor(colOld);
+    }
+
     @Override
     public Color setDrawColor(Color newCol) {
         Color oldCol = drawColor;
         drawColor = newCol;
         panel.g.setColor(newCol);
         return oldCol;
+    }
+
+    @Override
+    public Color setBackgroundColor(Color newCol) {
+        Color oldCol = backgroundColor;
+        backgroundColor = newCol;
+        return oldCol;
+    }
+
+    @Override
+    public Color getDrawColor() {
+        return panel.g.getColor();
+    }
+
+    @Override
+    public Color getBackgroundColor() {
+        return backgroundColor;
     }
 
     @Override
@@ -247,6 +282,11 @@ public class BasicDisplayAwt extends BasicDisplay {
     }
 
     @Override
+    public Font getFont() {
+        return panel.g.getFont();
+    }
+
+    @Override
     public int[] getTextSize(String str) {
         FontMetrics metrics = panel.g.getFontMetrics(panel.g.getFont());
 
@@ -282,6 +322,7 @@ public class BasicDisplayAwt extends BasicDisplay {
         int MOUSE_BUTTON_ID_RIGHT = 3;
         return panel.mouseButtonStates[MOUSE_BUTTON_ID_RIGHT];
     }
+
 
     @Override
     public int getWidth() {

@@ -1,17 +1,18 @@
 package com.physmo.minvio;
 
+import java.awt.Color;
+import java.awt.Font;
+
 public abstract class MinvioApp {
 
     BasicDisplay bd = null;
     boolean running = true;
 
-    final int maxTicks = 100;
-    public double tickAverage = 0;
-    public double actualFps = 0;
-    long tickList[] = new long[maxTicks];
-    int tickIndex = 0;
-    long tickSum = 0;
+    RollingAverage tickRollingAverage = new RollingAverage(30);
     int targetFps = 60;
+    boolean displayFps = true;
+    Font fpsFont = new Font("Verdana", Font.PLAIN, 12);
+
 
     public BasicDisplay getBasicDisplay() {
         return bd;
@@ -25,14 +26,6 @@ public abstract class MinvioApp {
         running = false;
     }
 
-    /**
-     * Set the target frames per second.
-     *
-     * @param targetFps integer frames per second target.
-     */
-    public void setFps(int targetFps) {
-        this.targetFps = targetFps;
-    }
 
     /**
      * Start the application - creates the app window and starts the main draw loop running.
@@ -42,7 +35,10 @@ public abstract class MinvioApp {
      * @param fps   Frames-per-second of the draw loop.
      */
     public void start(BasicDisplay bd, String title, int fps) {
+        bd.setDrawColor(new Color(63, 63, 63));
+        bd.setBackgroundColor(new Color(218, 218, 218));
         bd.setTitle(title);
+        bd.cls();
         this.targetFps = fps;
         start(bd);
     }
@@ -81,31 +77,19 @@ public abstract class MinvioApp {
 
             long lDelta = System.nanoTime() - lastDrawTime;
             delta = (double) lDelta;
-            updateTickCounter(lDelta);
+
+            tickRollingAverage.add(lDelta / (double) 1000_000);
             lastDrawTime = System.nanoTime();
+            bd.repaintTimerStart = System.nanoTime();
             draw(bd, (delta) / 1_000_000_000.0);
 
-
+            if (displayFps) drawFps();
             bd.repaint();
 
-            bd.repaintTimerStart = System.nanoTime();
+            //bd.repaintTimerStart = System.nanoTime();
         }
 
 
-    }
-
-    /**
-     * Keep a rolling average of tick times in order to calculate actual FPS
-     *
-     * @param delta
-     */
-    private void updateTickCounter(long delta) {
-        tickSum -= tickList[tickIndex];
-        tickList[tickIndex] = delta / 1000_000;
-        tickSum += tickList[tickIndex];
-        tickIndex = (tickIndex + 1) % maxTicks;
-        tickAverage = (double) tickSum / (double) maxTicks;
-        actualFps = 1000.0 / (double) tickAverage;
     }
 
     /**
@@ -136,4 +120,45 @@ public abstract class MinvioApp {
      * @param delta time in seconds since the last DRAW call, e.g. 1.0 = 1 second.
      */
     public abstract void draw(BasicDisplay bd, double delta);
+
+    private void drawFps() {
+        Font currentFont = bd.getFont();
+        Color currentColor = bd.getDrawColor();
+        bd.setFont(fpsFont);
+        String fpsText = String.format("FPS: %.2f", 1000.0 / tickRollingAverage.getAverage());
+        bd.setDrawColor(Color.BLACK);
+        bd.drawText(fpsText, 11, 16);
+        bd.setDrawColor(Color.WHITE);
+        bd.drawText(fpsText, 10, 15);
+        bd.setFont(currentFont);
+        bd.setDrawColor(currentColor);
+    }
+
+    /**
+     * Set the target frames per second.
+     *
+     * @param targetFps integer frames per second target.
+     */
+    public void setFpsTarget(int targetFps) {
+        this.targetFps = targetFps;
+    }
+
+    /**
+     * Return the average FPS (Frames per second)
+     *
+     * @return
+     */
+    public double getFps() {
+        return 1000.0 / tickRollingAverage.getAverage();
+    }
+
+    /**
+     * Enable or disable built-in fps display.
+     *
+     * @param set
+     */
+    public void setDisplayFps(boolean set) {
+        displayFps = set;
+    }
+
 }
