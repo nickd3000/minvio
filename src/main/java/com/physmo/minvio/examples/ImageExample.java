@@ -3,11 +3,8 @@ package com.physmo.minvio.examples;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.URL;
 
 // Load an image from resources folder and draw it unscaled and then scaled.
 class ImageExample {
@@ -16,7 +13,7 @@ class ImageExample {
     public static void main(String... args) {
         BasicDisplay bd = new BasicDisplayAwt(400, 400);
 
-        BufferedImage image = loadImage("/odin.jpg");
+        BufferedImage image = BasicDisplay.loadImage("/odin.jpg");
 
         bd.setTitle("Image Example");
         bd.setFont(10);
@@ -31,18 +28,6 @@ class ImageExample {
 
             bd.repaint(60);
         }
-    }
-
-    // TODO: Move this to utils?
-    public static BufferedImage loadImage(String name) {
-        URL file = ImageExample.class.getResource(name);
-        BufferedImage image = null;
-        try {
-            image = ImageIO.read(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return image;
     }
 
     // Draw many small scaled images in a rotating ring formation.

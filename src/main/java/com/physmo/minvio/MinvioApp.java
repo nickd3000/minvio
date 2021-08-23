@@ -35,8 +35,6 @@ public abstract class MinvioApp {
      * @param fps   Frames-per-second of the draw loop.
      */
     public void start(BasicDisplay bd, String title, int fps) {
-        bd.setDrawColor(new Color(63, 63, 63));
-        bd.setBackgroundColor(new Color(218, 218, 218));
         bd.setTitle(title);
         bd.cls();
         this.targetFps = fps;

@@ -67,9 +67,11 @@ public class BasicDisplayAwt extends BasicDisplay {
         mainFrame.setVisible(true);
         mainFrame.setResizable(false);
 
-        drawColor = Color.white;
+        setDrawColor(new Color(63, 63, 63));
+        setBackgroundColor(new Color(218, 218, 218));
 
-        cls(Color.BLACK);
+
+        cls();
     }
 
     /**

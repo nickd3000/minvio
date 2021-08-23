@@ -3,10 +3,12 @@ package com.physmo.minvio;
 import javax.imageio.ImageIO;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 // Implements common functionality and alternative types methods for drawing operations.
 public abstract class BasicDisplay {
@@ -406,6 +408,24 @@ public abstract class BasicDisplay {
         } catch (IOException e) {
 
         }
+    }
+
+    public static String[] getAvailableFontNames() {
+        String fonts[] = GraphicsEnvironment
+                .getLocalGraphicsEnvironment()
+                .getAvailableFontFamilyNames();
+        return fonts;
+    }
+
+    public static BufferedImage loadImage(String name) {
+        URL file = BasicDisplay.class.getResource(name);
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return image;
     }
 
     /**
