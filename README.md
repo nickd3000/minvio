@@ -20,7 +20,7 @@ Add maven dependency:
 ![Image Minvio example CubeWave](docs/cubeWave.png)
 ![Image Minvio example MouseExample](docs/mouseExample.png)
 
-http://cc.coolbubble.com:8099
+http://www.coolbubble.com/cc/ - coolcompare
 
 **Minimal example**
 
