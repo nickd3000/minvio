@@ -290,7 +290,7 @@ public class WikiExamples {
             Point p2 = new Point(100, 100);
             bd.drawLine(p1, p2, 3);
 
-            bd.drawLine(130, 60, 20, 100, 3);
+            bd.drawLine(130, 60, 20, 100, 5);
 
         });
     }
@@ -321,6 +321,24 @@ public class WikiExamples {
             int[] yPoints = new int[]{20, 180, 20};
 
             bd.drawFilledPolygon(xPoints, yPoints, 3);
+
+        });
+    }
+
+    @Test
+    public void drawCircle() {
+        runExample(200, 200, "drawCircle", bd -> {
+
+            bd.drawCircle(100, 100, 50);
+
+        });
+    }
+
+    @Test
+    public void drawFilledCircle() {
+        runExample(200, 200, "drawFilledCircle", bd -> {
+
+            bd.drawFilledCircle(100, 100, 50);
 
         });
     }

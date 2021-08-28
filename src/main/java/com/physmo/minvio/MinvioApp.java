@@ -10,7 +10,7 @@ public abstract class MinvioApp {
 
     RollingAverage tickRollingAverage = new RollingAverage(30);
     int targetFps = 60;
-    boolean displayFps = true;
+    boolean displayFps = false;
     Font fpsFont = new Font("Verdana", Font.PLAIN, 12);
 
 

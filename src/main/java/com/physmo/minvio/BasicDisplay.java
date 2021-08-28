@@ -23,6 +23,45 @@ public abstract class BasicDisplay {
 
     /* COLOR ----------------------------------------------------------------*/
 
+    public static String[] getAvailableFontNames() {
+        String fonts[] = GraphicsEnvironment
+                .getLocalGraphicsEnvironment()
+                .getAvailableFontFamilyNames();
+        return fonts;
+    }
+
+    public static BufferedImage loadImage(String name) {
+        URL file = BasicDisplay.class.getResource(name);
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return image;
+    }
+
+    public static Color lerp(Color c1, Color c2, double pos) {
+        int r = lerp(c1.getRed(), c2.getRed(), pos);
+        int g = lerp(c1.getGreen(), c2.getGreen(), pos);
+        int b = lerp(c1.getBlue(), c2.getBlue(), pos);
+        return new Color(r, g, b);
+    }
+
+    public static int lerp(int v1, int v2, double pos) {
+        int span = v2 - v1;
+        return (int) (v1 + (int) (double) span * pos);
+    }
+
+    public static Point lerp(Point p1, Point p2, double pos) {
+        return new Point(lerp(p1.x, p2.x, pos), lerp(p1.y, p2.y, pos));
+    }
+
+    public static double lerp(double v1, double v2, double pos) {
+        double span = v2 - v1;
+        return (v1 + span * pos);
+    }
+
     /**
      * Returns a new distinct colour for each supplied index
      * Colours will be the same for a given index each time it is called.
@@ -175,6 +214,8 @@ public abstract class BasicDisplay {
         return new Color(rgb);
     }
 
+    /* LINE ---------------------------------------------------------------*/
+
     /**
      * Get the color in RGB packed integer format at the defined position.
      * <p>
@@ -197,6 +238,8 @@ public abstract class BasicDisplay {
         drawLine((int) x1, (int) y1, (int) x2, (int) y2);
     }
 
+    /* RECT ---------------------------------------------------------------*/
+
     /**
      * Drawing function - draw a line
      *
@@ -217,7 +260,7 @@ public abstract class BasicDisplay {
         drawLine((int) pos1.x, (int) pos1.y, (int) pos2.x, (int) pos2.y);
     }
 
-    /* LINE ---------------------------------------------------------------*/
+    /* POLYGON ---------------------------------------------------------------*/
 
     /**
      * Drawing function - draw a line
@@ -241,6 +284,8 @@ public abstract class BasicDisplay {
      */
     public abstract void drawLine(double x1, double y1, double x2, double y2, double thickness);
 
+    /* CIRCLE ---------------------------------------------------------------*/
+
     /**
      * Drawing function - draw a filled rectangle
      *
@@ -261,8 +306,6 @@ public abstract class BasicDisplay {
      */
     public abstract void drawRect(int x, int y, int width, int height);
 
-    /* RECT ---------------------------------------------------------------*/
-
     /**
      * Drawing function - draw a filled polygon
      *
@@ -271,6 +314,11 @@ public abstract class BasicDisplay {
      * @param numPoints number of points
      */
     public abstract void drawFilledPolygon(int[] xPoints, int[] yPoints, int numPoints);
+
+
+
+
+    /* TEXT ---------------------------------------------------------------*/
 
     /**
      * Drawing function - draw an unfilled circle
@@ -281,8 +329,6 @@ public abstract class BasicDisplay {
     public void drawCircle(Point pos, double r) {
         drawCircle(pos.x, pos.y, r);
     }
-
-    /* POLYGON ---------------------------------------------------------------*/
 
     /**
      * Drawing function - draw a filled circle
@@ -302,8 +348,6 @@ public abstract class BasicDisplay {
     public void drawFilledCircle(Point pos, double r) {
         drawFilledCircle(pos.x, pos.y, r);
     }
-
-    /* CIRCLE ---------------------------------------------------------------*/
 
     /**
      * Drawing function - draw a filled circle
@@ -331,11 +375,6 @@ public abstract class BasicDisplay {
      * @param font the user supplied font
      */
     public abstract void setFont(Font font);
-
-
-
-
-    /* TEXT ---------------------------------------------------------------*/
 
     /**
      * Obtain the current font used by BasicDisplay
@@ -408,24 +447,6 @@ public abstract class BasicDisplay {
         } catch (IOException e) {
 
         }
-    }
-
-    public static String[] getAvailableFontNames() {
-        String fonts[] = GraphicsEnvironment
-                .getLocalGraphicsEnvironment()
-                .getAvailableFontFamilyNames();
-        return fonts;
-    }
-
-    public static BufferedImage loadImage(String name) {
-        URL file = BasicDisplay.class.getResource(name);
-        BufferedImage image = null;
-        try {
-            image = ImageIO.read(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return image;
     }
 
     /**
