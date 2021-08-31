@@ -3,6 +3,7 @@ package com.physmo.minvio.examples;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
 import com.physmo.minvio.MinvioApp;
+import com.physmo.minvio.Point;
 
 import java.awt.Color;
 
@@ -20,6 +21,8 @@ class LerpExample extends MinvioApp {
 
         Color c1 = new Color(22, 150, 211);
         Color c2 = new Color(255, 214, 89);
+        Point p1 = new Point(10, 50);
+        Point p2 = new Point(190, 50);
 
         int i = 0;
         int width = bd.getWidth() / 5;
@@ -38,6 +41,9 @@ class LerpExample extends MinvioApp {
 
         bd.setDrawColor(c2);
         bd.drawFilledRect((i++ * width), 75, width, 30);
+
+        bd.setDrawColor(bd.lerp(c1, c2, bd.getMouseX() / 200.0));
+        bd.drawFilledCircle(bd.lerp(p1, p2, bd.getMouseX() / 200.0), 10);
 
     }
 }
