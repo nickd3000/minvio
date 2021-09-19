@@ -2,6 +2,7 @@ package com.physmo.minvio;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.List;
 
 public class BasicUtils {
 
@@ -48,5 +49,22 @@ public class BasicUtils {
         int dx = x2 - x1;
         int dy = y2 - y1;
         return (int) Math.sqrt(((dx * dx) + (dy * dy)));
+    }
+
+    public static int findClosestPointInList(List<Point> list, Point targetPoint, double threshHold) {
+
+        double minDist = 10000;
+        int minId = -1;
+
+        for (int i = 0; i < list.size(); i++) {
+            Point p = list.get(i);
+            double dist = Point.distance(p, targetPoint);
+            if (dist < threshHold && dist < minDist) {
+                minDist = dist;
+                minId = i;
+            }
+        }
+
+        return minId;
     }
 }
