@@ -1,4 +1,4 @@
-package com.physmo.minvio.gallery;
+package com.physmo.minvioexamples.gallery;
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;

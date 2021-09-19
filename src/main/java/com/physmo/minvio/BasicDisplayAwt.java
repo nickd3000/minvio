@@ -32,12 +32,11 @@ import java.util.Map;
 public class BasicDisplayAwt extends BasicDisplay {
 
     private static final int MAX_BUTTONS = 4;
-
+    final Map<Integer, Font> builtInFonts = new HashMap<>();
     private final JFrame mainFrame;
     private final BPanel panel;
     private final int width;
     private final int height;
-    final Map<Integer, Font> builtInFonts = new HashMap<>();
     private Color drawColor;
     private Color backgroundColor;
 
@@ -75,6 +74,33 @@ public class BasicDisplayAwt extends BasicDisplay {
     }
 
     /**
+     * Clear the display to background color.
+     */
+    @Override
+    public void cls() {
+        Color colOld = this.setDrawColor(backgroundColor);
+
+        panel.g.fillRect(0, 0, width, height);
+
+        this.setDrawColor(colOld);
+    }
+
+    @Override
+    public Color setDrawColor(Color newCol) {
+        Color oldCol = drawColor;
+        drawColor = newCol;
+        panel.g.setColor(newCol);
+        return oldCol;
+    }
+
+    @Override
+    public Color setBackgroundColor(Color newCol) {
+        Color oldCol = backgroundColor;
+        backgroundColor = newCol;
+        return oldCol;
+    }
+
+    /**
      * Close display
      */
     @Override
@@ -86,7 +112,6 @@ public class BasicDisplayAwt extends BasicDisplay {
     public void repaint() {
         panel.paintImmediately(0, 0, width, height);
     }
-
 
     /**
      * Set window title.
@@ -114,33 +139,6 @@ public class BasicDisplayAwt extends BasicDisplay {
         panel.g.fillRect(0, 0, width, height);
 
         this.setDrawColor(colOld);
-    }
-
-    /**
-     * Clear the display to background color.
-     */
-    @Override
-    public void cls() {
-        Color colOld = this.setDrawColor(backgroundColor);
-
-        panel.g.fillRect(0, 0, width, height);
-
-        this.setDrawColor(colOld);
-    }
-
-    @Override
-    public Color setDrawColor(Color newCol) {
-        Color oldCol = drawColor;
-        drawColor = newCol;
-        panel.g.setColor(newCol);
-        return oldCol;
-    }
-
-    @Override
-    public Color setBackgroundColor(Color newCol) {
-        Color oldCol = backgroundColor;
-        backgroundColor = newCol;
-        return oldCol;
     }
 
     @Override
@@ -223,9 +221,9 @@ public class BasicDisplayAwt extends BasicDisplay {
     /**
      * Draw rectangle outline
      *
-     * @param x Start X
-     * @param y Start Y
-     * @param width Width
+     * @param x      Start X
+     * @param y      Start Y
+     * @param width  Width
      * @param height Height
      */
     @Override

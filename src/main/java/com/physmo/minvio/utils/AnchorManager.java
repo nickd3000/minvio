@@ -2,6 +2,7 @@ package com.physmo.minvio.utils;
 
 
 import com.physmo.minvio.BasicDisplay;
+import com.physmo.minvio.BasicUtils;
 import com.physmo.minvio.Point;
 
 import java.awt.Color;
@@ -13,8 +14,8 @@ import java.util.List;
  */
 public class AnchorManager {
 
-    List<Point> anchors;
-    double anchorRadius;
+    final List<Point> anchors;
+    final double anchorRadius;
     boolean prevMouseButtonState = false;
     boolean grabActive = false;
     int grabbedId = 0;
@@ -47,6 +48,10 @@ public class AnchorManager {
         });
     }
 
+    public void setAnchorDrawDelegate(AnchorDrawDelegate anchorDrawDelegate) {
+        this.anchorDrawDelegate = anchorDrawDelegate;
+    }
+
     public boolean getConstrainToScreen() {
         return constrainToScreen;
     }
@@ -59,10 +64,6 @@ public class AnchorManager {
         anchors.add(new Point(x, y));
     }
 
-    public void setAnchorDrawDelegate(AnchorDrawDelegate anchorDrawDelegate) {
-        this.anchorDrawDelegate = anchorDrawDelegate;
-    }
-
     public List<Point> getAnchors() {
         return anchors;
     }
@@ -70,13 +71,13 @@ public class AnchorManager {
     public void update(BasicDisplay bd) {
         boolean mouseButtonState = bd.getMouseButtonLeft();
 
-        if (mouseButtonState == true && prevMouseButtonState == false) {
+        if (mouseButtonState && !prevMouseButtonState) {
             int id = findCloseAnchor(bd.getMouseX(), bd.getMouseY(), anchorRadius);
             if (id != -1) {
                 grabbedId = id;
                 grabActive = true;
             }
-        } else if (mouseButtonState == false && prevMouseButtonState == true) {
+        } else if (!mouseButtonState && prevMouseButtonState) {
             grabActive = false;
         }
 
@@ -94,19 +95,12 @@ public class AnchorManager {
 
     // TODO: Add utility function to return closest point from list of points.
     public int findCloseAnchor(double x, double y, double threshHold) {
-        double minDist = 10000;
-        int minId = -1;
+        int anchorId;
         Point targetPoint = new Point(x, y);
-        for (int i = 0; i < anchors.size(); i++) {
-            Point p = anchors.get(i);
-            double dist = Point.distance(p, targetPoint);
-            if (dist < threshHold && dist < minDist) {
-                minDist = dist;
-                minId = i;
-            }
-        }
 
-        return minId;
+        anchorId = BasicUtils.findClosestPointInList(anchors, targetPoint, threshHold);
+
+        return anchorId;
     }
 
     public Point constrainMouseToScreen(BasicDisplay bd) {

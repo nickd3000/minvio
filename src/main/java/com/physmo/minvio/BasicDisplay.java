@@ -13,9 +13,9 @@ import java.net.URL;
 // Implements common functionality and alternative types methods for drawing operations.
 public abstract class BasicDisplay {
 
-    public static final int TEXTSIZE_WIDTH = 0;
-    public static final int TEXTSIZE_ASCENT = 1;
-    public static final int TEXTSIZE_DESCENT = 2;
+    public static final int TEXT_SIZE_WIDTH = 0;
+    public static final int TEXT_SIZE_ASCENT = 1;
+    public static final int TEXT_SIZE_DESCENT = 2;
 
 
     /* TIMING ---------------------------------------------------------------*/
@@ -24,20 +24,17 @@ public abstract class BasicDisplay {
     /* COLOR ----------------------------------------------------------------*/
 
     public static String[] getAvailableFontNames() {
-        String fonts[] = GraphicsEnvironment
+        return GraphicsEnvironment
                 .getLocalGraphicsEnvironment()
                 .getAvailableFontFamilyNames();
-        return fonts;
     }
 
-    public static BufferedImage loadImage(String name) {
+    public static BufferedImage loadImage(String name) throws IOException {
         URL file = BasicDisplay.class.getResource(name);
-        BufferedImage image = null;
-        try {
-            image = ImageIO.read(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        BufferedImage image;
+
+        image = ImageIO.read(file);
+
         return image;
     }
 
@@ -68,7 +65,7 @@ public abstract class BasicDisplay {
      *
      * @param index      integer representing the distinct colour
      * @param saturation 0..1 double value
-     * @return
+     * @return A distinct color.
      */
     // TODO: Cache some of these
     public Color getDistinctColor(int index, double saturation) {
@@ -77,7 +74,7 @@ public abstract class BasicDisplay {
     }
 
     /**
-     * Get the width and height of the applicaton window as a Point
+     * Get the width and height of the application window as a Point
      *
      * @return The width and height of display as a Point object.
      */
@@ -86,7 +83,7 @@ public abstract class BasicDisplay {
     }
 
     /**
-     * Get the width of the applicaton window as an int
+     * Get the width of the application window as an int
      *
      * @return The width of the display.
      */
@@ -396,9 +393,9 @@ public abstract class BasicDisplay {
      * <p>
      * 3 values representing the width, ascent and descent values of the font
      * The provided index variables can be used to access them:
-     * TEXTSIZE_WIDTH
-     * TEXTSIZE_ASCENT
-     * TEXTSIZE_DESCENT
+     * TEXT_SIZE_WIDTH
+     * TEXT_SIZE_ASCENT
+     * TEXT_SIZE_DESCENT
      *
      * @param str string to retrieve metrics from
      * @return an integer array containing various measurements.
@@ -445,7 +442,7 @@ public abstract class BasicDisplay {
             File outputFile = new File(fullPath);
             ImageIO.write(bi, "png", outputFile);
         } catch (IOException e) {
-
+            System.out.println("Error writing to file: ");
         }
     }
 

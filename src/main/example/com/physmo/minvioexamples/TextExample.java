@@ -1,4 +1,4 @@
-package com.physmo.minvio.examples;
+package com.physmo.minvioexamples;
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
@@ -40,9 +40,9 @@ class TextExample {
             bd.drawText("getTextSize", 20, 160);
             int[] textSize = bd.getTextSize("getTextSize");
             bd.setDrawColor(Color.yellow);
-            int textSizeWidth = textSize[BasicDisplay.TEXTSIZE_WIDTH];
-            int textSizeAscent = textSize[BasicDisplay.TEXTSIZE_ASCENT];
-            int textSizeDescent = textSize[BasicDisplay.TEXTSIZE_DESCENT];
+            int textSizeWidth = textSize[BasicDisplay.TEXT_SIZE_WIDTH];
+            int textSizeAscent = textSize[BasicDisplay.TEXT_SIZE_ASCENT];
+            int textSizeDescent = textSize[BasicDisplay.TEXT_SIZE_DESCENT];
 
             bd.drawRect(
                     20, 160 + textSizeDescent,

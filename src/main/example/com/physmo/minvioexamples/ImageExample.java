@@ -1,19 +1,27 @@
-package com.physmo.minvio.examples;
+package com.physmo.minvioexamples;
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 // Load an image from resources folder and draw it unscaled and then scaled.
 class ImageExample {
     static double t = 0;
+    static String imagePath = "/odin.jpg";
 
     public static void main(String... args) {
+
         BasicDisplay bd = new BasicDisplayAwt(400, 400);
 
-        BufferedImage image = BasicDisplay.loadImage("/odin.jpg");
+        BufferedImage image = null;
+        try {
+            image = BasicDisplay.loadImage(imagePath);
+        } catch (IOException e) {
+            System.out.println("Could not locat path: " + imagePath);
+        }
 
         bd.setTitle("Image Example");
         bd.setFont(10);

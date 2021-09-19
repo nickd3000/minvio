@@ -8,10 +8,10 @@ public abstract class MinvioApp {
     BasicDisplay bd = null;
     boolean running = true;
 
-    RollingAverage tickRollingAverage = new RollingAverage(30);
+    final RollingAverage tickRollingAverage = new RollingAverage(30);
     int targetFps = 60;
     boolean displayFps = false;
-    Font fpsFont = new Font("Verdana", Font.PLAIN, 12);
+    final Font fpsFont = new Font("Verdana", Font.PLAIN, 12);
 
 
     public BasicDisplay getBasicDisplay() {
@@ -56,7 +56,7 @@ public abstract class MinvioApp {
         long lastDrawTime = System.nanoTime();
 
         int msPerFrame = 1000 / targetFps; // e.g.g 33.3 for 30fps
-        double delta = 0;
+        double delta;
 
         while (running) {
             while (bd.getElapsedTime() < msPerFrame) {
@@ -78,7 +78,7 @@ public abstract class MinvioApp {
 
             tickRollingAverage.add(lDelta / (double) 1000_000);
             lastDrawTime = System.nanoTime();
-            bd.repaintTimerStart = System.nanoTime();
+            BasicDisplay.repaintTimerStart = System.nanoTime();
             draw(bd, (delta) / 1_000_000_000.0);
 
             if (displayFps) drawFps();
@@ -144,7 +144,7 @@ public abstract class MinvioApp {
     /**
      * Return the average FPS (Frames per second)
      *
-     * @return
+     * @return double representing Frames Per Second.
      */
     public double getFps() {
         return 1000.0 / tickRollingAverage.getAverage();
@@ -153,7 +153,7 @@ public abstract class MinvioApp {
     /**
      * Enable or disable built-in fps display.
      *
-     * @param set
+     * @param set Boolean value representing desired draw state.
      */
     public void setDisplayFps(boolean set) {
         displayFps = set;

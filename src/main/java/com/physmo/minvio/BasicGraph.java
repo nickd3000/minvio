@@ -1,6 +1,6 @@
 package com.physmo.minvio;
 
-import java.awt.*;
+import java.awt.Color;
 import java.text.DecimalFormat;
 
 public class BasicGraph {
@@ -58,7 +58,7 @@ public class BasicGraph {
             px = count * ((double) width / (double) numPoints);
             px += x;
             py = (rawValue / zoomSpan) * height;
-            py += y + (height / 2);
+            py += y + (height / 2.0);
             if (py <= y || py >= y + height) continue;
             d.setDrawColor(c);
             d.drawFilledRect((int) px, (int) py, 2, 2);

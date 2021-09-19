@@ -6,7 +6,7 @@ import java.util.List;
 
 public class BasicUtils {
 
-    private static Font font10 = new Font("Verdana", Font.PLAIN, 10);
+    private static final Font font10 = new Font("Verdana", Font.PLAIN, 10);
 
     public static Point createRandomPointInCircle(double x, double y, double radius) {
         double angle = Math.random() * Math.PI * 2;

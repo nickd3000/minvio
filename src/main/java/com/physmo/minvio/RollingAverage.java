@@ -1,13 +1,19 @@
 package com.physmo.minvio;
 
+/**
+ * An object that manages a rolling average of double values.
+ */
 public class RollingAverage {
 
-    int size = 0;
+    final int size;
     int index = 0;
-    double[] values;
+    final double[] values;
     double sum = 0;
     double average = 0;
 
+    /**
+     * @param size The number of items to average.
+     */
     public RollingAverage(int size) {
         this.size = size;
         values = new double[size];
@@ -25,11 +31,8 @@ public class RollingAverage {
         return sum;
     }
 
-    ;
-
     public double getAverage() {
         return average;
     }
 
-    ;
 }

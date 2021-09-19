@@ -6,7 +6,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
+/*
+    These tests represent the wiki reference entries and generate screenshots for use in the wiki.
+ */
 public class WikiExamples {
 
     String imageSubPath = "minvioImages/";
@@ -360,7 +364,11 @@ public class WikiExamples {
 
         BasicDisplay bd = new BasicDisplayAwt(width, height);
 
-        code.run(bd);
+        try {
+            code.run(bd);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         bd.repaint();
         bd.saveScreenshot(filePath);
