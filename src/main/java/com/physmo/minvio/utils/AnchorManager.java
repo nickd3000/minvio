@@ -1,10 +1,10 @@
 package com.physmo.minvio.utils;
 
 
-import com.physmo.minvio.AnchorDrawDelegate;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.Point;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +25,26 @@ public class AnchorManager {
     public AnchorManager(double anchorRadius) {
         this.anchorRadius = anchorRadius;
         anchors = new ArrayList<>();
+
+        setAnchorDrawDelegate((bd, point, radius, mouseOver, grabbed) -> {
+
+            if (grabbed) {
+                bd.setDrawColor(new Color(255, 228, 94));
+                bd.drawFilledCircle(point, radius);
+                bd.setDrawColor(new Color(1, 1, 1));
+                bd.drawCircle(point, radius);
+            } else if (mouseOver) {
+                bd.setDrawColor(new Color(1, 1, 1));
+                bd.drawFilledCircle(point, radius);
+                bd.setDrawColor(new Color(245, 5, 5));
+                bd.drawCircle(point, radius);
+                bd.drawCircle(point, radius + 0.5);
+            } else {
+                bd.setDrawColor(new Color(1, 1, 1));
+                bd.drawFilledCircle(point, radius);
+            }
+
+        });
     }
 
     public boolean getConstrainToScreen() {
