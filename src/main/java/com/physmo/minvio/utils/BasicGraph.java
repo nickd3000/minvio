@@ -1,4 +1,6 @@
-package com.physmo.minvio;
+package com.physmo.minvio.utils;
+
+import com.physmo.minvio.BasicDisplay;
 
 import java.awt.Color;
 import java.text.DecimalFormat;

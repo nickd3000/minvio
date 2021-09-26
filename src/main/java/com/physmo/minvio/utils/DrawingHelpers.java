@@ -1,4 +1,6 @@
-package com.physmo.minvio;
+package com.physmo.minvio.utils;
+
+import com.physmo.minvio.BasicDisplay;
 
 public class DrawingHelpers {
 

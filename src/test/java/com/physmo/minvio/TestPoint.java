@@ -25,7 +25,7 @@ public class TestPoint {
 
     @Test
     public void testAdd() {
-        Point p1 = new Point(1,2);
+        Point p1 = new Point(1, 2);
         Point p2 = new Point(3, 4);
 
         p1.add(p2);
@@ -35,10 +35,26 @@ public class TestPoint {
     }
 
     @Test
+    public void testAddCoord() {
+        Point p1 = new Point(1, 2);
+
+        p1.add(3, 4);
+
+        Assert.assertEquals(p1.x, 4, delta);
+        Assert.assertEquals(p1.y, 6, delta);
+    }
+
+    @Test
     public void testDistance() {
-        Point p1 = new Point(1,2);
+        Point p1 = new Point(1, 2);
         Point p2 = new Point(3, 4);
         double distance = p1.distance(p2);
         Assert.assertEquals(distance, 2.828, delta);
     }
+
+    // add
+    // multiply
+    // to string
+
+
 }

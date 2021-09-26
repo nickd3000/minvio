@@ -1,4 +1,4 @@
-package com.physmo.minvio;
+package com.physmo.minvio.utils;
 
 import java.util.function.DoubleUnaryOperator;
 

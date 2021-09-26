@@ -3,7 +3,7 @@ package com.physmo.minvioexamples;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
 import com.physmo.minvio.MinvioApp;
-import com.physmo.minvio.RollingAverage;
+import com.physmo.minvio.utils.RollingAverage;
 
 import java.awt.Color;
 import java.text.DecimalFormat;

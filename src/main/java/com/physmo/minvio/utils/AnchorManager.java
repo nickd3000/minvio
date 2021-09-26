@@ -2,7 +2,6 @@ package com.physmo.minvio.utils;
 
 
 import com.physmo.minvio.BasicDisplay;
-import com.physmo.minvio.BasicUtils;
 import com.physmo.minvio.Point;
 
 import java.awt.Color;

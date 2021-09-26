@@ -1,4 +1,4 @@
-package com.physmo.minvio;
+package com.physmo.minvio.utils;
 
 /**
  * An object that manages a rolling average of double values.

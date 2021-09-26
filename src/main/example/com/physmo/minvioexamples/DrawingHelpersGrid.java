@@ -2,7 +2,7 @@ package com.physmo.minvioexamples;
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
-import com.physmo.minvio.DrawingHelpers;
+import com.physmo.minvio.utils.DrawingHelpers;
 
 import java.awt.*;
 

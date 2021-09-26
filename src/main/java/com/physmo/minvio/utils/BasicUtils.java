@@ -1,4 +1,8 @@
-package com.physmo.minvio;
+package com.physmo.minvio.utils;
+
+import com.physmo.minvio.BasicDisplay;
+import com.physmo.minvio.Point;
+import com.physmo.minvio.PointInterface;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -26,6 +30,17 @@ public class BasicUtils {
     }
 
     // Map one value range to another range.
+
+    /**
+     * Map one value range to another range.
+     *
+     * @param value  Input value
+     * @param inMin  Start of input range
+     * @param inMax  End of input range
+     * @param outMin Start of output range
+     * @param outMax End of output range
+     * @return remapped input value.
+     */
     public static double mapper(double value, double inMin, double inMax, double outMin, double outMax) {
         if (outMax - outMin == 0) return 0;
         value = (value - inMin) / ((inMax - inMin) / (outMax - outMin));

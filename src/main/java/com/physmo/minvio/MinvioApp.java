@@ -1,5 +1,7 @@
 package com.physmo.minvio;
 
+import com.physmo.minvio.utils.RollingAverage;
+
 import java.awt.Color;
 import java.awt.Font;
 

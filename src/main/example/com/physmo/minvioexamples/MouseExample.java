@@ -2,7 +2,7 @@ package com.physmo.minvioexamples;
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
-import com.physmo.minvio.BasicUtils;
+import com.physmo.minvio.utils.BasicUtils;
 
 import java.awt.Color;
 

@@ -10,7 +10,7 @@
 
     <name>${project.groupId}:${project.artifactId}</name>
     <url>https://github.com/nickd3000/minvio</url>
-    <description>Simple graphics library for java</description>
+    <description>Simple graphics framework</description>
 
     <licenses>
         <license>
