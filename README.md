@@ -14,7 +14,7 @@ Add maven dependency:
     <dependency>
         <groupId>io.github.nickd3000</groupId>
         <artifactId>minvio</artifactId>
-        <version>1.02</version>
+        <version>1.03</version>
     </dependency>
 
 ![Image Minvio example CubeWave](docs/cubeWave.png)
