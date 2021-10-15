@@ -39,6 +39,7 @@ public abstract class BasicDisplay {
     }
 
     public static Color lerp(Color c1, Color c2, double pos) {
+        pos = clamp(0.0, 1.0, pos);
         int r = lerp(c1.getRed(), c2.getRed(), pos);
         int g = lerp(c1.getGreen(), c2.getGreen(), pos);
         int b = lerp(c1.getBlue(), c2.getBlue(), pos);
@@ -57,6 +58,10 @@ public abstract class BasicDisplay {
     public static double lerp(double v1, double v2, double pos) {
         double span = v2 - v1;
         return (v1 + span * pos);
+    }
+
+    public static double clamp(double min, double max, double value) {
+        return value < min ? min : value > max ? max : value;
     }
 
     /**
