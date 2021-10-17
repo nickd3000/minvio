@@ -82,4 +82,37 @@ public class BasicUtils {
 
         return minId;
     }
+
+    /**
+     * Apply a user defined worker to each point in a list.
+     *
+     * @param bd
+     * @param points
+     * @param workload
+     */
+    public static void pointListProcessor(BasicDisplay bd, List<Point> points, PointWorker workload) {
+        for (Point point : points) {
+            workload.go(bd, point);
+        }
+    }
+
+    /**
+     * Call a user defined worker to get the colour of each cell in a grid.
+     *
+     * @param bd
+     */
+    public static void matrixDrawer(BasicDisplay bd, int x, int y, int width, int height, int cellSize, double time, MonoPixelWorker worker) {
+
+        for (int yy = 0; yy < height / cellSize; yy++) {
+            for (int xx = 0; xx < width / cellSize; xx++) {
+                double value = worker.go((double) (xx * cellSize) / (double) width, (double) (yy * cellSize) / (double) height, time);
+                value %= 1.0;
+                value = bd.clamp(0, 1, value);
+                bd.setDrawColor(new Color((float) value, (float) value, (float) value));
+                bd.drawFilledRect(x + (xx * cellSize), y + (yy * cellSize), cellSize, cellSize);
+            }
+        }
+
+    }
+
 }
