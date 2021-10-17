@@ -14,7 +14,7 @@ Add maven dependency:
     <dependency>
         <groupId>io.github.nickd3000</groupId>
         <artifactId>minvio</artifactId>
-        <version>1.03</version>
+        <version>1.04</version>
     </dependency>
 
 ![Image Minvio example CubeWave](docs/cubeWave.png)
@@ -50,3 +50,19 @@ class SimpleExample extends MinvioApp {
     }
 }
 ```
+
+### Changelist
+
+###### Version 1.04 - October 17 2021
+
+* Added Perlin Noise utility and examples.
+* Added colour gradient system and examples.
+* Added Matrix and point list rendering helpers with examples.
+
+###### Version 1.03 - October 10 2021
+
+* Added anchor system.
+* Rearranged example file folders.
+* Added lerp functions for several types.
+* Added FindClosestPointInList helper function.
+* Changes to image loading.
