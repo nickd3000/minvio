@@ -1,8 +1,9 @@
 package com.physmo.minvio;
 
+import org.junit.Assert;
 import org.junit.Test;
 
-import java.awt.*;
+import java.awt.Color;
 
 import static org.junit.Assert.assertEquals;
 
@@ -44,5 +45,16 @@ public class TestBasicDisplay {
         Color expectingWhite = bd.getColorAtPoint(1, 1);
 
         bd.close();
+    }
+
+    @Test
+    public void testClamp() {
+        Assert.assertEquals(0.0, BasicDisplay.clamp(0.0, 1.0, 0.0), 0.001);
+        Assert.assertEquals(1.0, BasicDisplay.clamp(0.0, 1.0, 1.0), 0.001);
+        Assert.assertEquals(0.5, BasicDisplay.clamp(0.0, 1.0, 0.5), 0.001);
+        Assert.assertEquals(0.0, BasicDisplay.clamp(0.0, 1.0, -1.0), 0.001);
+        Assert.assertEquals(1.0, BasicDisplay.clamp(0.0, 1.0, 5.0), 0.001);
+
+
     }
 }
