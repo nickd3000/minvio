@@ -17,8 +17,7 @@ Add maven dependency:
         <version>1.04</version>
     </dependency>
 
-![Image Minvio example CubeWave](docs/cubeWave.png)
-![Image Minvio example MouseExample](docs/mouseExample.png)
+![Image Minvio example CubeWave](docs/wiki/appLogo.png)
 
 http://www.coolbubble.com/cc/ - coolcompare
 
