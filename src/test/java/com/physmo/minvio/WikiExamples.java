@@ -15,12 +15,50 @@ public class WikiExamples {
 
     String imageSubPath = "minvioImages/";
 
+    @Test
+    public void appLogo() {
+        runExample(800, 200, "appLogo", bd -> {
+
+            Color background = new Color(48, 60, 107);
+            Color colMin = new Color(45, 121, 167);
+            Color colV = new Color(220, 220, 220);
+            Color colIo = new Color(248, 175, 86);
+            Color colShadow = new Color(1, 1, 45, 100);
+
+            bd.cls(background);
+            Font font1 = new Font("Arial Black", Font.PLAIN, 180);
+            bd.setFont(font1);
+
+            int x = 100, y = 160;
+            int o1 = 325;
+            int o2 = 410;
+            int so = 5;
+
+            // Min
+            bd.setDrawColor(colShadow);
+            bd.drawText("Min", x, y + so);
+            bd.setDrawColor(colMin);
+            bd.drawText("Min", x, y);
+
+            // io
+            bd.setDrawColor(colShadow);
+            bd.drawText("io", x + o2, y + so);
+            bd.setDrawColor(colIo);
+            bd.drawText("io", x + o2, y);
+
+            // v
+            bd.setDrawColor(colShadow);
+            bd.drawText("v", x + o1, y + so);
+            bd.setDrawColor(colV);
+            bd.drawText("v", x + o1, y - so);
+        });
+    }
 
     @Test
     public void drawText() {
         runExample(200, 200, "drawText", bd -> {
 
-            bd.drawText("Hello, world", 30, 70);
+            bd.drawText("Hello, world", 70, 90);
 
         });
     }
