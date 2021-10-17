@@ -86,9 +86,9 @@ public class BasicUtils {
     /**
      * Apply a user defined worker to each point in a list.
      *
-     * @param bd
-     * @param points
-     * @param workload
+     * @param bd       BasicDisplay object
+     * @param points   List of Point objects
+     * @param workload WorkloadObject
      */
     public static void pointListProcessor(BasicDisplay bd, List<Point> points, PointWorker workload) {
         for (Point point : points) {
@@ -99,7 +99,14 @@ public class BasicUtils {
     /**
      * Call a user defined worker to get the colour of each cell in a grid.
      *
-     * @param bd
+     * @param bd       BasicDisplay object
+     * @param x        Start of output grid
+     * @param y        Start of output grid
+     * @param width    Size of output grid
+     * @param height   Size of output grid
+     * @param cellSize Size fo each cell in output grid
+     * @param time     double representing time
+     * @param worker   Worker object
      */
     public static void matrixDrawer(BasicDisplay bd, int x, int y, int width, int height, int cellSize, double time, MonoPixelWorker worker) {
 
