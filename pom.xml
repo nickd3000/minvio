@@ -6,8 +6,7 @@
     <groupId>io.github.nickd3000</groupId>
     <artifactId>minvio</artifactId>
     <version>1.03</version>
-    <!--    <version>1.0-SNAPSHOT</version>-->
-
+    <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <url>https://github.com/nickd3000/minvio</url>
     <description>Simple graphics framework</description>
@@ -30,7 +29,7 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/simpligility/ossrh-demo.git</connection>
+        <connection>scm:git:git://github.com/nickd3000/minvio.git</connection>
         <developerConnection>scm:git:ssh://github.com:nickd3000/minvio.git</developerConnection>
         <url>https://github.com/nickd3000/minvio/tree/master</url>
     </scm>
@@ -42,7 +41,6 @@
         </snapshotRepository>
     </distributionManagement>
 
-    <packaging>jar</packaging>
 
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
