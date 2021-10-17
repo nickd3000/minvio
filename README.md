@@ -1,11 +1,12 @@
-# Minvio
+![Image Minvio example CubeWave](docs/wiki/appLogo.png)
+
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.nickd3000/minvio/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.nickd3000/minvio)
 ![GitHub](https://img.shields.io/github/license/nickd3000/minvio)
 
 Minvio is a Lightweight Java framework for developing graphical applications.
 
-Minvio handles creating the application window and timed draw loop, and exposes a host of drawing and input functionality.
-
+Minvio handles creating the application window and timed draw loop, and exposes a host of drawing and input
+functionality.
 
 http://www.coolbubble.com/projects/minvio
 
@@ -16,8 +17,6 @@ Add maven dependency:
         <artifactId>minvio</artifactId>
         <version>1.04</version>
     </dependency>
-
-![Image Minvio example CubeWave](docs/wiki/appLogo.png)
 
 http://www.coolbubble.com/cc/ - coolcompare
 
