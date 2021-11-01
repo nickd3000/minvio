@@ -2,15 +2,15 @@ package com.physmo.minvioexamples;
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
-import com.physmo.minvio.utils.BasicUtils;
 import com.physmo.minvio.MinvioApp;
+import com.physmo.minvio.utils.BasicUtils;
 
 import java.awt.Color;
 
 class MapperTest extends MinvioApp {
 
-    private static Color backgroundColour = new Color(20, 63, 88);
-    private static Color foregroundColour = new Color(200, 218, 105);
+    private static final Color backgroundColour = new Color(20, 63, 88);
+    private static final Color foregroundColour = new Color(200, 218, 105);
 
     public static void main(String... args) {
         MinvioApp app = new MapperTest();
@@ -31,8 +31,6 @@ class MapperTest extends MinvioApp {
         bd.drawRect(100, 100, 200, 200);
         bd.drawLine(200, 200, mappedX, mappedY, 2);
         bd.drawCircle(mappedX, mappedY, 10);
-
-        bd.repaint(60);
 
     }
 }
