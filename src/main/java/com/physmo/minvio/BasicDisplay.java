@@ -39,7 +39,7 @@ public abstract class BasicDisplay {
      *
      * @param name Path to file
      * @return BufferedImage object
-     * @throws IOException
+     * @throws IOException on file error
      */
     public static BufferedImage loadImage(String name) throws IOException {
         URL file = BasicDisplay.class.getResource(name);
@@ -72,7 +72,7 @@ public abstract class BasicDisplay {
      * @param v1  First value
      * @param v2  Second Value
      * @param pos control
-     * @return
+     * @return the interpolated value
      */
     public static int lerp(int v1, int v2, double pos) {
         int span = v2 - v1;
@@ -85,7 +85,7 @@ public abstract class BasicDisplay {
      * @param p1  First value
      * @param p2  Second Value
      * @param pos control
-     * @return
+     * @return the interpolated value
      */
     public static Point lerp(Point p1, Point p2, double pos) {
         return new Point(lerp(p1.x, p2.x, pos), lerp(p1.y, p2.y, pos));
@@ -110,7 +110,7 @@ public abstract class BasicDisplay {
      * @param min   First value
      * @param max   Second Value
      * @param value control
-     * @return
+     * @return the clamped value
      */
     public static double clamp(double min, double max, double value) {
         return value < min ? min : value > max ? max : value;
@@ -290,7 +290,7 @@ public abstract class BasicDisplay {
     /**
      * Drawing function - Draw a pixel using current draw color.
      *
-     * @param pos
+     * @param pos position
      */
     public void drawPoint(Point pos) {
         drawPoint((int) pos.x, (int) pos.y);
@@ -492,6 +492,10 @@ public abstract class BasicDisplay {
     }
 
     public abstract int getMouseX();
+
+    public Point getMousePointNormalised() {
+        return new Point((double) getMouseX() / getDisplaySize().x, (double) getMouseY() / getDisplaySize().y);
+    }
 
     public abstract int getMouseY();
 

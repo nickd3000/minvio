@@ -32,7 +32,7 @@ public class MinvioAppTimingTest extends MinvioApp {
     }
 
     @Override
-    public void update(double delta) {
+    public void update(BasicDisplay bd, double delta) {
         angles[0] += rotationSpeed * delta;
         updateRollingAverage.add(delta);
     }
