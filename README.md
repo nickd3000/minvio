@@ -15,7 +15,7 @@ Add maven dependency:
     <dependency>
         <groupId>io.github.nickd3000</groupId>
         <artifactId>minvio</artifactId>
-        <version>1.04</version>
+        <version>1.05</version>
     </dependency>
 
 http://www.coolbubble.com/cc/ - coolcompare
@@ -50,6 +50,15 @@ class SimpleExample extends MinvioApp {
 ```
 
 ### Changelist
+
+###### Version 1.05 - December 13 2021
+
+* **Added Entity-Component system**
+* Added Entity-Component example
+* Added Vec3 object
+* Added bucket list utility and gravity particle example
+* Added Ribbons to gallery
+* Added getMousePointNormalised
 
 ###### Version 1.04 - October 17 2021
 
