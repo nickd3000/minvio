@@ -15,18 +15,21 @@ import java.util.List;
 
 public class BucketListExample extends MinvioApp {
 
-    public static final double minDist = 3.0;
+    public static final double minDist = 1.0;
     BucketList bucketList;
     List<Position> points;
-    int numPoints = 3000;
+    int numPoints = 2000;
     double forceScale = 3.5;
     int threshold = 1;
     double friction = 1;
     double distancePad = 20;
+    double bounceLoss = 0.9;
+    double forceMax = 0.1;
+
 
     public static void main(String... args) {
         MinvioApp app = new BucketListExample();
-        app.start(new BasicDisplayAwt(800, 800), "", 20);
+        app.start(new BasicDisplayAwt(800, 800), "", 30);
     }
 
 
@@ -34,7 +37,7 @@ public class BucketListExample extends MinvioApp {
     public void init(BasicDisplay bd) {
         bucketList = new BucketList(64, bd.getWidth(), bd.getHeight());
         points = new ArrayList<>();
-        double startingSpeed = 10;
+        double startingSpeed = 0.03;
         for (int i = 0; i < numPoints; i++) {
             PointDynamic p = new PointDynamic();
             Point pos = BasicUtils.createRandomPointInCircle(
@@ -57,9 +60,16 @@ public class BucketListExample extends MinvioApp {
 
     @Override
     public void draw(BasicDisplay bd, double delta) {
-        bd.cls(Color.BLACK);
+        if (bd.getMouseButtonLeft())
+            bd.cls(new Color(14, 3, 6, 5));
+        else
+            bd.cls(Color.BLACK);
+
         bd.setDrawColor(Color.lightGray);
+
+
         tick(bd);
+
 
         // Draw summary grid
         List<Integer[]> bucketSummary = bucketList.getBucketSummary();
@@ -95,6 +105,10 @@ public class BucketListExample extends MinvioApp {
                     double dx = (p2.x - p.x) / distance;
                     double dy = (p2.y - p.y) / distance;
                     double force = (2.0 / (distance * distance)) * forceScale;
+                    force = BasicDisplay.clamp(0, forceMax, force);
+                    if (distance <= 3) {
+                        force = 0;
+                    }
                     p.dx += dx * force;
                     p.dy += dy * force;
                 }
@@ -126,19 +140,19 @@ public class BucketListExample extends MinvioApp {
 
             if (p.x < 0) {
                 p.x = 0;
-                ((PointDynamic) p).dx *= -1;
+                ((PointDynamic) p).dx *= -bounceLoss;
             }
             if (p.x > w) {
                 p.x = w;
-                ((PointDynamic) p).dx *= -1;
+                ((PointDynamic) p).dx *= -bounceLoss;
             }
             if (p.y < 0) {
                 p.y = 0;
-                ((PointDynamic) p).dy *= -1;
+                ((PointDynamic) p).dy *= -bounceLoss;
             }
             if (p.y > h) {
                 p.y = h;
-                ((PointDynamic) p).dy *= -1;
+                ((PointDynamic) p).dy *= -bounceLoss;
             }
             ((PointDynamic) p).dx *= friction;
             ((PointDynamic) p).dy *= friction;
