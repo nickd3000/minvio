@@ -23,12 +23,24 @@ public abstract class BasicDisplay {
 
     /* COLOR ----------------------------------------------------------------*/
 
+    /**
+     * Get list of all available font names.
+     *
+     * @return list of all available font names.
+     */
     public static String[] getAvailableFontNames() {
         return GraphicsEnvironment
                 .getLocalGraphicsEnvironment()
                 .getAvailableFontFamilyNames();
     }
 
+    /**
+     * Load an image from storage and return a BufferedImage object
+     *
+     * @param name Path to file
+     * @return BufferedImage object
+     * @throws IOException on file error
+     */
     public static BufferedImage loadImage(String name) throws IOException {
         URL file = BasicDisplay.class.getResource(name);
         BufferedImage image;
@@ -38,6 +50,14 @@ public abstract class BasicDisplay {
         return image;
     }
 
+    /**
+     * Return a blended color between c1 and c2 at position pos.
+     *
+     * @param c1  Color 1
+     * @param c2  Color 2
+     * @param pos Position
+     * @return Blended color
+     */
     public static Color lerp(Color c1, Color c2, double pos) {
         pos = clamp(0.0, 1.0, pos);
         int r = lerp(c1.getRed(), c2.getRed(), pos);
@@ -46,20 +66,52 @@ public abstract class BasicDisplay {
         return new Color(r, g, b);
     }
 
+    /**
+     * Return blended value, mix of v1 and v2, proportion specified by pos.
+     *
+     * @param v1  First value
+     * @param v2  Second Value
+     * @param pos control
+     * @return the interpolated value
+     */
     public static int lerp(int v1, int v2, double pos) {
         int span = v2 - v1;
         return (int) (v1 + (int) (double) span * pos);
     }
 
+    /**
+     * Return blended value, mix of v1 and v2, proportion specified by pos.
+     *
+     * @param p1  First value
+     * @param p2  Second Value
+     * @param pos control
+     * @return the interpolated value
+     */
     public static Point lerp(Point p1, Point p2, double pos) {
         return new Point(lerp(p1.x, p2.x, pos), lerp(p1.y, p2.y, pos));
     }
 
+    /**
+     * Return blended value, mix of v1 and v2, proportion specified by pos.
+     *
+     * @param v1  First value
+     * @param v2  Second Value
+     * @param pos control
+     * @return
+     */
     public static double lerp(double v1, double v2, double pos) {
         double span = v2 - v1;
         return (v1 + span * pos);
     }
 
+    /**
+     * Return blended value, mix of v1 and v2, proportion specified by pos.
+     *
+     * @param min   First value
+     * @param max   Second Value
+     * @param value control
+     * @return the clamped value
+     */
     public static double clamp(double min, double max, double value) {
         return value < min ? min : value > max ? max : value;
     }
@@ -172,6 +224,12 @@ public abstract class BasicDisplay {
      */
     public abstract Color setDrawColor(Color newCol);
 
+    /**
+     * Set the background color to use for drawing operations.
+     *
+     * @param newCol The color that future draw operations will use.
+     * @return The previous color.
+     */
     public abstract Color setBackgroundColor(Color newCol);
 
     /**
@@ -229,13 +287,31 @@ public abstract class BasicDisplay {
      */
     public abstract int getRGBAtPoint(int x, int y);
 
+    /**
+     * Drawing function - Draw a pixel using current draw color.
+     *
+     * @param pos position
+     */
     public void drawPoint(Point pos) {
         drawPoint((int) pos.x, (int) pos.y);
     }
 
-    // Draw a single point using the current draw colour..
+    /**
+     * Drawing function - Draw a pixel using current draw color.
+     *
+     * @param x x-coordinate
+     * @param y y-coordinate
+     */
     public abstract void drawPoint(int x, int y);
 
+    /**
+     * Drawing function - draw a line
+     *
+     * @param x1 x-coordinate (start)
+     * @param y1 y-coordinate (start)
+     * @param x2 x-coordinate (end)
+     * @param y2 y-coordinate (end)
+     */
     public void drawLine(double x1, double y1, double x2, double y2) {
         drawLine((int) x1, (int) y1, (int) x2, (int) y2);
     }
@@ -317,10 +393,6 @@ public abstract class BasicDisplay {
      */
     public abstract void drawFilledPolygon(int[] xPoints, int[] yPoints, int numPoints);
 
-
-
-
-    /* TEXT ---------------------------------------------------------------*/
 
     /**
      * Drawing function - draw an unfilled circle
@@ -421,6 +493,10 @@ public abstract class BasicDisplay {
 
     public abstract int getMouseX();
 
+    public Point getMousePointNormalised() {
+        return new Point((double) getMouseX() / getDisplaySize().x, (double) getMouseY() / getDisplaySize().y);
+    }
+
     public abstract int getMouseY();
 
     public abstract boolean getMouseButtonLeft();
@@ -433,6 +509,9 @@ public abstract class BasicDisplay {
 
     public abstract Color getBackgroundColor();
 
+    /**
+     * Write an image file of the current BasicDisplay window to the users home folder.
+     */
     public void saveScreenshot() {
         String filePath = System.getProperty("user.home");
         filePath += File.separator + getTitle().replaceAll("\\s+", "") + ".png";
@@ -441,6 +520,11 @@ public abstract class BasicDisplay {
 
     public abstract String getTitle();
 
+    /**
+     * Write an image file of the current BasicDisplay window to the supplied path
+     *
+     * @param fullPath Path to new image file.
+     */
     public void saveScreenshot(String fullPath) {
         try {
             BufferedImage bi = (BufferedImage) getDrawBuffer();

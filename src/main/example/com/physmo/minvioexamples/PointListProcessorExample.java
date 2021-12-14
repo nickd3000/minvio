@@ -22,8 +22,8 @@ class PointListProcessorExample extends MinvioApp {
     @Override
     public void init(BasicDisplay bd) {
         points = new ArrayList<>();
-        points.add(new Point(1, 1));
-        points.add(new Point(33, 31));
+        points.add(new Point(100, 50));
+        points.add(new Point(100, 100));
     }
 
     @Override

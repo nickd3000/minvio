@@ -7,14 +7,12 @@ import java.awt.Font;
 
 public abstract class MinvioApp {
 
+    final RollingAverage tickRollingAverage = new RollingAverage(30);
+    final Font fpsFont = new Font("Verdana", Font.PLAIN, 12);
     BasicDisplay bd = null;
     boolean running = true;
-
-    final RollingAverage tickRollingAverage = new RollingAverage(30);
     int targetFps = 60;
     boolean displayFps = false;
-    final Font fpsFont = new Font("Verdana", Font.PLAIN, 12);
-
 
     public BasicDisplay getBasicDisplay() {
         return bd;
@@ -69,7 +67,7 @@ public abstract class MinvioApp {
                     Thread.sleep(5);
                     delta = (double) (System.nanoTime() - lastUpdateTime);
                     lastUpdateTime = System.nanoTime();
-                    update((delta) / 1_000_000_000.0);
+                    update(bd, (delta) / 1_000_000_000.0);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -105,9 +103,10 @@ public abstract class MinvioApp {
     /**
      * This may be optionally overridden, for example if you want to do logic multiple times per frame.
      *
+     * @param bd    Basic Display object
      * @param delta time in seconds since the last UPDATE call, e.g. 1.0 = 1 second.
      */
-    public void update(double delta) {
+    public void update(BasicDisplay bd, double delta) {
     }
 
 
