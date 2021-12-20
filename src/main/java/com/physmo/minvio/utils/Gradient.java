@@ -25,6 +25,12 @@ public class Gradient {
         colorList.put(1.0, Color.BLACK);
     }
 
+    public Gradient(Color startColor, Color endColor) {
+        colorList.put(0.0, startColor);
+        colorList.put(1.0, endColor);
+        recalculateList();
+    }
+
     /**
      * If there is already a colour at the given position it is replace.
      * On inserting a colour the internal lookup table is refreshed.
@@ -90,6 +96,5 @@ public class Gradient {
         if (index >= preComputedListSize) index = preComputedListSize - 1;
         return preComputedList.get(index);
     }
-
 
 }
