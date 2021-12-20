@@ -49,4 +49,32 @@ public class TestVec3 {
         Assert.assertEquals(v1.y, 5, 0.001);
         Assert.assertEquals(v1.z, 6, 0.001);
     }
+
+    @Test
+    public void testSet() {
+        Vec3 v1 = new Vec3(1, 2, 3);
+        v1.set(3, 2, 1);
+    }
+
+    @Test
+    public void testToString() {
+        Vec3 v1 = new Vec3(1, 2, 3);
+        String toString = v1.toString();
+        Assert.assertEquals("Vec3{x=1.00, y=2.00, z=3.00}", toString);
+    }
+
+    @Test
+    public void testScale() {
+        Vec3 v1 = new Vec3(1, 2, 3);
+        v1 = v1.scale(1);
+        Assert.assertEquals(v1.x, 1, 0.01);
+        Assert.assertEquals(v1.y, 2, 0.01);
+        Assert.assertEquals(v1.z, 3, 0.01);
+        v1 = v1.scale(2);
+        Assert.assertEquals(v1.x, 2, 0.01);
+        Assert.assertEquals(v1.y, 4, 0.01);
+        Assert.assertEquals(v1.z, 6, 0.01);
+
+
+    }
 }
