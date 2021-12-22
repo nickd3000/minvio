@@ -1,5 +1,8 @@
 package com.physmo.minvio;
 
+import com.physmo.minvio.utils.Gradient;
+import com.physmo.minvio.utils.MatrixDrawer;
+import com.physmo.minvio.utils.PerlinNoise;
 import org.junit.Test;
 
 import java.awt.Color;
@@ -18,6 +21,7 @@ public class WikiExamples {
     @Test
     public void appLogo() {
         runExample(800, 200, "appLogo", bd -> {
+            MatrixDrawer matrixDrawer = new MatrixDrawer(400, 100);
 
             Color background = new Color(48, 60, 107);
             Color colMin = new Color(45, 121, 167);
@@ -25,9 +29,18 @@ public class WikiExamples {
             Color colIo = new Color(248, 175, 86);
             Color colShadow = new Color(1, 1, 45, 100);
 
+            Color gradCol1 = new Color(21, 63, 114, 255);
+            Color gradCol2 = new Color(252, 252, 252, 255);
+
             bd.cls(background);
             Font font1 = new Font("Arial Black", Font.PLAIN, 180);
             bd.setFont(font1);
+
+            matrixDrawer.draw(bd, 0, 0, 2, 5.1, (x, y, a, d, t) -> {
+                double xx = PerlinNoise.noise(x * 4, y * 4, t + 2.5);
+                double yy = PerlinNoise.noise(x * 4, y * 4, t + 2.5);
+                return PerlinNoise.noise((x + xx) * 2, (y + yy) * 2, t);
+            }, new Gradient(gradCol1, gradCol2)); // We can supply null if we don't want to use a gradient.
 
             int x = 100, y = 160;
             int o1 = 325;
@@ -397,7 +410,7 @@ public class WikiExamples {
     /****************************************************************/
 
     public void runExample(int width, int height, String fileName, BDRunnable code) {
-        String filePath = System.getProperty("user.home");
+        String filePath = "/tmp/"; //System.getProperty("user.home");
         filePath += File.separator + imageSubPath + fileName + ".png";
 
         BasicDisplay bd = new BasicDisplayAwt(width, height);
