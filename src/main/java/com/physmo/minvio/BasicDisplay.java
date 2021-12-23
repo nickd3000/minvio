@@ -97,7 +97,7 @@ public abstract class BasicDisplay {
      * @param v1  First value
      * @param v2  Second Value
      * @param pos control
-     * @return
+     * @return the interpolated value
      */
     public static double lerp(double v1, double v2, double pos) {
         double span = v2 - v1;

@@ -96,30 +96,4 @@ public class BasicUtils {
         }
     }
 
-    /**
-     * Call a user defined worker to get the colour of each cell in a grid.
-     *
-     * @param bd       BasicDisplay object
-     * @param x        Start of output grid
-     * @param y        Start of output grid
-     * @param width    Size of output grid
-     * @param height   Size of output grid
-     * @param cellSize Size fo each cell in output grid
-     * @param time     double representing time
-     * @param worker   Worker object
-     */
-    public static void matrixDrawer(BasicDisplay bd, int x, int y, int width, int height, int cellSize, double time, MonoPixelWorker worker) {
-
-        for (int yy = 0; yy < height / cellSize; yy++) {
-            for (int xx = 0; xx < width / cellSize; xx++) {
-                double value = worker.go((double) (xx * cellSize) / (double) width, (double) (yy * cellSize) / (double) height, time);
-                value %= 1.0;
-                value = bd.clamp(0, 1, value);
-                bd.setDrawColor(new Color((float) value, (float) value, (float) value));
-                bd.drawFilledRect(x + (xx * cellSize), y + (yy * cellSize), cellSize, cellSize);
-            }
-        }
-
-    }
-
 }

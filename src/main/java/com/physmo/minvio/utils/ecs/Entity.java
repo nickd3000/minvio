@@ -14,9 +14,9 @@ public class Entity {
     public Vec3 position = new Vec3(0, 0, 0);
     public Vec3 velocity = new Vec3(0, 0, 0);
 
-    List<Component> components = new ArrayList<>();
+    final List<Component> components = new ArrayList<>();
     Component drawComponent;
-    Map<String, Object> properties = new HashMap<>();
+    final Map<String, Object> properties = new HashMap<>();
 
     public Entity addComponent(Component c) {
         components.add(c);
@@ -44,7 +44,7 @@ public class Entity {
         return Optional.ofNullable(properties.get(name));
     }
 
-    public Component getComponentOfType(Class clazz) {
+    public Component getComponentOfType(Class<?> clazz) {
         if (clazz == null) return null;
         for (Component component : components) {
             if (component.getClass() == clazz) {

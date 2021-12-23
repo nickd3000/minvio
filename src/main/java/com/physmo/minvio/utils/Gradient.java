@@ -15,14 +15,20 @@ import java.util.stream.Collectors;
  * Black is automatically inserted at the start and end of the list.
  */
 public class Gradient {
-    Map<Double, Color> colorList = new HashMap<>();
-    List<Color> preComputedList = new ArrayList<>();
+    final Map<Double, Color> colorList = new HashMap<>();
+    final List<Color> preComputedList = new ArrayList<>();
 
-    int preComputedListSize = 1000;
+    final int preComputedListSize = 1000;
 
     public Gradient() {
         colorList.put(0.0, Color.BLACK);
         colorList.put(1.0, Color.BLACK);
+    }
+
+    public Gradient(Color startColor, Color endColor) {
+        colorList.put(0.0, startColor);
+        colorList.put(1.0, endColor);
+        recalculateList();
     }
 
     /**
@@ -33,9 +39,7 @@ public class Gradient {
      * @param color    the colour to insert.
      */
     public void addColor(double position, Color color) {
-        if (colorList.containsKey(position)) {
-            colorList.remove(position);
-        }
+        colorList.remove(position);
         colorList.put(position, color);
         recalculateList();
     }
@@ -74,9 +78,7 @@ public class Gradient {
         Color c1 = colorList.get(firstKey);
         Color c2 = colorList.get(secondKey);
 
-        Color newColor = BasicDisplay.lerp(c1, c2, lerpPos);
-
-        return newColor;
+        return BasicDisplay.lerp(c1, c2, lerpPos);
     }
 
     /**
@@ -90,6 +92,5 @@ public class Gradient {
         if (index >= preComputedListSize) index = preComputedListSize - 1;
         return preComputedList.get(index);
     }
-
 
 }
