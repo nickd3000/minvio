@@ -2,7 +2,7 @@ package com.physmo.minvio;
 
 import com.physmo.minvio.utils.Gradient;
 import com.physmo.minvio.utils.MatrixDrawer;
-import com.physmo.minvio.utils.PerlinNoise;
+import com.physmo.minvio.utils.VoronoiNoise;
 import org.junit.Test;
 
 import java.awt.Color;
@@ -29,17 +29,16 @@ public class WikiExamples {
             Color colIo = new Color(248, 175, 86);
             Color colShadow = new Color(1, 1, 45, 100);
 
-            Color gradCol1 = new Color(21, 63, 114, 255);
-            Color gradCol2 = new Color(252, 252, 252, 255);
+            Color gradCol1 = new Color(0, 0, 0, 255);
+            Color gradCol2 = new Color(207, 218, 231, 255);
 
             bd.cls(background);
             Font font1 = new Font("Arial Black", Font.PLAIN, 180);
             bd.setFont(font1);
 
             matrixDrawer.draw(bd, 0, 0, 2, 5.1, (x, y, a, d, t) -> {
-                double xx = PerlinNoise.noise(x * 4, y * 4, t + 2.5);
-                double yy = PerlinNoise.noise(x * 4, y * 4, t + 2.5);
-                return PerlinNoise.noise((x + xx) * 2, (y + yy) * 2, t);
+                double val = VoronoiNoise.noise(x * 3 * 3, y * 3, t);
+                return val * val;
             }, new Gradient(gradCol1, gradCol2)); // We can supply null if we don't want to use a gradient.
 
             int x = 100, y = 160;
