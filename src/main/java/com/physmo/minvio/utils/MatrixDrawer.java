@@ -7,7 +7,8 @@ import java.awt.Color;
 // TODO: precalc angles and distances
 public class MatrixDrawer {
 
-    int width, height;
+    final int width;
+    final int height;
     double[] angles;
     double[] distances;
 
@@ -49,7 +50,6 @@ public class MatrixDrawer {
     }
 
     public void draw(BasicDisplay bd, int xPos, int yPos, int scale, double time, MonoPixelWorker worker, Gradient gradient) {
-        int cs = scale;
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
 
@@ -57,14 +57,14 @@ public class MatrixDrawer {
                 double a = angles[index];
                 double d = distances[index];
                 double value = worker.go((double) (x) / (double) width, (double) (y) / (double) height, a, d, time);
-                value = bd.clamp(0, 1, value);
+                value = BasicDisplay.clamp(0, 1, value);
 
                 if (gradient == null)
                     bd.setDrawColor(new Color((float) value, (float) value, (float) value));
                 else
                     bd.setDrawColor(gradient.getColor(value));
 
-                bd.drawFilledRect(xPos + (x * cs), yPos + (y * cs), cs, cs);
+                bd.drawFilledRect(xPos + (x * scale), yPos + (y * scale), scale, scale);
             }
         }
 

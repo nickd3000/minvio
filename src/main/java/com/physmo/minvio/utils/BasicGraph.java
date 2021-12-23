@@ -70,9 +70,7 @@ public class BasicGraph {
         d.drawRect(x, y, width, height);
 
         String maxText = df2.format(Math.max(floatingMax, Math.abs(floatingMin)));
-        //d.drawText(maxText, x+width-40+15, y+15);
 
-        //d.drawText(maxText, x+width-70+15, y+15);
         d.drawText(maxText, 5, y + 15 + 5);
     }
 }

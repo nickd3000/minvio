@@ -6,8 +6,7 @@ public class VoronoiNoise {
         double sum = 0;
         double total = 0;
         for (int i = 1; i < order; i++) {
-            double dOrder = (double) i;
-            sum += noise(x * dOrder, y * dOrder, z * dOrder) / dOrder;
+            sum += noise(x * (double) i, y * (double) i, z * (double) i) / (double) i;
             total += 1.0 / order;
         }
         return (sum / total);
@@ -68,7 +67,7 @@ public class VoronoiNoise {
                 for (int xo = -1; xo < 2; xo++) {
                     for (int m = 1; m <= pointsPerCell; m++) {
 
-                        QuickRandom random = new QuickRandom((_x + xo) * 3333 + (_z + zo) * 4844 + (_y + yo) * 5525 * m);
+                        QuickRandom random = new QuickRandom((_x + xo) * 3333L + (_z + zo) * 4844L + (long) (_y + yo) * 5525 * m);
                         double px = random.nextDouble();
                         double py = random.nextDouble();
                         double pz = random.nextDouble();
