@@ -1,4 +1,4 @@
-package com.physmo.minvioexamples;
+package com.physmo.minvioexamples.gallery;
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
@@ -15,14 +15,14 @@ import java.util.List;
     Use the MatrixDrawer helper class to quickly
     trial equations on the x/y axis.
  */
-class MatrixDrawerExample extends MinvioApp {
+class NoseStyles extends MinvioApp {
 
     double time = 0;
     MatrixDrawer matrixDrawer;
     List<Gradient> gradients;
 
     public static void main(String... args) {
-        MinvioApp app = new MatrixDrawerExample();
+        MinvioApp app = new NoseStyles();
         app.start(new BasicDisplayAwt(400, 400), "Matrix Drawer Example", 30);
     }
 
@@ -47,7 +47,11 @@ class MatrixDrawerExample extends MinvioApp {
         time += delta;
 
         matrixDrawer.draw(bd, 0, 0, 2, time, (x, y, a, d, t) -> {
-            return ((1.0 + Math.sin(t * 2 + a * 6)) + (1.0 + Math.cos(t * 5 + d * 6 + a * 3))) * 0.25;
+            double xx = PerlinNoise.noise(x * 4, y * 4, t + 2.5);
+            double yy = PerlinNoise.noise(x * 4, y * 4, t + 2.5);
+            return PerlinNoise.noise((x + xx) * 2, (y + yy) * 2, t);
+
+            //return ((1.0 + Math.sin(t * 2 + a * 6)) + (1.0 + Math.cos(t * 5 + d * 6 + a * 3))) * 0.25;
         }, gradients.get(0));
 
         matrixDrawer.draw(bd, 200, 0, 2, time, (x, y, a, d, t) -> {
@@ -55,9 +59,7 @@ class MatrixDrawerExample extends MinvioApp {
         }, gradients.get(1));
 
         matrixDrawer.draw(bd, 0, 200, 2, time, (x, y, a, d, t) -> {
-            double xx = PerlinNoise.noise(x * 4, y * 4, t + 2.5);
-            double yy = PerlinNoise.noise(x * 4, y * 4, t + 2.5);
-            return PerlinNoise.noise((x + xx) * 2, (y + yy) * 2, t);
+            return (1.0 + Math.sin(x * 4 + d * 4 + t * 2 + y)) / 2;
         }, null); // We can supply null if we don't want to use a gradient.
 
         matrixDrawer.draw(bd, 200, 200, 2, time, (x, y, a, d, t) -> {

@@ -3,7 +3,6 @@ package com.physmo.minvioexamples;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
 import com.physmo.minvio.MinvioApp;
-import com.physmo.minvio.utils.BasicUtils;
 import com.physmo.minvio.utils.Gradient;
 
 import java.awt.Color;
@@ -43,12 +42,4 @@ public class GradientExample extends MinvioApp {
 
     }
 
-    public void setColourFromNoise(BasicDisplay bd, double noise) {
-        // Noise value is in range -1..1 - convert to 0..1
-        // We can use the BasicUtils.mapper helper for this.
-        // noise = (1.0 + noise) / 2.0;
-        noise = BasicUtils.mapper(noise, -1, 1, 0, 1);
-
-        bd.setDrawColor(new Color((float) noise, (float) noise, (float) noise));
-    }
 }

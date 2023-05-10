@@ -9,7 +9,7 @@ public class BucketList {
     int cellSize = 64;
     int cellsWide = 0;
     int cellsHigh = 0;
-    List<List<Integer>> buckets;
+    final List<List<Integer>> buckets;
 
     public BucketList(int cellSize, int width, int height) {
         this.cellSize = cellSize;
@@ -17,7 +17,7 @@ public class BucketList {
         cellsHigh = (height / cellSize) + 1;
         buckets = new ArrayList<>();
         for (int i = 0; i < cellsWide * cellsHigh; i++) {
-            buckets.add(new ArrayList<Integer>());
+            buckets.add(new ArrayList<>());
         }
     }
 

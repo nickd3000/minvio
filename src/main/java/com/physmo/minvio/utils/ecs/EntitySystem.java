@@ -7,7 +7,7 @@ import java.util.List;
 
 public class EntitySystem {
 
-    private List<Entity> entities = new ArrayList<>();
+    private final List<Entity> entities = new ArrayList<>();
 
     public void tickAll(BasicDisplay bd, double delta) {
         entities.forEach(entity -> entity.tick(bd, delta));
@@ -27,7 +27,7 @@ public class EntitySystem {
      * @param clazz The class of the component type we are interested in.
      * @return list of entities containing clazz
      */
-    public List<Entity> getEntitiesWithComponent(Class clazz) {
+    public List<Entity> getEntitiesWithComponent(Class<?> clazz) {
         if (clazz == null) return null;
 
         List<Entity> matched = new ArrayList<>();

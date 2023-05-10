@@ -25,5 +25,6 @@ public class PointDynamic extends Position {
     public PointDynamic(PointDynamic p) {
         this.x = p.x;
         this.y = p.y;
+        this.mass = p.mass;
     }
 }
