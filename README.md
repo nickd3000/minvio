@@ -15,10 +15,9 @@ Add maven dependency:
     <dependency>
         <groupId>io.github.nickd3000</groupId>
         <artifactId>minvio</artifactId>
-        <version>1.05</version>
+        <version>1.06</version>
     </dependency>
 
-http://www.coolbubble.com/cc/ - coolcompare
 
 **Minimal example**
 
@@ -51,6 +50,11 @@ class SimpleExample extends MinvioApp {
 
 ### Changelist
 
+###### Version 1.06 - December 23 2021
+
+* Matrix drawer changes
+* Added QuickRandom
+
 ###### Version 1.05 - December 13 2021
 
 * **Added Entity-Component system**
@@ -73,3 +77,5 @@ class SimpleExample extends MinvioApp {
 * Added lerp functions for several types.
 * Added FindClosestPointInList helper function.
 * Changes to image loading.
+
+http://www.coolbubble.com/cc/ - coolcompare

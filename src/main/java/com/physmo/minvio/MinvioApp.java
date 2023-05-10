@@ -92,7 +92,7 @@ public abstract class MinvioApp {
 
     /**
      * Skeleton init function - override this to perform one-time setup operations for your app.
-     * You may override this in your own app and it will be called only one time,
+     * You may override this in your own app: it will be called only one time,
      * and before draw or update is called.
      *
      * @param bd the instance of BasicDisplay.
