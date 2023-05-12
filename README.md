@@ -12,16 +12,17 @@ http://www.coolbubble.com/projects/minvio
 
 Add maven dependency:
 
-    <dependency>
-        <groupId>io.github.nickd3000</groupId>
-        <artifactId>minvio</artifactId>
-        <version>1.06</version>
-    </dependency>
-
+``` xml
+<dependency>
+    <groupId>io.github.nickd3000</groupId>
+    <artifactId>minvio</artifactId>
+    <version>1.06</version>
+</dependency>
+```
 
 **Minimal example**
 
-```java
+``` java
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
 import com.physmo.minvio.MinvioApp;
@@ -49,6 +50,10 @@ class SimpleExample extends MinvioApp {
 ```
 
 ### Changelist
+
+###### Version 1.07 - May 2023
+
+* Removed all example - They are now in a separate project - minvio-examples
 
 ###### Version 1.06 - December 23 2021
 
