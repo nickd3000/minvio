@@ -16,7 +16,7 @@ Add maven dependency:
 <dependency>
     <groupId>io.github.nickd3000</groupId>
     <artifactId>minvio</artifactId>
-    <version>1.06</version>
+    <version>1.07</version>
 </dependency>
 ```
 
