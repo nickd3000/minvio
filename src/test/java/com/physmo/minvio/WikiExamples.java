@@ -31,12 +31,12 @@ public class WikiExamples {
 
             Color gradCol1 = new Color(0, 0, 0, 255);
             Color gradCol2 = new Color(207, 218, 231, 255);
-
-            bd.cls(background);
+            DrawingContext dc = bd.getDrawingContext();
+            dc.cls(background);
             Font font1 = new Font("Arial Black", Font.PLAIN, 180);
-            bd.setFont(font1);
+            dc.setFont(font1);
 
-            matrixDrawer.draw(bd, 0, 0, 2, 5.1, (x, y, a, d, t) -> {
+            matrixDrawer.draw(dc, 0, 0, 2, 5.1, (x, y, a, d, t) -> {
                 double val = VoronoiNoise.noise(x * 3 * 3, y * 3, t);
                 return val * val;
             }, new Gradient(gradCol1, gradCol2)); // We can supply null if we don't want to use a gradient.
@@ -47,30 +47,30 @@ public class WikiExamples {
             int so = 5;
 
             // Min
-            bd.setDrawColor(colShadow);
-            bd.drawText("Min", x, y + so);
-            bd.setDrawColor(colMin);
-            bd.drawText("Min", x, y);
+            dc.setDrawColor(colShadow);
+            dc.drawText("Min", x, y + so);
+            dc.setDrawColor(colMin);
+            dc.drawText("Min", x, y);
 
             // io
-            bd.setDrawColor(colShadow);
-            bd.drawText("io", x + o2, y + so);
-            bd.setDrawColor(colIo);
-            bd.drawText("io", x + o2, y);
+            dc.setDrawColor(colShadow);
+            dc.drawText("io", x + o2, y + so);
+            dc.setDrawColor(colIo);
+            dc.drawText("io", x + o2, y);
 
             // v
-            bd.setDrawColor(colShadow);
-            bd.drawText("v", x + o1, y + so);
-            bd.setDrawColor(colV);
-            bd.drawText("v", x + o1, y - so);
+            dc.setDrawColor(colShadow);
+            dc.drawText("v", x + o1, y + so);
+            dc.setDrawColor(colV);
+            dc.drawText("v", x + o1, y - so);
         });
     }
 
     @Test
     public void drawText() {
         runExample(200, 200, "drawText", bd -> {
-
-            bd.drawText("Hello, world", 70, 90);
+            DrawingContext dc = bd.getDrawingContext();
+            dc.drawText("Hello, world", 70, 90);
 
         });
     }
@@ -78,14 +78,14 @@ public class WikiExamples {
     @Test
     public void drawText_b() {
         runExample(200, 200, "drawText_b", bd -> {
-
+            DrawingContext dc = bd.getDrawingContext();
             Font font1 = new Font("Times New Roman", Font.PLAIN, 20);
             Font font2 = new Font("Menlo", Font.PLAIN, 20);
 
-            bd.setFont(font1);
-            bd.drawText("Hello, world", 30, 70);
-            bd.setFont(font2);
-            bd.drawText("Hello, world", 30, 100);
+            dc.setFont(font1);
+            dc.drawText("Hello, world", 30, 70);
+            dc.setFont(font2);
+            dc.drawText("Hello, world", 30, 100);
 
         });
     }
@@ -97,9 +97,9 @@ public class WikiExamples {
             String fonts[] = BasicDisplay.getAvailableFontNames();
 
             Font font = new Font(fonts[fonts.length / 2], Font.PLAIN, 30);
-
-            bd.setFont(font);
-            bd.drawText("Hello, world", 30, 70);
+            DrawingContext dc = bd.getDrawingContext();
+            dc.setFont(font);
+            dc.drawText("Hello, world", 30, 70);
 
         });
     }
@@ -108,12 +108,12 @@ public class WikiExamples {
     public void getDistinctColor() {
 
         runExample(200, 200, "getDistinctColor", bd -> {
+            DrawingContext dc = bd.getDrawingContext();
+            dc.setDrawColor(Utils.getDistinctColor(1, 1));
+            dc.drawFilledRect(50, 50, 50, 100);
 
-            bd.setDrawColor(bd.getDistinctColor(1, 1));
-            bd.drawFilledRect(50, 50, 50, 100);
-
-            bd.setDrawColor(bd.getDistinctColor(16, 0.2));
-            bd.drawFilledRect(100, 50, 50, 100);
+            dc.setDrawColor(Utils.getDistinctColor(16, 0.2));
+            dc.drawFilledRect(100, 50, 50, 100);
 
         });
 
@@ -123,10 +123,10 @@ public class WikiExamples {
     public void getDisplaySize() {
 
         runExample(220, 200, "getDisplaySize", bd -> {
-
+            DrawingContext dc = bd.getDrawingContext();
             Point displaySize = bd.getDisplaySize();
-            bd.drawText("width=" + displaySize.x, 20, 40);
-            bd.drawText("height=" + displaySize.y, 20, 70);
+            dc.drawText("width=" + displaySize.x, 20, 40);
+            dc.drawText("height=" + displaySize.y, 20, 70);
 
         });
     }
@@ -135,9 +135,9 @@ public class WikiExamples {
     public void getWidth() {
 
         runExample(200, 150, "getWidth", bd -> {
-
+            DrawingContext dc = bd.getDrawingContext();
             int width = bd.getWidth();
-            bd.drawText("width=" + width, 20, 40);
+            dc.drawText("width=" + width, 20, 40);
 
 
         });
@@ -147,9 +147,9 @@ public class WikiExamples {
     public void getHeight() {
 
         runExample(200, 150, "getHeight", bd -> {
-
+            DrawingContext dc = bd.getDrawingContext();
             int height = bd.getHeight();
-            bd.drawText("height=" + height, 20, 40);
+            dc.drawText("height=" + height, 20, 40);
 
         });
     }
@@ -169,7 +169,7 @@ public class WikiExamples {
 
         runExample(200, 200, "repaint", bd -> {
 
-            bd.drawText("repaint", 20, 40);
+            bd.getDrawingContext().drawText("repaint", 20, 40);
             // Repaint causes anything drawn this frame to be updated and made visible.
             // The FPS parameter controls how long to wait until the next repaint.
             bd.repaint(30);
@@ -184,7 +184,7 @@ public class WikiExamples {
 
             // Set the name of the app shown in the title bar.
             bd.setTitle("Example title");
-            bd.drawText(bd.getTitle(), 20, 40);
+            bd.getDrawingContext().drawText(bd.getTitle(), 20, 40);
 
         });
     }
@@ -195,7 +195,7 @@ public class WikiExamples {
         runExample(200, 200, "cls", bd -> {
 
             // Clear the screen to supplied colour.
-            bd.cls(Color.ORANGE);
+            bd.getDrawingContext().cls(Color.ORANGE);
 
         });
     }
@@ -206,7 +206,7 @@ public class WikiExamples {
         runExample(200, 200, "cls_b", bd -> {
 
             // cls() with no colour supplied uses the default or user defined background colour.
-            bd.cls();
+            bd.getDrawingContext().cls();
 
         });
     }
@@ -216,14 +216,14 @@ public class WikiExamples {
 
         runExample(200, 200, "setDrawColor", bd -> {
 
-            bd.setDrawColor(Color.BLUE); // Use a built in colour.
-            bd.drawLine(0, 30, 200, 30);
+            bd.getDrawingContext().setDrawColor(Color.BLUE); // Use a built in colour.
+            bd.getDrawingContext().drawLine(0, 30, 200, 30);
 
-            bd.setDrawColor(new Color(255, 0, 0)); // or create a new one.
-            bd.drawLine(0, 60, 200, 60);
+            bd.getDrawingContext().setDrawColor(new Color(255, 0, 0)); // or create a new one.
+            bd.getDrawingContext().drawLine(0, 60, 200, 60);
 
-            bd.setDrawColor(bd.getDistinctColor(12, 1)); // Or use distinct colour helper.
-            bd.drawLine(0, 90, 200, 90);
+            bd.getDrawingContext().setDrawColor(Utils.getDistinctColor(12, 1)); // Or use distinct colour helper.
+            bd.getDrawingContext().drawLine(0, 90, 200, 90);
 
         });
     }
@@ -233,8 +233,8 @@ public class WikiExamples {
 
         runExample(200, 200, "setBackgroundColor", bd -> {
 
-            bd.setBackgroundColor(Color.CYAN);
-            bd.cls();
+            bd.getDrawingContext().setBackgroundColor(Color.CYAN);
+            bd.getDrawingContext().cls();
 
         });
     }
@@ -246,7 +246,7 @@ public class WikiExamples {
         runExample(200, 200, "drawImage", bd -> {
 
             BufferedImage bufferedImage = BasicDisplay.loadImage("/odin.jpg");
-            bd.drawImage(bufferedImage, 0, 0);
+            bd.getDrawingContext().drawImage(bufferedImage, 0, 0);
 
         });
     }
@@ -257,8 +257,8 @@ public class WikiExamples {
         runExample(200, 200, "drawImage_b", bd -> {
 
             BufferedImage bufferedImage = BasicDisplay.loadImage("/odin.jpg");
-            bd.drawImage(bufferedImage, 10, 10, 64, 50);
-            bd.drawImage(bufferedImage, 10, 70, 64 * 2, 50 * 2);
+            bd.getDrawingContext().drawImage(bufferedImage, 10, 10, 64, 50);
+            bd.getDrawingContext().drawImage(bufferedImage, 10, 70, 64 * 2, 50 * 2);
 
         });
     }
@@ -267,14 +267,14 @@ public class WikiExamples {
     public void getColorAtPoint() {
         runExample(200, 200, "getColorAtPoint", bd -> {
 
-            bd.cls(new Color(123, 134, 156));
+            bd.getDrawingContext().cls(new Color(123, 134, 156));
 
-            Color colorAtPoint1 = bd.getColorAtPoint(100, 100);
-            Color colorAtPoint2 = bd.getColorAtPoint(new Point(150, 150));
+            Color colorAtPoint1 = bd.getDrawingContext().getColorAtPoint(100, 100);
+            Color colorAtPoint2 = bd.getDrawingContext().getColorAtPoint(new Point(150, 150));
 
-            bd.setFont(10);
-            bd.drawText(colorAtPoint1.toString(), 10, 30);
-            bd.drawText(colorAtPoint2.toString(), 10, 60);
+            bd.getDrawingContext().setFont(10);
+            bd.getDrawingContext().drawText(colorAtPoint1.toString(), 10, 30);
+            bd.getDrawingContext().drawText(colorAtPoint2.toString(), 10, 60);
 
         });
     }
@@ -283,19 +283,19 @@ public class WikiExamples {
     public void getRGBAtPoint() {
         runExample(200, 200, "getRGBAtPoint", bd -> {
 
-            bd.cls(new Color(156, 211, 60));
+            bd.getDrawingContext().cls(new Color(156, 211, 60));
 
-            int rgbAtPoint = bd.getRGBAtPoint(100, 100);
+            int rgbAtPoint = bd.getDrawingContext().getRGBAtPoint(100, 100);
 
-            bd.setFont(16);
+            bd.getDrawingContext().setFont(16);
 
             int r = (rgbAtPoint >> 16) & 0xff;
             int g = (rgbAtPoint >> 8) & 0xff;
             int b = (rgbAtPoint) & 0xff;
 
-            bd.drawText("Red value:   " + r, 10, 30);
-            bd.drawText("Green value: " + g, 10, 60);
-            bd.drawText("Blue value:  " + b, 10, 90);
+            bd.getDrawingContext().drawText("Red value:   " + r, 10, 30);
+            bd.getDrawingContext().drawText("Green value: " + g, 10, 60);
+            bd.getDrawingContext().drawText("Blue value:  " + b, 10, 90);
 
 
         });
@@ -308,8 +308,8 @@ public class WikiExamples {
 
             Point point = new Point(80, 80);
 
-            bd.drawPoint(point);
-            bd.drawPoint(120, 120);
+            bd.getDrawingContext().drawPoint(point);
+            bd.getDrawingContext().drawPoint(120, 120);
 
         });
     }
@@ -319,8 +319,8 @@ public class WikiExamples {
     public void drawline() {
         runExample(200, 200, "drawLine", bd -> {
 
-            bd.drawLine(20, 20, 160, 160);
-            bd.drawLine(20.0, 100.0, 160, 160);
+            bd.getDrawingContext().drawLine(20, 20, 160, 160);
+            bd.getDrawingContext().drawLine(20.0, 100.0, 160, 160);
 
         });
     }
@@ -331,7 +331,7 @@ public class WikiExamples {
 
             Point p1 = new Point(10, 10);
             Point p2 = new Point(100, 100);
-            bd.drawLine(p1, p2);
+            bd.getDrawingContext().drawLine(p1, p2);
 
         });
     }
@@ -342,9 +342,9 @@ public class WikiExamples {
 
             Point p1 = new Point(10, 10);
             Point p2 = new Point(100, 100);
-            bd.drawLine(p1, p2, 3);
+            bd.getDrawingContext().drawLine(p1, p2, 3);
 
-            bd.drawLine(130, 60, 20, 100, 5);
+            bd.getDrawingContext().drawLine(130, 60, 20, 100, 5);
 
         });
     }
@@ -353,7 +353,7 @@ public class WikiExamples {
     public void drawRect() {
         runExample(200, 200, "drawRect", bd -> {
 
-            bd.drawRect(50, 50, 100, 100);
+            bd.getDrawingContext().drawRect(50, 50, 100, 100);
 
         });
     }
@@ -362,7 +362,7 @@ public class WikiExamples {
     public void drawFilledRect() {
         runExample(200, 200, "drawFilledRect", bd -> {
 
-            bd.drawFilledRect(50, 50, 100, 100);
+            bd.getDrawingContext().drawFilledRect(50, 50, 100, 100);
 
         });
     }
@@ -374,7 +374,7 @@ public class WikiExamples {
             int[] xPoints = new int[]{20, 100, 180};
             int[] yPoints = new int[]{20, 180, 20};
 
-            bd.drawFilledPolygon(xPoints, yPoints, 3);
+            bd.getDrawingContext().drawFilledPolygon(xPoints, yPoints, 3);
 
         });
     }
@@ -383,7 +383,7 @@ public class WikiExamples {
     public void drawCircle() {
         runExample(200, 200, "drawCircle", bd -> {
 
-            bd.drawCircle(100, 100, 50);
+            bd.getDrawingContext().drawCircle(100, 100, 50);
 
         });
     }
@@ -392,7 +392,7 @@ public class WikiExamples {
     public void drawFilledCircle() {
         runExample(200, 200, "drawFilledCircle", bd -> {
 
-            bd.drawFilledCircle(100, 100, 50);
+            bd.getDrawingContext().drawFilledCircle(100, 100, 50);
 
         });
     }
@@ -423,6 +423,7 @@ public class WikiExamples {
         bd.repaint();
         bd.saveScreenshot(filePath);
     }
+
 
     @Test
     public void t1() {

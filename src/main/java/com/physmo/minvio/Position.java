@@ -1,5 +1,8 @@
 package com.physmo.minvio;
 
+// TODO: rethink all the point stuff
+// we may not need position, just extend point if we have to
+// consider making point a templated class too.
 public abstract class Position {
 
     public double x, y;

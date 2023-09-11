@@ -1,6 +1,7 @@
 package com.physmo.minvio.utils;
 
-import com.physmo.minvio.BasicDisplay;
+import com.physmo.minvio.DrawingContext;
+import com.physmo.minvio.Utils;
 
 import java.awt.Color;
 
@@ -49,7 +50,8 @@ public class MatrixDrawer {
 
     }
 
-    public void draw(BasicDisplay bd, int xPos, int yPos, int scale, double time, MonoPixelWorker worker, Gradient gradient) {
+    public void draw(DrawingContext dc, int xPos, int yPos, int scale, double time, MonoPixelWorker worker, Gradient gradient) {
+
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
 
@@ -57,14 +59,14 @@ public class MatrixDrawer {
                 double a = angles[index];
                 double d = distances[index];
                 double value = worker.go((double) (x) / (double) width, (double) (y) / (double) height, a, d, time);
-                value = BasicDisplay.clamp(0, 1, value);
+                value = Utils.clamp(0, 1, value);
 
                 if (gradient == null)
-                    bd.setDrawColor(new Color((float) value, (float) value, (float) value));
+                    dc.setDrawColor(new Color((float) value, (float) value, (float) value));
                 else
-                    bd.setDrawColor(gradient.getColor(value));
+                    dc.setDrawColor(gradient.getColor(value));
 
-                bd.drawFilledRect(xPos + (x * scale), yPos + (y * scale), scale, scale);
+                dc.drawFilledRect(xPos + (x * scale), yPos + (y * scale), scale, scale);
             }
         }
 
