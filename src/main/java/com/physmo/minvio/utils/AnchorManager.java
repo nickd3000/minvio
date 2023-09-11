@@ -2,6 +2,7 @@ package com.physmo.minvio.utils;
 
 
 import com.physmo.minvio.BasicDisplay;
+import com.physmo.minvio.DrawingContext;
 import com.physmo.minvio.Point;
 
 import java.awt.Color;
@@ -26,22 +27,22 @@ public class AnchorManager {
         this.anchorRadius = anchorRadius;
         anchors = new ArrayList<>();
 
-        setAnchorDrawDelegate((bd, point, radius, mouseOver, grabbed) -> {
+        setAnchorDrawDelegate((dc, point, radius, mouseOver, grabbed) -> {
 
             if (grabbed) {
-                bd.setDrawColor(new Color(255, 228, 94));
-                bd.drawFilledCircle(point, radius);
-                bd.setDrawColor(new Color(1, 1, 1));
-                bd.drawCircle(point, radius);
+                dc.setDrawColor(new Color(255, 228, 94));
+                dc.drawFilledCircle(point, radius);
+                dc.setDrawColor(new Color(1, 1, 1));
+                dc.drawCircle(point, radius);
             } else if (mouseOver) {
-                bd.setDrawColor(new Color(1, 1, 1));
-                bd.drawFilledCircle(point, radius);
-                bd.setDrawColor(new Color(245, 5, 5));
-                bd.drawCircle(point, radius);
-                bd.drawCircle(point, radius + 0.5);
+                dc.setDrawColor(new Color(1, 1, 1));
+                dc.drawFilledCircle(point, radius);
+                dc.setDrawColor(new Color(245, 5, 5));
+                dc.drawCircle(point, radius);
+                dc.drawCircle(point, radius + 0.5);
             } else {
-                bd.setDrawColor(new Color(1, 1, 1));
-                bd.drawFilledCircle(point, radius);
+                dc.setDrawColor(new Color(1, 1, 1));
+                dc.drawFilledCircle(point, radius);
             }
 
         });
@@ -113,17 +114,18 @@ public class AnchorManager {
         return p;
     }
 
-    public void draw(BasicDisplay bd) {
+    public void draw(DrawingContext dc) {
         for (int i = 0; i < anchors.size(); i++) {
-            drawAnchor(bd, i);
+            drawAnchor(dc, i);
         }
     }
 
-    public void drawAnchor(BasicDisplay bd, int index) {
+    public void drawAnchor(DrawingContext dc, int index) {
         if (anchorDrawDelegate == null) {
-            bd.drawFilledCircle(anchors.get(index), anchorRadius);
+
+            dc.drawFilledCircle(anchors.get(index), anchorRadius);
         } else {
-            anchorDrawDelegate.draw(bd,
+            anchorDrawDelegate.draw(dc,
                     anchors.get(index),
                     anchorRadius,
                     index == mouseOverId,

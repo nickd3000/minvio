@@ -1,6 +1,7 @@
 package com.physmo.minvio.utils;
 
 import com.physmo.minvio.BasicDisplay;
+import com.physmo.minvio.DrawingContext;
 
 import java.awt.Color;
 import java.text.DecimalFormat;
@@ -33,15 +34,15 @@ public class BasicGraph {
         if (headPos >= numPoints) headPos = 0;
     }
 
-    public void draw(BasicDisplay d, int x, int y, int width, int height, Color c) {
+    public void draw(BasicDisplay bd, int x, int y, int width, int height, Color c) {
 
         floatingMax = floatingMax - ((floatingMax - maxValue) * INERTIA);
         floatingMin = floatingMin - ((floatingMin - minValue) * INERTIA);
         //double zoomSpan = Math.max(Math.abs(maxValue), Math.abs(minValue))*2;
         double zoomSpan = Math.max(Math.abs(floatingMax), Math.abs(floatingMin)) * 2.2;
-
-        d.setDrawColor(Color.black);
-        d.drawLine(x, y + (height / 2), x + width, y + (height / 2));
+        DrawingContext dc = bd.getDrawingContext();
+        dc.setDrawColor(Color.black);
+        dc.drawLine(x, y + (height / 2), x + width, y + (height / 2));
         int count = 0;
         int readPos = headPos;
         double rawValue;
@@ -62,15 +63,15 @@ public class BasicGraph {
             py = (rawValue / zoomSpan) * height;
             py += y + (height / 2.0);
             if (py <= y || py >= y + height) continue;
-            d.setDrawColor(c);
-            d.drawFilledRect((int) px, (int) py, 2, 2);
+            dc.setDrawColor(c);
+            dc.drawFilledRect((int) px, (int) py, 2, 2);
         }
 
-        d.setDrawColor(Color.black);
-        d.drawRect(x, y, width, height);
+        dc.setDrawColor(Color.black);
+        dc.drawRect(x, y, width, height);
 
         String maxText = df2.format(Math.max(floatingMax, Math.abs(floatingMin)));
 
-        d.drawText(maxText, 5, y + 15 + 5);
+        dc.drawText(maxText, 5, y + 15 + 5);
     }
 }
