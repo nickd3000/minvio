@@ -14,14 +14,15 @@ public class TestGui extends MinvioApp {
     public static void main(String... args) {
         MinvioApp app = new TestGui();
 
-        app.start(new BasicDisplayAwt(200, 200), "Simple Example", 60);
+        app.start(new BasicDisplayAwt(400, 200), "Simple Example", 60);
     }
 
+    GuiPanel guiPanel2;
 
     @Override
     public void init(BasicDisplay bd) {
         guiContext = new GuiContext(getBasicDisplay());
-        GuiPanel guiPanel = new GuiPanel(new Rect(40, 0, 200, 200));
+        GuiPanel guiPanel = new GuiPanel(new Rect(200, 0, 200, 200));
         GuiButton guiButton1 = new GuiButton(new Rect(10, 10, 50, 50));
         guiButton1.setAction(() -> {
             counter++;
@@ -30,6 +31,9 @@ public class TestGui extends MinvioApp {
         GuiButton guiButton2 = new GuiButton(new Rect(60, 10, 30, 20));
         guiPanel.add(guiButton2);
         guiContext.add(guiPanel);
+
+        guiPanel2 = new GuiPanel(new Rect(0, 0, 200, 200));
+        guiContext.add(guiPanel2);
     }
 
     @Override
@@ -44,6 +48,10 @@ public class TestGui extends MinvioApp {
         //dc.drawText("X:" + getMouseX() + " Y:" + bd.getMouseY(), 10, 190);
         dc.drawText("Presses:" + counter, 10, 190);
         dc.drawText("Tick :" + getFps(), 10, 160);
+
+        DrawingContext dc1 = guiPanel2.getDc();
+        dc1.setDrawColor(Color.ORANGE);
+        dc1.drawFilledRect(10, 10, 30, 30);
 
         guiContext.drawAll(dc);
     }

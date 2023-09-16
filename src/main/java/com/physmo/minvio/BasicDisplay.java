@@ -1,6 +1,6 @@
 package com.physmo.minvio;
 
-import com.physmo.minvio.utils.gui.MouseConnector;
+import com.physmo.minvio.utils.gui.support.MouseConnector;
 
 import javax.imageio.ImageIO;
 import java.awt.GraphicsEnvironment;
@@ -18,23 +18,13 @@ public abstract class BasicDisplay {
     public static final int TEXT_SIZE_WIDTH = 0;
     public static final int TEXT_SIZE_ASCENT = 1;
     public static final int TEXT_SIZE_DESCENT = 2;
-
+    /* TIMING ---------------------------------------------------------------*/
+    public static long repaintTimerStart = 0;
     List<MouseConnector> mouseConnectors;
 
     public BasicDisplay() {
         mouseConnectors = new ArrayList<>();
     }
-
-    public void addMouseConnector(MouseConnector mouseConnector) {
-        mouseConnectors.add(mouseConnector);
-    }
-
-    /* TIMING ---------------------------------------------------------------*/
-    public static long repaintTimerStart = 0;
-
-    public abstract DrawingContext getDrawingContext();
-
-    /* COLOR ----------------------------------------------------------------*/
 
     /**
      * Get list of all available font names.
@@ -62,6 +52,14 @@ public abstract class BasicDisplay {
 
         return image;
     }
+
+    /* COLOR ----------------------------------------------------------------*/
+
+    public void addMouseConnector(MouseConnector mouseConnector) {
+        mouseConnectors.add(mouseConnector);
+    }
+
+    public abstract DrawingContext getDrawingContext();
 
 //    /**
 //     * Returns a new distinct colour for each supplied index
@@ -147,13 +145,6 @@ public abstract class BasicDisplay {
      */
     public abstract void repaint();
 
-    /**
-     * Set the title of the application window.
-     *
-     * @param str Text representing the new window title.
-     */
-    public abstract void setTitle(String str);
-
     // Input and output.
     // Update previous keys with current keys so we can tell what changed next time.
     public abstract void tickInput();
@@ -180,10 +171,6 @@ public abstract class BasicDisplay {
 
     public abstract boolean getMouseButtonRight();
 
-//    public abstract Color getDrawColor();
-
-//    public abstract Color getBackgroundColor();
-
     /**
      * Write an image file of the current BasicDisplay window to the users home folder.
      */
@@ -193,7 +180,18 @@ public abstract class BasicDisplay {
         saveScreenshot(filePath);
     }
 
+//    public abstract Color getDrawColor();
+
+//    public abstract Color getBackgroundColor();
+
     public abstract String getTitle();
+
+    /**
+     * Set the title of the application window.
+     *
+     * @param str Text representing the new window title.
+     */
+    public abstract void setTitle(String str);
 
     /**
      * Write an image file of the current BasicDisplay window to the supplied path

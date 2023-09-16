@@ -1,4 +1,4 @@
-package com.physmo.minvio.utils.gui;
+package com.physmo.minvio.utils.gui.support;
 
 public interface MouseConnector {
     void onMouseMoved(int x, int y);

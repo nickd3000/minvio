@@ -2,7 +2,7 @@ package com.physmo.minvio;
 
 // Import the basic graphics classes.
 
-import com.physmo.minvio.utils.gui.MouseConnector;
+import com.physmo.minvio.utils.gui.support.MouseConnector;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -185,6 +185,7 @@ public class BasicDisplayAwt extends BasicDisplay {
         //final Graphics2D g2d;
         int mouseX = 0;
         int mouseY = 0;
+        List<MouseConnector> mouseConnectors;
 
         BPanel(int width, int height, BufferedImage drawBuffer) {
             setSize(width, height);
@@ -242,7 +243,6 @@ public class BasicDisplayAwt extends BasicDisplay {
             keyDown[e.getKeyCode()] = 0;
         }
 
-
         @Override
         public void mouseClicked(MouseEvent e) {
 //            int bid = e.getButton();
@@ -285,8 +285,6 @@ public class BasicDisplayAwt extends BasicDisplay {
         public void mouseExited(MouseEvent e) {
 
         }
-
-        List<MouseConnector> mouseConnectors;
 
         public void addMouseConnectors(List<MouseConnector> mouseConnectors) {
             this.mouseConnectors = mouseConnectors;
