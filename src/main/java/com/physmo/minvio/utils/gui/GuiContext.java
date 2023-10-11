@@ -4,9 +4,11 @@ import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.DrawingContext;
 import com.physmo.minvio.PointInt;
 import com.physmo.minvio.utils.gui.support.GuiMessage;
+import com.physmo.minvio.utils.gui.support.GuiStyle;
 import com.physmo.minvio.utils.gui.support.MouseConnector;
 import com.physmo.minvio.utils.gui.support.MouseMessageData;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -21,6 +23,7 @@ public class GuiContext {
 
     BasicDisplay basicDisplay;
     List<GuiContainer> buttonDownList = new ArrayList<>();
+    private GuiStyle guiStyle;
 
     public GuiContext(BasicDisplay basicDisplay) {
         this.basicDisplay = basicDisplay;
@@ -28,12 +31,41 @@ public class GuiContext {
         initMouseConnector();
         basicDisplay.addMouseConnector(mouseConnector);
         //map = new HashMap<>();
+        guiStyle = new GuiStyle() {
+            @Override
+            public Color getBackgroundColor() {
+                return new Color(189, 189, 189, 255);
+            }
+
+            @Override
+            public Color getBevelLight() {
+                return new Color(231, 231, 231, 255);
+            }
+
+            @Override
+            public Color getBevelDark() {
+                return new Color(143, 143, 143, 255);
+            }
+
+            @Override
+            public Color getAccent() {
+                return new Color(40, 40, 213, 255);
+            }
+        };
+    }
+
+    public GuiStyle getGuiStyle() {
+        return guiStyle;
+    }
+
+    public void setGuiStyle(GuiStyle guiStyle) {
+        this.guiStyle = guiStyle;
     }
 
     public void tick() {
         locateAll();
         for (GuiContainer guiContainer : allChildren) {
-            guiContainer.drawIfDirty();
+            guiContainer.drawIfDirty(this);
         }
     }
 
@@ -45,11 +77,13 @@ public class GuiContext {
         mouseConnector = new MouseConnector() {
             @Override
             public void onMouseMoved(int x, int y) {
-                for (GuiContainer guiContainer : allChildren) {
+                synchronized (allChildren) {
+                    for (GuiContainer guiContainer : allChildren) {
 
-                    PointInt p = guiContainer.getInheritedPosition();
-                    guiContainer.onMessage(GuiMessage.MOUSE_MOVE, new MouseMessageData(x - p.x, y - p.y, 0));
+                        PointInt p = guiContainer.getInheritedPosition();
+                        guiContainer.onMessage(GuiMessage.MOUSE_MOVE, new MouseMessageData(x - p.x, y - p.y, 0));
 
+                    }
                 }
             }
 
@@ -81,7 +115,7 @@ public class GuiContext {
     public void drawAll(DrawingContext topLevelContext) {
         locateAll();
         for (GuiContainer container : containers) {
-            container.recursiveDraw(topLevelContext, 0, 0);
+            container.recursiveDraw(this, topLevelContext, 0, 0);
         }
 
     }

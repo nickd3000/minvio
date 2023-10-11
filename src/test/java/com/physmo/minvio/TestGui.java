@@ -8,8 +8,9 @@ import java.awt.Color;
 
 public class TestGui extends MinvioApp {
 
-    GuiContext guiContext;
     int counter = 0;
+    GuiContext guiContext;
+
 
     public static void main(String... args) {
         MinvioApp app = new TestGui();
@@ -22,6 +23,7 @@ public class TestGui extends MinvioApp {
     @Override
     public void init(BasicDisplay bd) {
         guiContext = new GuiContext(getBasicDisplay());
+
         GuiPanel guiPanel = new GuiPanel(new Rect(200, 0, 200, 200));
         GuiButton guiButton1 = new GuiButton(new Rect(10, 10, 50, 50));
         guiButton1.setAction(() -> {

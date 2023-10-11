@@ -31,11 +31,11 @@ public class GuiButton extends GuiContainer {
     }
 
     @Override
-    public void draw() {
+    public void draw(GuiContext guiContext) {
         if (!visiblyPressed)
-            GuiUtils.drawBevelBoxOut(dc, 0, 0, rect.w, rect.h);
+            GuiUtils.drawBevelBoxOut(dc, guiContext.getGuiStyle(), 0, 0, rect.w, rect.h);
         else
-            GuiUtils.drawBevelBoxIn(dc, 0, 0, rect.w, rect.h);
+            GuiUtils.drawBevelBoxIn(dc, guiContext.getGuiStyle(), 0, 0, rect.w, rect.h);
     }
 
     public boolean isPointInside(int x, int y) {

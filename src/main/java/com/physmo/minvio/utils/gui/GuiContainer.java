@@ -35,7 +35,7 @@ public abstract class GuiContainer {
         return dc;
     }
 
-    public abstract void draw();
+    public abstract void draw(GuiContext guiContext);
 
     public void add(GuiContainer child) {
         child.parent = this;
@@ -54,13 +54,13 @@ public abstract class GuiContainer {
     }
 
 
-    public void recursiveDraw(DrawingContext baseContext, int offsetX, int offsetY) {
+    public void recursiveDraw(GuiContext guiContext, DrawingContext baseContext, int offsetX, int offsetY) {
         int ox = offsetX + rect.x;
         int oy = offsetY + rect.y;
-        drawIfDirty();
+        drawIfDirty(guiContext);
         baseContext.drawImage(buffer, ox, oy);
         for (GuiContainer child : children) {
-            child.recursiveDraw(baseContext, ox, oy);
+            child.recursiveDraw(guiContext, baseContext, ox, oy);
         }
 
     }
@@ -74,9 +74,9 @@ public abstract class GuiContainer {
     }
 
 
-    public void drawIfDirty() {
+    public void drawIfDirty(GuiContext guiContext) {
         if (!dirty) return;
-        draw();
+        draw(guiContext);
         dirty = false;
     }
 
