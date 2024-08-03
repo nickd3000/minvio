@@ -4,8 +4,10 @@ import com.physmo.minvio.utils.RollingAverage;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 
-public abstract class MinvioApp {
+public class MinvioApp implements DrawingContext {
 
     final RollingAverage tickRollingAverage = new RollingAverage(30);
     final Font fpsFont = new Font("Verdana", Font.PLAIN, 12);
@@ -41,6 +43,18 @@ public abstract class MinvioApp {
         bd.getDrawingContext().cls();
         this.targetFps = fps;
         start(bd);
+    }
+
+    /**
+     * Start the application with default basic display settings. 60fps.
+     */
+    public MinvioApp start(int width, int height) {
+        BasicDisplayAwt bd = new BasicDisplayAwt(width, height);
+        bd.setTitle("Minvio App");
+        bd.getDrawingContext().cls();
+        this.targetFps = 60;
+        start(bd);
+        return this;
     }
 
     /**
@@ -82,7 +96,7 @@ public abstract class MinvioApp {
             tickRollingAverage.add(lDelta / (double) 1000_000);
             lastDrawTime = System.nanoTime();
             BasicDisplay.repaintTimerStart = System.nanoTime();
-            draw(drawingContext, (delta) / 1_000_000_000.0);
+            draw((delta) / 1_000_000_000.0);
 
             if (displayFps) drawFps();
             bd.repaint();
@@ -115,13 +129,13 @@ public abstract class MinvioApp {
 
     /**
      * The main draw function of your app, you must override this in your MinvioApp based
-     * program.  It is called once per fram (according to the FPS value), after it has
+     * program.  It is called once per frame (according to the FPS value), after it has
      * been called, the display will be refreshed automatically.
      *
-     * @param dc    the DrawingContext.
      * @param delta time in seconds since the last DRAW call, e.g. 1.0 = 1 second.
      */
-    public abstract void draw(DrawingContext dc, double delta);
+    public void draw(double delta) {
+    }
 
     private void drawFps() {
         DrawingContext dc = bd.getDrawingContext();
@@ -164,12 +178,131 @@ public abstract class MinvioApp {
         displayFps = set;
     }
 
+    public DrawingContext getDrawingContext() {
+        return drawingContext;
+    }
+
     public int getMouseX() {
         return bd.getMouseX();
     }
 
     public int getMouseY() {
         return bd.getMouseY();
+    }
+
+    @Override
+    public void cls(Color c) {
+        drawingContext.cls(c);
+    }
+
+    @Override
+    public void cls() {
+        drawingContext.cls();
+    }
+
+    @Override
+    public Color setDrawColor(Color newCol) {
+        return drawingContext.setDrawColor(newCol);
+    }
+
+    @Override
+    public Color setBackgroundColor(Color newCol) {
+        return drawingContext.setBackgroundColor(newCol);
+    }
+
+    @Override
+    public void drawImage(BufferedImage sourceImage, int x, int y) {
+        drawingContext.drawImage(sourceImage, x, y);
+    }
+
+    @Override
+    public void drawImage(BufferedImage sourceImage, int x, int y, int w, int h) {
+        drawingContext.drawImage(sourceImage, x, y, w, h);
+    }
+
+    @Override
+    public int getRGBAtPoint(int x, int y) {
+        return drawingContext.getRGBAtPoint(x, y);
+    }
+
+    @Override
+    public void drawPoint(int x, int y) {
+        drawingContext.drawPoint(x, y);
+    }
+
+    @Override
+    public void drawLine(int x1, int y1, int x2, int y2) {
+        drawingContext.drawLine(x1, y1, x2, y2);
+    }
+
+    @Override
+    public void drawLine(double x1, double y1, double x2, double y2, double thickness) {
+        drawingContext.drawLine(x1, y1, x2, y2, thickness);
+    }
+
+    @Override
+    public void drawFilledRect(int x, int y, int width, int height) {
+        drawingContext.drawFilledRect(x, y, width, height);
+    }
+
+    @Override
+    public void drawRect(int x, int y, int width, int height) {
+        drawingContext.drawRect(x, y, width, height);
+    }
+
+    @Override
+    public void drawFilledPolygon(int[] xPoints, int[] yPoints, int numPoints) {
+        drawingContext.drawFilledPolygon(xPoints, yPoints, numPoints);
+    }
+
+    @Override
+    public void drawCircle(double x, double y, double r) {
+        drawingContext.drawCircle(x, y, r);
+    }
+
+    @Override
+    public void drawFilledCircle(double x, double y, double r) {
+        drawingContext.drawFilledCircle(x, y, r);
+    }
+
+    @Override
+    public void drawText(String str, int x, int y) {
+        drawingContext.drawText(str, x, y);
+    }
+
+    @Override
+    public void setFont(Font font) {
+        drawingContext.setFont(font);
+    }
+
+    @Override
+    public Font getFont() {
+        return drawingContext.getFont();
+    }
+
+    @Override
+    public void setFont(int size) {
+        drawingContext.setFont(size);
+    }
+
+    @Override
+    public int[] getTextSize(String str) {
+        return drawingContext.getTextSize(str);
+    }
+
+    @Override
+    public Color getDrawColor() {
+        return drawingContext.getDrawColor();
+    }
+
+    @Override
+    public Color getBackgroundColor() {
+        return drawingContext.getBackgroundColor();
+    }
+
+    @Override
+    public Image getDrawBuffer() {
+        return drawingContext.getDrawBuffer();
     }
 
     public int getWidth() {
