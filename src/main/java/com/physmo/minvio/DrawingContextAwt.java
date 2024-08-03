@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DrawingContextAwt extends DrawingContext {
+public class DrawingContextAwt implements DrawingContext {
 
     BufferedImage buffer;
     Graphics g;
