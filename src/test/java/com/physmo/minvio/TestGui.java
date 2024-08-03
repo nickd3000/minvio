@@ -39,22 +39,22 @@ public class TestGui extends MinvioApp {
     }
 
     @Override
-    public void draw(DrawingContext dc, double delta) {
+    public void draw(double delta) {
         guiContext.tick();
 
-        dc.cls(Color.LIGHT_GRAY);
-        dc.setDrawColor(Color.WHITE);
-        dc.drawFilledRect(75, 75, 50, 50);
-        dc.setDrawColor(Color.BLUE);
-        dc.drawCircle(100, 100, 70);
-        //dc.drawText("X:" + getMouseX() + " Y:" + bd.getMouseY(), 10, 190);
-        dc.drawText("Presses:" + counter, 10, 190);
-        dc.drawText("Tick :" + getFps(), 10, 160);
+        cls(Color.LIGHT_GRAY);
+        setDrawColor(Color.WHITE);
+        drawFilledRect(75, 75, 50, 50);
+        setDrawColor(Color.BLUE);
+        drawCircle(100, 100, 70);
+        //drawText("X:" + getMouseX() + " Y:" + bd.getMouseY(), 10, 190);
+        drawText("Presses:" + counter, 10, 190);
+        drawText("Tick :" + getFps(), 10, 160);
 
         DrawingContext dc1 = guiPanel2.getDc();
         dc1.setDrawColor(Color.ORANGE);
         dc1.drawFilledRect(10, 10, 30, 30);
 
-        guiContext.drawAll(dc);
+        guiContext.drawAll(getDrawingContext());
     }
 }

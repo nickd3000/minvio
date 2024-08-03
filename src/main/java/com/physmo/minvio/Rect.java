@@ -12,8 +12,7 @@ public class Rect {
 
     public boolean isPointInside(int xx, int yy) {
         if (xx < x || yy < y) return false;
-        if (xx > x + w || yy > y + h) return false;
-        return true;
+        return xx <= x + w && yy <= y + h;
     }
 
 }
