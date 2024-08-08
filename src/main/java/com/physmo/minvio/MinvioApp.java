@@ -58,6 +58,18 @@ public class MinvioApp implements DrawingContext {
     }
 
     /**
+     * Start the application with default basic display settings. 60fps.
+     */
+    public MinvioApp start(int width, int height, String title, int fps) {
+        BasicDisplayAwt bd = new BasicDisplayAwt(width, height);
+        bd.setTitle(title);
+        bd.getDrawingContext().cls();
+        this.targetFps = fps;
+        start(bd);
+        return this;
+    }
+
+    /**
      * Start the application - creates the app window and starts the main draw loop running.
      *
      * @param bd an instance of BasicDisplay.
