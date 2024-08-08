@@ -81,7 +81,22 @@ public class Utils {
      * @return the clamped value
      */
     public static double clamp(double min, double max, double value) {
-        return value < min ? min : value > max ? max : value;
+        return value < min ? min : Math.min(value, max);
     }
 
+    /**
+     * Calculates the inverted distance between the given distance and the maximum distance.
+     * If the distance is greater than the maximum, it is set to the maximum before the calculation is performed.
+     * The resulting value is between 0 and 1, where 1 is the closest distance and 0 is the farthest.
+     *
+     * @param distance the distance value
+     * @param max      the maximum distance value
+     * @return the inverted distance value
+     */
+    public static double invertDistance(double distance, double max) {
+        if (distance > max) {
+            distance = max;
+        }
+        return (max - distance) / max;
+    }
 }
