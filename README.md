@@ -16,15 +16,13 @@ Add maven dependency:
 <dependency>
     <groupId>io.github.nickd3000</groupId>
     <artifactId>minvio</artifactId>
-    <version>1.07</version>
+    <version>1.08</version>
 </dependency>
 ```
 
 **Minimal example**
 
 ``` java
-import com.physmo.minvio.BasicDisplay;
-import com.physmo.minvio.BasicDisplayAwt;
 import com.physmo.minvio.MinvioApp;
 
 import java.awt.Color;
@@ -33,23 +31,28 @@ class SimpleExample extends MinvioApp {
 
     public static void main(String... args) {
         MinvioApp app = new SimpleExample();
-        // Start the app running with a window size of 200x200 pixels, at 60 frames per second.
-        app.start(new BasicDisplayAwt(200, 200), "Simple Example", 60);
+        app.start(200, 200, "Simple Example", 60);
     }
 
     @Override
-    public void draw(BasicDisplay bd, double delta) {
-        bd.cls(Color.LIGHT_GRAY);
-        bd.setDrawColor(Color.WHITE);
-        bd.drawFilledRect(75, 75, 50, 50);
-        bd.setDrawColor(Color.BLUE);
-        bd.drawCircle(100, 100, 70);
-        bd.drawText("X:" + bd.getMouseX() + " Y:" + bd.getMouseY(), 10, 190);
+    public void draw(double delta) {
+        cls(Color.LIGHT_GRAY);
+        setDrawColor(Color.WHITE);
+        drawFilledRect(75, 75, 50, 50);
+        setDrawColor(Color.BLUE);
+        drawCircle(100, 100, 70);
+        drawText("X:" + getMouseX() + " Y:" + getMouseY(), 10, 190);
+        drawText("Tick :" + getFps(), 10, 160);
     }
 }
 ```
 
 ### Changelist
+
+###### Version 1.08 - August 2024
+
+* Simplified app startup
+* Added pass-through methods in MinvioApp to drawing context
 
 ###### Version 1.07 - May 2023
 

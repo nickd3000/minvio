@@ -1,6 +1,6 @@
 package com.physmo.minvio.utils.ecs;
 
-import com.physmo.minvio.BasicDisplay;
+import com.physmo.minvio.DrawingContext;
 import com.physmo.minvio.Vec3;
 
 import java.util.ArrayList;
@@ -28,12 +28,12 @@ public class Entity {
         return this;
     }
 
-    public void tick(BasicDisplay bd, double t) {
-        components.forEach(c -> c.tick(bd, this, t));
+    public void tick(DrawingContext dc, double t) {
+        components.forEach(c -> c.tick(dc, this, t));
     }
 
-    public void draw(BasicDisplay bd, double t) {
-        drawComponent.tick(bd, this, t);
+    public void draw(DrawingContext dc, double t) {
+        drawComponent.tick(dc, this, t);
     }
 
     public void setProperty(String name, Object value) {

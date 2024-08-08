@@ -1,14 +1,16 @@
 package com.physmo.minvio;
 
+import com.physmo.minvio.utils.gui.support.MouseConnector;
+
 import javax.imageio.ImageIO;
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 // Implements common functionality and alternative types methods for drawing operations.
 public abstract class BasicDisplay {
@@ -16,12 +18,13 @@ public abstract class BasicDisplay {
     public static final int TEXT_SIZE_WIDTH = 0;
     public static final int TEXT_SIZE_ASCENT = 1;
     public static final int TEXT_SIZE_DESCENT = 2;
-
-
     /* TIMING ---------------------------------------------------------------*/
     public static long repaintTimerStart = 0;
+    List<MouseConnector> mouseConnectors;
 
-    /* COLOR ----------------------------------------------------------------*/
+    public BasicDisplay() {
+        mouseConnectors = new ArrayList<>();
+    }
 
     /**
      * Get list of all available font names.
@@ -50,85 +53,27 @@ public abstract class BasicDisplay {
         return image;
     }
 
-    /**
-     * Return a blended color between c1 and c2 at position pos.
-     *
-     * @param c1  Color 1
-     * @param c2  Color 2
-     * @param pos Position
-     * @return Blended color
-     */
-    public static Color lerp(Color c1, Color c2, double pos) {
-        pos = clamp(0.0, 1.0, pos);
-        int r = lerp(c1.getRed(), c2.getRed(), pos);
-        int g = lerp(c1.getGreen(), c2.getGreen(), pos);
-        int b = lerp(c1.getBlue(), c2.getBlue(), pos);
-        return new Color(r, g, b);
+    /* COLOR ----------------------------------------------------------------*/
+
+    public void addMouseConnector(MouseConnector mouseConnector) {
+        mouseConnectors.add(mouseConnector);
     }
 
-    /**
-     * Return blended value, mix of v1 and v2, proportion specified by pos.
-     *
-     * @param v1  First value
-     * @param v2  Second Value
-     * @param pos control
-     * @return the interpolated value
-     */
-    public static int lerp(int v1, int v2, double pos) {
-        int span = v2 - v1;
-        return (int) (v1 + (int) (double) span * pos);
-    }
+    public abstract DrawingContext getDrawingContext();
 
-    /**
-     * Return blended value, mix of v1 and v2, proportion specified by pos.
-     *
-     * @param p1  First value
-     * @param p2  Second Value
-     * @param pos control
-     * @return the interpolated value
-     */
-    public static Point lerp(Point p1, Point p2, double pos) {
-        return new Point(lerp(p1.x, p2.x, pos), lerp(p1.y, p2.y, pos));
-    }
-
-    /**
-     * Return blended value, mix of v1 and v2, proportion specified by pos.
-     *
-     * @param v1  First value
-     * @param v2  Second Value
-     * @param pos control
-     * @return the interpolated value
-     */
-    public static double lerp(double v1, double v2, double pos) {
-        double span = v2 - v1;
-        return (v1 + span * pos);
-    }
-
-    /**
-     * Return blended value, mix of v1 and v2, proportion specified by pos.
-     *
-     * @param min   First value
-     * @param max   Second Value
-     * @param value control
-     * @return the clamped value
-     */
-    public static double clamp(double min, double max, double value) {
-        return value < min ? min : value > max ? max : value;
-    }
-
-    /**
-     * Returns a new distinct colour for each supplied index
-     * Colours will be the same for a given index each time it is called.
-     *
-     * @param index      integer representing the distinct colour
-     * @param saturation 0..1 double value
-     * @return A distinct color.
-     */
-    // TODO: Cache some of these
-    public Color getDistinctColor(int index, double saturation) {
-        float magicNumber = 0.6180339887f;
-        return new Color(Color.HSBtoRGB(((float) index) * magicNumber, (float) saturation, 1.0f));
-    }
+//    /**
+//     * Returns a new distinct colour for each supplied index
+//     * Colours will be the same for a given index each time it is called.
+//     *
+//     * @param index      integer representing the distinct colour
+//     * @param saturation 0..1 double value
+//     * @return A distinct color.
+//     */
+//    // TODO: Cache some of these
+//    public Color getDistinctColor(int index, double saturation) {
+//        float magicNumber = 0.6180339887f;
+//        return new Color(Color.HSBtoRGB(((float) index) * magicNumber, (float) saturation, 1.0f));
+//    }
 
     /**
      * Get the width and height of the application window as a Point
@@ -200,285 +145,6 @@ public abstract class BasicDisplay {
      */
     public abstract void repaint();
 
-    /**
-     * Set the title of the application window.
-     *
-     * @param str Text representing the new window title.
-     */
-    public abstract void setTitle(String str);
-
-    /**
-     * Clear the display to the supplied color.
-     *
-     * @param c AWT Color object to clear the display to.
-     */
-    public abstract void cls(Color c);
-
-    public abstract void cls();
-
-    /**
-     * Set the color to use for drawing operations.
-     *
-     * @param newCol The color that future draw operations will use.
-     * @return The previous color.
-     */
-    public abstract Color setDrawColor(Color newCol);
-
-    /**
-     * Set the background color to use for drawing operations.
-     *
-     * @param newCol The color that future draw operations will use.
-     * @return The previous color.
-     */
-    public abstract Color setBackgroundColor(Color newCol);
-
-    /**
-     * Draw an image to the display.
-     *
-     * @param sourceImage Source image as a Buffered Image
-     * @param x           x-coordinate
-     * @param y           y-coordinate
-     */
-    public abstract void drawImage(BufferedImage sourceImage, int x, int y);
-
-    /**
-     * Draw an image to the display.
-     *
-     * @param sourceImage Source image as a Buffered Image
-     * @param x           x-coordinate
-     * @param y           y-coordinate
-     * @param w           width
-     * @param h           height
-     */
-    public abstract void drawImage(BufferedImage sourceImage, int x, int y, int w, int h);
-
-    /**
-     * Get the colour at the defined position.
-     *
-     * @param pos Position
-     * @return Color value
-     */
-    public Color getColorAtPoint(Point pos) {
-        return getColorAtPoint((int) pos.x, (int) pos.y);
-    }
-
-    /**
-     * Get the colour at the defined position.
-     *
-     * @param x x-coordinate
-     * @param y y-coordinate
-     * @return Color value
-     */
-    public Color getColorAtPoint(int x, int y) {
-        int rgb = this.getRGBAtPoint(x, y);
-        return new Color(rgb);
-    }
-
-    /* LINE ---------------------------------------------------------------*/
-
-    /**
-     * Get the color in RGB packed integer format at the defined position.
-     * <p>
-     * Format in hex: 0xAARRGGBB
-     *
-     * @param x x-coordinate
-     * @param y y-coordinate
-     * @return integer RGB value
-     */
-    public abstract int getRGBAtPoint(int x, int y);
-
-    /**
-     * Drawing function - Draw a pixel using current draw color.
-     *
-     * @param pos position
-     */
-    public void drawPoint(Point pos) {
-        drawPoint((int) pos.x, (int) pos.y);
-    }
-
-    /**
-     * Drawing function - Draw a pixel using current draw color.
-     *
-     * @param x x-coordinate
-     * @param y y-coordinate
-     */
-    public abstract void drawPoint(int x, int y);
-
-    /**
-     * Drawing function - draw a line
-     *
-     * @param x1 x-coordinate (start)
-     * @param y1 y-coordinate (start)
-     * @param x2 x-coordinate (end)
-     * @param y2 y-coordinate (end)
-     */
-    public void drawLine(double x1, double y1, double x2, double y2) {
-        drawLine((int) x1, (int) y1, (int) x2, (int) y2);
-    }
-
-    /* RECT ---------------------------------------------------------------*/
-
-    /**
-     * Drawing function - draw a line
-     *
-     * @param x1 x-coordinate (start)
-     * @param y1 y-coordinate (start)
-     * @param x2 x-coordinate (end)
-     * @param y2 y-coordinate (end)
-     */
-    public abstract void drawLine(int x1, int y1, int x2, int y2);
-
-    /**
-     * Drawing function - draw a line
-     *
-     * @param pos1 start Point
-     * @param pos2 end Point
-     */
-    public void drawLine(Point pos1, Point pos2) {
-        drawLine((int) pos1.x, (int) pos1.y, (int) pos2.x, (int) pos2.y);
-    }
-
-    /* POLYGON ---------------------------------------------------------------*/
-
-    /**
-     * Drawing function - draw a line
-     *
-     * @param pos1      start Point
-     * @param pos2      end Point
-     * @param thickness line thickness
-     */
-    public void drawLine(Point pos1, Point pos2, double thickness) {
-        drawLine(pos1.x, pos1.y, pos2.x, pos2.y, thickness);
-    }
-
-    /**
-     * Drawing function - draw a line
-     *
-     * @param x1        x-coordinate (start)
-     * @param y1        y-coordinate (start)
-     * @param x2        x-coordinate (end)
-     * @param y2        y-coordinate (end)
-     * @param thickness line thickness
-     */
-    public abstract void drawLine(double x1, double y1, double x2, double y2, double thickness);
-
-    /* CIRCLE ---------------------------------------------------------------*/
-
-    /**
-     * Drawing function - draw a filled rectangle
-     *
-     * @param x      x-coordinate
-     * @param y      y-coordinate
-     * @param width  width
-     * @param height height
-     */
-    public abstract void drawFilledRect(int x, int y, int width, int height);
-
-    /**
-     * Drawing function - draw an unfilled rectangle
-     *
-     * @param x      x-coordinate
-     * @param y      y-coordinate
-     * @param width  width
-     * @param height height
-     */
-    public abstract void drawRect(int x, int y, int width, int height);
-
-    /**
-     * Drawing function - draw a filled polygon
-     *
-     * @param xPoints   Array of x-coordinate
-     * @param yPoints   Array of y-coordinate
-     * @param numPoints number of points
-     */
-    public abstract void drawFilledPolygon(int[] xPoints, int[] yPoints, int numPoints);
-
-
-    /**
-     * Drawing function - draw an unfilled circle
-     *
-     * @param pos Position
-     * @param r   radius
-     */
-    public void drawCircle(Point pos, double r) {
-        drawCircle(pos.x, pos.y, r);
-    }
-
-    /**
-     * Drawing function - draw a filled circle
-     *
-     * @param x x-coordinate
-     * @param y y-coordinate
-     * @param r radius
-     */
-    public abstract void drawCircle(double x, double y, double r);
-
-    /**
-     * Drawing function - draw a filled circle
-     *
-     * @param pos Position
-     * @param r   radius
-     */
-    public void drawFilledCircle(Point pos, double r) {
-        drawFilledCircle(pos.x, pos.y, r);
-    }
-
-    /**
-     * Drawing function - draw a filled circle
-     *
-     * @param x x-coordinate
-     * @param y y-coordinate
-     * @param r radius
-     */
-    public abstract void drawFilledCircle(double x, double y, double r);
-
-    /**
-     * Draw the supplied string using the active font.
-     *
-     * @param str text to draw
-     * @param x   x-coordinate
-     * @param y   y-coordinate
-     */
-    public abstract void drawText(String str, int x, int y);
-
-    /**
-     * Set current font to the specified font.
-     * Example:
-     * Font font = new Font("Verdana", Font.PLAIN, 10);
-     *
-     * @param font the user supplied font
-     */
-    public abstract void setFont(Font font);
-
-    /**
-     * Obtain the current font used by BasicDisplay
-     *
-     * @return the current font.
-     */
-    public abstract Font getFont();
-
-    /**
-     * Set current font to the built-in font at the specified size.
-     *
-     * @param size font size
-     */
-    public abstract void setFont(int size);
-
-    /**
-     * Retrieve font metrics of the supplied string in an int array
-     * This is useful for accurate text layout.
-     * <p>
-     * 3 values representing the width, ascent and descent values of the font
-     * The provided index variables can be used to access them:
-     * TEXT_SIZE_WIDTH
-     * TEXT_SIZE_ASCENT
-     * TEXT_SIZE_DESCENT
-     *
-     * @param str string to retrieve metrics from
-     * @return an integer array containing various measurements.
-     */
-    public abstract int[] getTextSize(String str);
-
     // Input and output.
     // Update previous keys with current keys so we can tell what changed next time.
     public abstract void tickInput();
@@ -505,10 +171,6 @@ public abstract class BasicDisplay {
 
     public abstract boolean getMouseButtonRight();
 
-    public abstract Color getDrawColor();
-
-    public abstract Color getBackgroundColor();
-
     /**
      * Write an image file of the current BasicDisplay window to the users home folder.
      */
@@ -519,6 +181,13 @@ public abstract class BasicDisplay {
     }
 
     public abstract String getTitle();
+
+    /**
+     * Set the title of the application window.
+     *
+     * @param str Text representing the new window title.
+     */
+    public abstract void setTitle(String str);
 
     /**
      * Write an image file of the current BasicDisplay window to the supplied path

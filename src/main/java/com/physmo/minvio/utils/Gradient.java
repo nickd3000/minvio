@@ -1,6 +1,6 @@
 package com.physmo.minvio.utils;
 
-import com.physmo.minvio.BasicDisplay;
+import com.physmo.minvio.Utils;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public class Gradient {
     }
 
     private Color calculateColor(double pos) {
-        pos = BasicDisplay.clamp(0.0, 1.0, pos);
+        pos = Utils.clamp(0.0, 1.0, pos);
 
         List<Double> sortedKeys = colorList.keySet().stream().sorted().collect(Collectors.toList());
 
@@ -78,7 +78,7 @@ public class Gradient {
         Color c1 = colorList.get(firstKey);
         Color c2 = colorList.get(secondKey);
 
-        return BasicDisplay.lerp(c1, c2, lerpPos);
+        return Utils.lerp(c1, c2, lerpPos);
     }
 
     /**

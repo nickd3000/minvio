@@ -2,26 +2,23 @@ package com.physmo.minvio;
 
 // Import the basic graphics classes.
 
+import com.physmo.minvio.utils.gui.support.MouseConnector;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import java.awt.BasicStroke;
+import javax.swing.WindowConstants;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A basic display module implemented using AWT.
@@ -32,13 +29,12 @@ import java.util.Map;
 public class BasicDisplayAwt extends BasicDisplay {
 
     private static final int MAX_BUTTONS = 4;
-    final Map<Integer, Font> builtInFonts = new HashMap<>();
-    private final JFrame mainFrame;
-    private final BPanel panel;
     private final int width;
     private final int height;
-    private Color drawColor;
-    private Color backgroundColor;
+    private JFrame mainFrame;
+    private BPanel panel;
+    private BufferedImage drawBuffer;
+    private DrawingContext drawingContext;
 
     /**
      * Default constructor - creates display with default size
@@ -56,48 +52,40 @@ public class BasicDisplayAwt extends BasicDisplay {
     public BasicDisplayAwt(int width, int height) {
         this.width = width;
         this.height = height;
-        panel = new BPanel(width, height);
+
+        drawBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        drawingContext = new DrawingContextAwt(drawBuffer);
+        drawingContext.cls();
+
+        createAndShowGui();
+
+    }
+
+    public void createAndShowGui() {
+
+        panel = new BPanel(width, height, drawBuffer);
+
+        panel.addMouseConnectors(this.mouseConnectors);
 
         mainFrame = new JFrame("...");
         mainFrame.getContentPane().add(panel);
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
         mainFrame.pack();
         mainFrame.setLocationRelativeTo(null);
+        mainFrame.setResizable(true);
         mainFrame.setVisible(true);
-        mainFrame.setResizable(false);
-
-        setDrawColor(new Color(63, 63, 63));
-        setBackgroundColor(new Color(218, 218, 218));
 
 
-        cls();
+        drawingContext.setDrawColor(new Color(63, 63, 63));
+        drawingContext.setBackgroundColor(new Color(218, 218, 218));
+
     }
 
-    /**
-     * Clear the display to background color.
-     */
-    @Override
-    public void cls() {
-        Color colOld = this.setDrawColor(backgroundColor);
-
-        panel.g.fillRect(0, 0, width, height);
-
-        this.setDrawColor(colOld);
-    }
 
     @Override
-    public Color setDrawColor(Color newCol) {
-        Color oldCol = drawColor;
-        drawColor = newCol;
-        panel.g.setColor(newCol);
-        return oldCol;
-    }
-
-    @Override
-    public Color setBackgroundColor(Color newCol) {
-        Color oldCol = backgroundColor;
-        backgroundColor = newCol;
-        return oldCol;
+    public DrawingContext getDrawingContext() {
+        return drawingContext;
     }
 
     /**
@@ -113,6 +101,11 @@ public class BasicDisplayAwt extends BasicDisplay {
         panel.paintImmediately(0, 0, width, height);
     }
 
+    @Override
+    public String getTitle() {
+        return mainFrame.getTitle();
+    }
+
     /**
      * Set window title.
      *
@@ -120,35 +113,6 @@ public class BasicDisplayAwt extends BasicDisplay {
      */
     public void setTitle(String str) {
         mainFrame.setTitle(str);
-    }
-
-    @Override
-    public String getTitle() {
-        return mainFrame.getTitle();
-    }
-
-    /**
-     * Clear the display to supplied color.
-     *
-     * @param c Color to fill display with.
-     */
-    @Override
-    public void cls(Color c) {
-        Color colOld = this.setDrawColor(c);
-
-        panel.g.fillRect(0, 0, width, height);
-
-        this.setDrawColor(colOld);
-    }
-
-    @Override
-    public Color getDrawColor() {
-        return panel.g.getColor();
-    }
-
-    @Override
-    public Color getBackgroundColor() {
-        return backgroundColor;
     }
 
     @Override
@@ -169,131 +133,8 @@ public class BasicDisplayAwt extends BasicDisplay {
 
     @Override
     public Image getDrawBuffer() {
-        return panel.drawBuffer;
+        return drawBuffer;
     }
-
-    @Override
-    public void drawImage(BufferedImage sourceImage, int x, int y) {
-        panel.g.drawImage(sourceImage, x, y, null);
-    }
-
-    @Override
-    public void drawImage(BufferedImage sourceImage, int x, int y, int w, int h) {
-        panel.g.drawImage(sourceImage, x, y, w, h, null);
-    }
-
-    @Override
-    public int getRGBAtPoint(int x, int y) {
-        return panel.drawBuffer.getRGB(x, y);
-    }
-
-    @Override
-    public void drawPoint(int x, int y) {
-        panel.g.drawLine(x, y, x, y);
-        //panel.g.drawLine(x1, y1, x2, y2);
-
-    }
-
-    /**
-     * Draw Line
-     *
-     * @param x1 Start X
-     * @param y1 Start Y
-     * @param x2 End X
-     * @param y2 End Y
-     */
-    @Override
-    public void drawLine(int x1, int y1, int x2, int y2) {
-        panel.g.drawLine(x1, y1, x2, y2);
-    }
-
-    @Override
-    public void drawLine(double x1, double y1, double x2, double y2, double thickness) {
-        panel.g2d.setStroke(new BasicStroke((float) thickness));
-        panel.g2d.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
-    }
-
-    @Override
-    public void drawFilledRect(int x, int y, int width, int height) {
-        panel.g.fillRect(x, y, width, height);
-    }
-
-    /**
-     * Draw rectangle outline
-     *
-     * @param x      Start X
-     * @param y      Start Y
-     * @param width  Width
-     * @param height Height
-     */
-    @Override
-    public void drawRect(int x, int y, int width, int height) {
-        panel.g.drawRect(x, y, width, height);
-    }
-
-    /**
-     * Draw a centered circle.
-     *
-     * @param x x position
-     * @param y y position
-     * @param r diameter
-     */
-    @Override
-    public void drawFilledCircle(double x, double y, double r) {
-        // This new method does correct sub-pixel float coords.
-        panel.g2d.fill(new Ellipse2D.Double(x - r, y - r, r * 2, r * 2));
-    }
-
-    @Override
-    public void drawCircle(double x, double y, double r) {
-        panel.g2d.draw(new Ellipse2D.Double(x - r, y - r, r * 2, r * 2));
-    }
-
-    @Override
-    public void drawFilledPolygon(int[] xPoints, int[] yPoints, int numPoints) {
-        panel.g2d.fillPolygon(xPoints, yPoints, numPoints);
-    }
-
-    @Override
-    public void drawText(String str, int x, int y) {
-
-        panel.g.drawString(str, x, y);
-
-    }
-
-    /* TEXT ---------------------------------------------------------------*/
-
-    @Override
-    public void setFont(int size) {
-        String builtInFontName = "Verdana";
-        if (!builtInFonts.containsKey(size)) {
-            Font newFont = new Font(builtInFontName, Font.PLAIN, size);
-            builtInFonts.put(size, newFont);
-        }
-
-        if (builtInFonts.containsKey(size)) {
-            setFont(builtInFonts.get(size));
-        }
-    }
-
-    @Override
-    public void setFont(Font font) {
-        panel.g.setFont(font);
-    }
-
-    @Override
-    public Font getFont() {
-        return panel.g.getFont();
-    }
-
-    @Override
-    public int[] getTextSize(String str) {
-        FontMetrics metrics = panel.g.getFontMetrics(panel.g.getFont());
-
-        return new int[]{metrics.stringWidth(str), metrics.getAscent(), metrics.getDescent()};
-
-    }
-
 
     @Override
     public int getMouseX() {
@@ -341,25 +182,19 @@ public class BasicDisplayAwt extends BasicDisplay {
         final int[] keyDownPrevious = new int[numKeys];
         final boolean[] mouseButtonStates = new boolean[MAX_BUTTONS];
         final BufferedImage drawBuffer;
-        final Graphics g;
-        final Graphics2D g2d;
+        //final Graphics g;
+        //final Graphics2D g2d;
         int mouseX = 0;
         int mouseY = 0;
+        List<MouseConnector> mouseConnectors;
 
-        BPanel(int width, int height) {
+        BPanel(int width, int height, BufferedImage drawBuffer) {
             setSize(width, height);
             setVisible(true);
-            drawBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            this.drawBuffer = drawBuffer;
             setPreferredSize(new Dimension(width, height));
 
-            g = drawBuffer.getGraphics();
-            g2d = (Graphics2D) g;
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-            Font fnt = new Font("window", Font.BOLD, 20);
-            g.setFont(fnt);
-
-            for (int i = 0; i < numKeys; i++) keyDown[i] = 0;
+            Arrays.fill(keyDown, 0);
 
             this.addKeyListener(this);
             this.addMouseMotionListener(this);
@@ -378,12 +213,19 @@ public class BasicDisplayAwt extends BasicDisplay {
         public void mouseDragged(MouseEvent e) {
             mouseX = e.getX();
             mouseY = e.getY();
+            for (MouseConnector mouseConnector : mouseConnectors) {
+                mouseConnector.onMouseMoved(mouseX, mouseY);
+            }
         }
 
         @Override
         public void mouseMoved(MouseEvent e) {
             mouseX = e.getX();
             mouseY = e.getY();
+
+            for (MouseConnector mouseConnector : mouseConnectors) {
+                mouseConnector.onMouseMoved(mouseX, mouseY);
+            }
         }
 
         @Override
@@ -402,7 +244,6 @@ public class BasicDisplayAwt extends BasicDisplay {
             keyDown[e.getKeyCode()] = 0;
         }
 
-
         @Override
         public void mouseClicked(MouseEvent e) {
 //            int bid = e.getButton();
@@ -417,6 +258,12 @@ public class BasicDisplayAwt extends BasicDisplay {
             if (bid < MAX_BUTTONS) {
                 mouseButtonStates[bid] = true;
             }
+
+            for (MouseConnector mouseConnector : mouseConnectors) {
+                mouseConnector.onButtonDown(e.getX(), e.getY(), bid);
+            }
+
+
         }
 
         @Override
@@ -424,6 +271,9 @@ public class BasicDisplayAwt extends BasicDisplay {
             int bid = e.getButton();
             if (bid < MAX_BUTTONS) {
                 mouseButtonStates[bid] = false;
+            }
+            for (MouseConnector mouseConnector : mouseConnectors) {
+                mouseConnector.onButtonUp(e.getX(), e.getY(), bid);
             }
         }
 
@@ -435,6 +285,10 @@ public class BasicDisplayAwt extends BasicDisplay {
         @Override
         public void mouseExited(MouseEvent e) {
 
+        }
+
+        public void addMouseConnectors(List<MouseConnector> mouseConnectors) {
+            this.mouseConnectors = mouseConnectors;
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.physmo.minvio.utils;
 
 import com.physmo.minvio.BasicDisplay;
+import com.physmo.minvio.DrawingContext;
 import com.physmo.minvio.Point;
 import com.physmo.minvio.PointInterface;
 
@@ -29,8 +30,6 @@ public class BasicUtils {
         }
     }
 
-    // Map one value range to another range.
-
     /**
      * Map one value range to another range.
      *
@@ -48,15 +47,16 @@ public class BasicUtils {
     }
 
     public static void drawCursorPosition(BasicDisplay bd, int x, int y) {
+        DrawingContext dc = bd.getDrawingContext();
         int mouseX = bd.getMouseX();
         int mouseY = bd.getMouseY();
         int yOffset = 10;
         String str = "(" + mouseX + "," + mouseY + ")";
-        bd.setFont(font10);
-        bd.setDrawColor(Color.BLACK);
-        bd.drawText(str, x + 1, y + 1 + yOffset);
-        bd.setDrawColor(Color.WHITE);
-        bd.drawText(str, x, y + yOffset);
+        dc.setFont(font10);
+        dc.setDrawColor(Color.BLACK);
+        dc.drawText(str, x + 1, y + 1 + yOffset);
+        dc.setDrawColor(Color.WHITE);
+        dc.drawText(str, x, y + yOffset);
     }
 
 
@@ -86,13 +86,13 @@ public class BasicUtils {
     /**
      * Apply a user defined worker to each point in a list.
      *
-     * @param bd       BasicDisplay object
+     * @param dc       BasicDisplay object
      * @param points   List of Point objects
      * @param workload WorkloadObject
      */
-    public static void pointListProcessor(BasicDisplay bd, List<Point> points, PointWorker workload) {
+    public static void pointListProcessor(DrawingContext dc, List<Point> points, PointWorker workload) {
         for (Point point : points) {
-            workload.go(bd, point);
+            workload.go(dc, point);
         }
     }
 
