@@ -17,6 +17,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -193,7 +194,7 @@ public class BasicDisplayAwt extends BasicDisplay {
             this.drawBuffer = drawBuffer;
             setPreferredSize(new Dimension(width, height));
 
-            for (int i = 0; i < numKeys; i++) keyDown[i] = 0;
+            Arrays.fill(keyDown, 0);
 
             this.addKeyListener(this);
             this.addMouseMotionListener(this);

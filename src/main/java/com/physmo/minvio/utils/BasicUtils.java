@@ -30,8 +30,6 @@ public class BasicUtils {
         }
     }
 
-    // Map one value range to another range.
-
     /**
      * Map one value range to another range.
      *

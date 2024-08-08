@@ -180,10 +180,6 @@ public abstract class BasicDisplay {
         saveScreenshot(filePath);
     }
 
-//    public abstract Color getDrawColor();
-
-//    public abstract Color getBackgroundColor();
-
     public abstract String getTitle();
 
     /**
