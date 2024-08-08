@@ -5,7 +5,7 @@
 
     <groupId>io.github.nickd3000</groupId>
     <artifactId>minvio</artifactId>
-    <version>1.08-SNAPSHOT</version>
+    <version>1.08</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <url>https://github.com/nickd3000/minvio</url>
