@@ -174,6 +174,10 @@ public interface DrawingContext {
      */
     void drawFilledRect(int x, int y, int width, int height);
 
+    default void drawFilledRect(Rect rect) {
+        this.drawFilledRect(rect.x, rect.y, rect.w, rect.h);
+    }
+
     /**
      * Drawing function - draw an unfilled rectangle
      *
