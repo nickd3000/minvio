@@ -5,6 +5,11 @@ import com.physmo.minvio.Position;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The BucketList class represents a 2-dimensional grid of buckets,
+ * which are used to store items based on their position.
+ * Each bucket can contain multiple items.
+ */
 public class BucketList {
     int cellSize = 64;
     int cellsWide = 0;
