@@ -1,6 +1,6 @@
 package com.physmo.minvio.utils;
 
-import com.physmo.minvio.Point;
+import com.physmo.minvio.types.Point;
 import org.junit.Assert;
 import org.junit.Test;
 

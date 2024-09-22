@@ -1,5 +1,8 @@
 package com.physmo.minvio;
 
+import com.physmo.minvio.types.Point;
+import com.physmo.minvio.types.Rect;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;

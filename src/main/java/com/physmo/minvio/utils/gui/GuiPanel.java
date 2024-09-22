@@ -1,6 +1,6 @@
 package com.physmo.minvio.utils.gui;
 
-import com.physmo.minvio.Rect;
+import com.physmo.minvio.types.Rect;
 import com.physmo.minvio.utils.gui.support.GuiMessage;
 
 public class GuiPanel extends GuiContainer {

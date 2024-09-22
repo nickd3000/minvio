@@ -1,4 +1,4 @@
-package com.physmo.minvio;
+package com.physmo.minvio.types;
 
 public class Rect {
     public int x, y, w, h;

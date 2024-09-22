@@ -2,8 +2,8 @@ package com.physmo.minvio.utils.gui;
 
 import com.physmo.minvio.DrawingContext;
 import com.physmo.minvio.DrawingContextAwt;
-import com.physmo.minvio.PointInt;
-import com.physmo.minvio.Rect;
+import com.physmo.minvio.types.PointInt;
+import com.physmo.minvio.types.Rect;
 import com.physmo.minvio.utils.gui.support.GuiMessage;
 
 import java.awt.image.BufferedImage;

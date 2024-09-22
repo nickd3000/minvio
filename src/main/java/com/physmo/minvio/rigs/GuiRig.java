@@ -2,7 +2,7 @@ package com.physmo.minvio.rigs;
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.MinvioApp;
-import com.physmo.minvio.Rect;
+import com.physmo.minvio.types.Rect;
 import com.physmo.minvio.utils.gui.GuiButton;
 import com.physmo.minvio.utils.gui.GuiContext;
 import com.physmo.minvio.utils.gui.GuiLabel;

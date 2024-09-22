@@ -2,7 +2,7 @@ package com.physmo.minvio.utils.gui;
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.DrawingContext;
-import com.physmo.minvio.PointInt;
+import com.physmo.minvio.types.PointInt;
 import com.physmo.minvio.utils.gui.support.GuiMessage;
 import com.physmo.minvio.utils.gui.support.GuiStyle;
 import com.physmo.minvio.utils.gui.support.MouseConnector;

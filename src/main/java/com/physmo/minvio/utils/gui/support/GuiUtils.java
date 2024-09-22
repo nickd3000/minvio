@@ -1,7 +1,7 @@
 package com.physmo.minvio.utils.gui.support;
 
 import com.physmo.minvio.DrawingContext;
-import com.physmo.minvio.Rect;
+import com.physmo.minvio.types.Rect;
 
 import java.awt.Color;
 import java.awt.Font;

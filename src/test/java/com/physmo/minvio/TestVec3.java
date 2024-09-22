@@ -1,5 +1,6 @@
 package com.physmo.minvio;
 
+import com.physmo.minvio.types.Vec3;
 import org.junit.Assert;
 import org.junit.Test;
 

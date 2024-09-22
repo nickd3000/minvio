@@ -3,7 +3,7 @@ package com.physmo.minvio.utils;
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.DrawingContext;
-import com.physmo.minvio.Point;
+import com.physmo.minvio.types.Point;
 
 import java.awt.Color;
 import java.util.ArrayList;

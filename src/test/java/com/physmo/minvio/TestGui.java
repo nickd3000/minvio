@@ -1,5 +1,6 @@
 package com.physmo.minvio;
 
+import com.physmo.minvio.types.Rect;
 import com.physmo.minvio.utils.gui.GuiButton;
 import com.physmo.minvio.utils.gui.GuiContext;
 import com.physmo.minvio.utils.gui.GuiPanel;

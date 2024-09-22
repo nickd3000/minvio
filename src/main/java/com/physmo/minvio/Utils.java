@@ -1,5 +1,7 @@
 package com.physmo.minvio;
 
+import com.physmo.minvio.types.Point;
+
 import java.awt.Color;
 
 public class Utils {

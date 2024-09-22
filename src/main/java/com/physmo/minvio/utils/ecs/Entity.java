@@ -1,7 +1,7 @@
 package com.physmo.minvio.utils.ecs;
 
 import com.physmo.minvio.DrawingContext;
-import com.physmo.minvio.Vec3;
+import com.physmo.minvio.types.Vec3;
 
 import java.util.ArrayList;
 import java.util.HashMap;
