@@ -1,13 +1,25 @@
-package com.physmo.minvio;
+package com.physmo.minvio.types;
 
-// TODO: rethink all the point stuff
-// we may not need position, just extend point if we have to
-// consider making point a templated class too.
-public abstract class Position {
+public class Point {
 
     public double x, y;
 
-    public void add(Position other) {
+    public Point() {
+        x = 0;
+        y = 0;
+    }
+
+    public Point(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public Point(Point p) {
+        this.x = p.x;
+        this.y = p.y;
+    }
+
+    public void add(Point other) {
         this.x += other.x;
         this.y += other.y;
     }
@@ -22,14 +34,14 @@ public abstract class Position {
         this.y *= val;
     }
 
-    public double distance(Position other) {
-        return distance(this, other);
-    }
-
-    public static double distance(Position p1, Position p2) {
+    public static double distance(Point p1, Point p2) {
         double dx = p1.x - p2.x;
         double dy = p1.y - p2.y;
         return Math.sqrt((dx * dx) + (dy * dy));
+    }
+
+    public double distance(Point other) {
+        return distance(this, other);
     }
 
     public String toString() {

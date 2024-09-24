@@ -1,5 +1,8 @@
 package com.physmo.minvio;
 
+import com.physmo.minvio.types.Point;
+import com.physmo.minvio.types.Rect;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
@@ -173,6 +176,10 @@ public interface DrawingContext {
      * @param height height
      */
     void drawFilledRect(int x, int y, int width, int height);
+
+    default void drawFilledRect(Rect rect) {
+        this.drawFilledRect(rect.x, rect.y, rect.w, rect.h);
+    }
 
     /**
      * Drawing function - draw an unfilled rectangle

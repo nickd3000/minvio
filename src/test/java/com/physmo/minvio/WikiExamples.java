@@ -1,5 +1,6 @@
 package com.physmo.minvio;
 
+import com.physmo.minvio.types.Point;
 import com.physmo.minvio.utils.Gradient;
 import com.physmo.minvio.utils.MatrixDrawer;
 import com.physmo.minvio.utils.VoronoiNoise;

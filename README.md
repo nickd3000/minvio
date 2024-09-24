@@ -8,7 +8,9 @@ Minvio is a Lightweight Java framework for developing graphical applications.
 Minvio handles creating the application window and timed draw loop, and exposes a host of drawing and input
 functionality.
 
-http://www.coolbubble.com/projects/minvio
+Great for Programmatic Art, Experiments, POC's, Algorithm Development, Toys, Learning.
+
+Find examples here: https://github.com/nickd3000/minvio-examples
 
 Add maven dependency:
 
@@ -16,7 +18,7 @@ Add maven dependency:
 <dependency>
     <groupId>io.github.nickd3000</groupId>
     <artifactId>minvio</artifactId>
-    <version>1.08</version>
+    <version>1.10</version>
 </dependency>
 ```
 
@@ -36,18 +38,29 @@ class SimpleExample extends MinvioApp {
 
     @Override
     public void draw(double delta) {
-        cls(Color.LIGHT_GRAY);
-        setDrawColor(Color.WHITE);
-        drawFilledRect(75, 75, 50, 50);
-        setDrawColor(Color.BLUE);
-        drawCircle(100, 100, 70);
+        cls(new Color(83, 83, 83));
+        setDrawColor(new Color(241, 225, 58));
+
+        drawFilledRect(50, 50, 40, 40);
+        drawFilledCircle(120, 70, 20);
+        drawCircle(120, 120, 20);
+        drawRect(50, 100, 40, 40);
+
         drawText("X:" + getMouseX() + " Y:" + getMouseY(), 10, 190);
-        drawText("Tick :" + getFps(), 10, 160);
+
     }
 }
 ```
 
+![Image Simple Example](docs/wiki/simpleExample.png)
+
 ### Changelist
+
+###### Version 1.10 - September 2024
+
+* Gui: Added Label, Slider and text button.
+* Gui: Added more color components to GuiContext.
+* Cleanup: Moved structure objects to types package.
 
 ###### Version 1.08 - August 2024
 

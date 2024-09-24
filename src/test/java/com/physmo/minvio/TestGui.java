@@ -1,8 +1,10 @@
 package com.physmo.minvio;
 
+import com.physmo.minvio.types.Rect;
 import com.physmo.minvio.utils.gui.GuiButton;
 import com.physmo.minvio.utils.gui.GuiContext;
 import com.physmo.minvio.utils.gui.GuiPanel;
+import com.physmo.minvio.utils.gui.GuiSlider;
 
 import java.awt.Color;
 
@@ -32,6 +34,10 @@ public class TestGui extends MinvioApp {
         guiPanel.add(guiButton1);
         GuiButton guiButton2 = new GuiButton(new Rect(60, 10, 30, 20));
         guiPanel.add(guiButton2);
+
+        GuiSlider guiSlider1 = new GuiSlider(new Rect(10, 70, 150, 20));
+        guiPanel.add(guiSlider1);
+
         guiContext.add(guiPanel);
 
         guiPanel2 = new GuiPanel(new Rect(0, 0, 200, 200));

@@ -2,7 +2,7 @@ package com.physmo.minvio.utils.gui;
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.DrawingContext;
-import com.physmo.minvio.PointInt;
+import com.physmo.minvio.types.PointInt;
 import com.physmo.minvio.utils.gui.support.GuiMessage;
 import com.physmo.minvio.utils.gui.support.GuiStyle;
 import com.physmo.minvio.utils.gui.support.MouseConnector;
@@ -38,6 +38,11 @@ public class GuiContext {
             }
 
             @Override
+            public Color getButtonColor() {
+                return new Color(197, 197, 197, 255);
+            }
+
+            @Override
             public Color getBevelLight() {
                 return new Color(231, 231, 231, 255);
             }
@@ -51,6 +56,13 @@ public class GuiContext {
             public Color getAccent() {
                 return new Color(40, 40, 213, 255);
             }
+
+            @Override
+            public Color getTextColor() {
+                return new Color(46, 45, 45, 255);
+            }
+
+
         };
     }
 

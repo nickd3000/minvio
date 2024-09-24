@@ -2,8 +2,8 @@ package com.physmo.minvio.utils;
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.DrawingContext;
-import com.physmo.minvio.Point;
-import com.physmo.minvio.PointInterface;
+import com.physmo.minvio.types.Point;
+import com.physmo.minvio.types.PointInterface;
 
 import java.awt.Color;
 import java.awt.Font;
