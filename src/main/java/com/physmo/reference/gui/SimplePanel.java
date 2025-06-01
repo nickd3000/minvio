@@ -22,7 +22,7 @@ import java.awt.Color;
  * - Setting up a GUI context and adding a panel to it.
  * - Handling initialization using the init method.
  * - Drawing elements within the panel, such as a filled circle
- * that follows the mouse position, using the draw method.
+ *   that follows the mouse position, using the draw method.
  */
 public class SimplePanel extends MinvioApp {
 

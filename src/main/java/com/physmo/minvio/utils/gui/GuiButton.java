@@ -16,7 +16,7 @@ import static com.physmo.minvio.utils.gui.support.GuiMessage.MOUSE_MOVE;
  * Represents a graphical user interface button within a GUI system.
  * The GuiButton class is responsible for rendering a button, handling mouse interaction,
  * and executing an associated action when the button is activated.
- * <p>
+ *
  * This class extends GuiContainer and provides functionality specific to button interaction
  * and visual representation, including displaying a text label and processing mouse events.
  */
@@ -61,6 +61,7 @@ public class GuiButton extends GuiContainer {
 
         if (text != null) {
             int yShift = visiblyPressed ? 2 : 0;
+            yShift += 2;
             GuiUtils.drawTextWithinRect(dc, rect, guiContext.getGuiStyle(), font, text, 0, yShift);
         }
     }

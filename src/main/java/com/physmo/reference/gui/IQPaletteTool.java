@@ -10,8 +10,10 @@ import com.physmo.minvio.utils.gui.GuiPanel;
 import com.physmo.minvio.utils.gui.GuiSlider;
 
 import java.awt.Color;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * The IQPaletteTool class is a graphical interface for experimenting
@@ -36,7 +38,7 @@ public class IQPaletteTool extends MinvioApp {
     GuiPanel graphPanel;
 
     Map<Integer, GuiSlider> sliders = new HashMap<>();
-    double[] sliderValues = new double[20];
+    double[] sliderValues = new double[12];
     Color[] componentColors;
     IQPalette iqPalette = new IQPalette();
 
@@ -74,10 +76,13 @@ public class IQPaletteTool extends MinvioApp {
 
         retrieveAllSliderValues();
 
-        GuiButton guiButton = new GuiButton(new Rect(10, 370, 110, 25), "Randomize");
-        guiButton.setAction(this::randomizeSliders);
+        GuiButton randomizeButton = new GuiButton(new Rect(10, 370, 110, 25), "Randomize");
+        randomizeButton.setAction(this::randomizeSliders);
+        guiContext.add(randomizeButton);
 
-        guiContext.add(guiButton);
+        GuiButton exportButton = new GuiButton(new Rect(10 + 150, 370, 110, 25), "Export");
+        exportButton.setAction(this::export);
+        guiContext.add(exportButton);
 
         componentColors = new Color[3];
         componentColors[0] = new Color(142, 38, 38, 0xff);
@@ -111,6 +116,17 @@ public class IQPaletteTool extends MinvioApp {
         }
         retrieveAllSliderValues();
         updateIQPaletteControls();
+    }
+
+    /**
+     * Exports the current state of slider values by formatting them to two decimal places and
+     * printing the resulting values as a comma-separated string.
+     */
+    public void export() {
+        String result = Arrays.stream(sliderValues)
+                .mapToObj(value -> String.format("%.2f", value)) // Format each value to 2 decimal places
+                .collect(Collectors.joining(","));
+        System.out.println(result);
     }
 
     public void retrieveAllSliderValues() {
