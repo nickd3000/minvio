@@ -19,23 +19,32 @@ class ImageExample {
 
     public static void main(String... args) {
 
+        // Create a BasicDisplay instance and retrieve the drawing context.
         BasicDisplay bd = new BasicDisplayAwt(400, 400);
         DrawingContext dc = bd.getDrawingContext();
 
+        // Load an image from disk.
         BufferedImage image = null;
         try {
             image = BasicDisplay.loadImage(imagePath);
         } catch (IOException e) {
-            System.out.println("Could not locat path: " + imagePath);
+            System.out.println("Could not locate path: " + imagePath);
         }
 
+        // Ensure the image was created.
+        assert image != null;
+
+        // Set window title and font size.
         bd.setTitle("Image Example");
         dc.setFont(10);
 
+
+        // Enter an infinite loop to do the drawing.
         while (true) {
             dc.cls(Color.lightGray);
 
             dc.drawImage(image, 0, 0);
+
             dc.drawImage(image, image.getWidth(), 0, 100, 100);
 
             ringOfImages(dc, image);
@@ -48,7 +57,7 @@ class ImageExample {
     public static void ringOfImages(DrawingContext dc, BufferedImage image) {
         t += 0.01;
 
-        int numSprites = 30 * 5;
+        int numSprites = 30;
         double angleSpan = (Math.PI * 2) / (double) numSprites;
         double radius = 170;
         for (int i = 0; i < numSprites; i++) {

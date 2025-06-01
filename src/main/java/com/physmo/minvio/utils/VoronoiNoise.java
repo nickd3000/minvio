@@ -1,5 +1,11 @@
 package com.physmo.minvio.utils;
 
+/**
+ * The VoronoiNoise class provides methods for generating Voronoi noise
+ * in three-dimensional space. Voronoi noise is a procedural texture
+ * generation technique often used in computer graphics for creating natural
+ * patterns such as cellular textures, stone, or terrain.
+ */
 public class VoronoiNoise {
 
     public static double noise(double x, double y, double z, int order) {

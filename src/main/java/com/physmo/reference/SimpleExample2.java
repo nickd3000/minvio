@@ -9,7 +9,7 @@ import java.awt.Color;
 
 /**
  * SimpleExample2 demonstrates basic graphical drawing using the BasicDisplay framework.
- * The program utilizes sinusoidal calculations to create dynamic visual patterns
+ * The program uses sinusoidal calculations to create dynamic visual patterns
  * that update and interact based on the mouse cursor position.
  * <p>
  * Features include:

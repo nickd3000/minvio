@@ -20,18 +20,18 @@ public class PanelWithButtons extends MinvioApp {
 
     @Override
     public void init(BasicDisplay bd) {
-        // Create the GUI context that will manage everything GUI related.
+        // Create the GUI context that will manage everything GUI-related.
         guiContext = new GuiContext(getBasicDisplay());
 
         // Create a GUI Panel
         GuiPanel guiPanel = new GuiPanel(new Rect(0, 0, getWidth(), getHeight()));
 
-        // Create the first button, add an action then add it as a child of the panel.
+        // Create the first button, add an action, then add it as a child of the panel.
         GuiButton minusButton = new GuiButton(new Rect(10, 10, 30, 30), "-");
         minusButton.setAction(() -> counter--);
         guiPanel.add(minusButton);
 
-        // Create the second button, add an action then add it as a child of the panel.
+        // Create the second button, add an action, then add it as a child of the panel.
         GuiButton plusButton = new GuiButton(new Rect(45, 10, 30, 30), "+");
         plusButton.setAction(() -> counter++);
         guiPanel.add(plusButton);
@@ -40,7 +40,7 @@ public class PanelWithButtons extends MinvioApp {
         resetButton.setAction(() -> counter = 0);
         guiPanel.add(resetButton);
 
-        // Finally add the panel to the GUI context.
+        // Finally, add the panel to the GUI context.
         guiContext.add(guiPanel);
 
     }

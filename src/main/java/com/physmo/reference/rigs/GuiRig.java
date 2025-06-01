@@ -1,4 +1,4 @@
-package com.physmo.minvio.rigs;
+package com.physmo.reference.rigs;
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.MinvioApp;
@@ -9,7 +9,9 @@ import com.physmo.minvio.utils.gui.GuiLabel;
 import com.physmo.minvio.utils.gui.GuiPanel;
 import com.physmo.minvio.utils.gui.GuiSlider;
 
-
+/**
+ * This app acts as a rig to easily test all gui components in one place.
+ */
 public class GuiRig extends MinvioApp {
 
     GuiContext guiContext;
@@ -18,7 +20,7 @@ public class GuiRig extends MinvioApp {
     public static void main(String... args) {
         MinvioApp app = new GuiRig();
 
-        app.start(300, 300, "PanelWithButtons", 60);
+        app.start(300, 300, "GuiRig", 60);
     }
 
     @Override

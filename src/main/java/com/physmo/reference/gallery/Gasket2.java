@@ -43,8 +43,10 @@ public class Gasket2 extends MinvioApp {
             int ii = (int) (Math.random() * (double) anchorManager.getAnchors().size());
             Point p2 = anchorManager.getAnchors().get(ii);
 
-            floatingPoint.x = (floatingPoint.x + p2.x) / 2;
-            floatingPoint.y = (floatingPoint.y + p2.y) / 2;
+            double divisor = 2.0;
+
+            floatingPoint.x = (floatingPoint.x + p2.x) / divisor;
+            floatingPoint.y = (floatingPoint.y + p2.y) / divisor;
 
             drawFilledRect((int) floatingPoint.x, (int) floatingPoint.y, 2, 2);
         }

@@ -13,7 +13,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-// Implements common functionality and alternative types methods for drawing operations.
+/**
+ * The BasicDisplay class defines an abstract framework for creating and manipulating
+ * a graphical display. This class includes support for rendering visual content,
+ * retrieving input states, handling mouse events, and managing the display's lifecycle.
+ * Implementing classes must provide concrete implementations of abstract methods
+ * such as rendering and input-related functionalities.
+ */
 public abstract class BasicDisplay {
 
     public static final int TEXT_SIZE_WIDTH = 0;

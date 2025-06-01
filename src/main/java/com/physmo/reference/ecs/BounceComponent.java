@@ -3,7 +3,9 @@ package com.physmo.reference.ecs;
 import com.physmo.minvio.DrawingContext;
 import com.physmo.minvio.utils.ecs.Component;
 import com.physmo.minvio.utils.ecs.Entity;
+import com.physmo.reference.Reference;
 
+@Reference
 public class BounceComponent extends Component {
     @Override
     public void tick(DrawingContext dc, Entity e, double d) {

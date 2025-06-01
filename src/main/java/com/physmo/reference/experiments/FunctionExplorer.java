@@ -4,6 +4,7 @@ package com.physmo.reference.experiments;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.MinvioApp;
 import com.physmo.minvio.types.Rect;
+import com.physmo.minvio.utils.PerlinNoise;
 import com.physmo.minvio.utils.VoronoiNoise;
 import com.physmo.minvio.utils.gui.GuiContext;
 import com.physmo.minvio.utils.gui.GuiPanel;
@@ -167,8 +168,8 @@ public class FunctionExplorer extends MinvioApp {
             for (int x = 0; x < width; x += skip) {
                 double xx = x * scale;
                 double yy = y * scale;
-                //double noise = PerlinNoise.noise(cx + xx, cy + yy, 0);
-                double noise = functionMandelbrot((float) (cx + xx), (float) (cy + yy));
+                double noise = PerlinNoise.noise(cx + xx, cy + yy, 0);
+                //double noise = functionMandelbrot((float) (cx + xx), (float) (cy + yy));
                 //double noise = voronioNoise((float) (cx + xx), (float) (cy + yy));
                 //double noise = functionNickbrot((float) (cx + xx), (float) (cy + yy));
                 int c = (int) ((noise) % 255) & 0xff;

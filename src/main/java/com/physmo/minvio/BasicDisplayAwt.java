@@ -21,11 +21,11 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * A basic display module implemented using AWT.
- *
- * @author nickd3000
+ * Represents a basic display window implemented using AWT and Swing.
+ * This class provides functionality such as mouse and keyboard input handling,
+ * drawing capabilities, and window management.
+ * It extends the {@code BasicDisplay} class.
  */
-
 public class BasicDisplayAwt extends BasicDisplay {
 
     private static final int MAX_BUTTONS = 4;

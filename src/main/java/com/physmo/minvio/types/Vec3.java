@@ -1,5 +1,7 @@
 package com.physmo.minvio.types;
 
+import java.util.Objects;
+
 public class Vec3 {
 
     public double x, y, z;
@@ -21,6 +23,9 @@ public class Vec3 {
      * Represents a 3-dimensional vector.
      */
     public Vec3(Vec3 other) {
+        if (other == null) {
+            throw new IllegalArgumentException("Input vector cannot be null");
+        }
         this.x = other.x;
         this.y = other.y;
         this.z = other.z;
@@ -118,5 +123,21 @@ public class Vec3 {
         y = y / magnitude;
         z = z / magnitude;
         return magnitude;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, z);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Vec3 vec3 = (Vec3) obj;
+        double epsilon = 1e-10; // Precision threshold
+        return Math.abs(vec3.x - x) < epsilon &&
+                Math.abs(vec3.y - y) < epsilon &&
+                Math.abs(vec3.z - z) < epsilon;
     }
 }

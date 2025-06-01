@@ -42,6 +42,22 @@ public class LookupTable {
         return values[index];
     }
 
+    public double getInterpolatedValue(double x) {
+        double scaledIndex = (x - min) * numItems_range;
+        int lowerIndex = Math.max(0, Math.min(numItems - 1, (int) scaledIndex));
+        int upperIndex = Math.min(numItems - 1, lowerIndex + 1);
+
+        if (lowerIndex == upperIndex) {
+            return values[lowerIndex];
+        }
+
+        double lowerX = min + (lowerIndex / numItems_range);
+        double upperX = min + (upperIndex / numItems_range);
+        double weight = (x - lowerX) / (upperX - lowerX);
+
+        return values[lowerIndex] * (1 - weight) + values[upperIndex] * weight;
+    }
+
     // TODO: getInterpolatedValue()
     // TODO: getValue with no bounds checking?
     // TODO: getWrappedValue() - for repeating functions like sine etc.
