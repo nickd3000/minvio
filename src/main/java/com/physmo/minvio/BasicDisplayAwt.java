@@ -10,6 +10,7 @@ import javax.swing.WindowConstants;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -35,6 +36,7 @@ public class BasicDisplayAwt extends BasicDisplay {
     private BPanel panel;
     private BufferedImage drawBuffer;
     private DrawingContext drawingContext;
+    private boolean headless = false;
 
     /**
      * Default constructor - creates display with default size
@@ -57,25 +59,30 @@ public class BasicDisplayAwt extends BasicDisplay {
         drawingContext = new DrawingContextAwt(drawBuffer);
         drawingContext.cls();
 
+        if (GraphicsEnvironment.isHeadless()) {
+            headless = true;
+        }
+
         createAndShowGui();
 
     }
 
     public void createAndShowGui() {
 
-        panel = new BPanel(width, height, drawBuffer);
+        if (!headless) {
+            panel = new BPanel(width, height, drawBuffer);
 
-        panel.addMouseConnectors(this.mouseConnectors);
+            panel.addMouseConnectors(this.mouseConnectors);
 
-        mainFrame = new JFrame("...");
-        mainFrame.getContentPane().add(panel);
-        mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            mainFrame = new JFrame("...");
+            mainFrame.getContentPane().add(panel);
+            mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        mainFrame.pack();
-        mainFrame.setLocationRelativeTo(null);
-        mainFrame.setResizable(true);
-        mainFrame.setVisible(true);
-
+            mainFrame.pack();
+            mainFrame.setLocationRelativeTo(null);
+            mainFrame.setResizable(true);
+            mainFrame.setVisible(true);
+        }
 
         drawingContext.setDrawColor(new Color(63, 63, 63));
         drawingContext.setBackgroundColor(new Color(218, 218, 218));
@@ -98,7 +105,9 @@ public class BasicDisplayAwt extends BasicDisplay {
 
     @Override
     public void repaint() {
-        panel.paintImmediately(0, 0, width, height);
+        if (!headless) {
+            panel.paintImmediately(0, 0, width, height);
+        }
     }
 
     @Override

@@ -9,6 +9,7 @@ import static org.junit.Assert.assertEquals;
 
 public class TestBasicDisplay {
 
+
     @Test
     public void testBasicDisplay() {
         BasicDisplayAwt bd = new BasicDisplayAwt(100, 100);
