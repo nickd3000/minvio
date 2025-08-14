@@ -141,7 +141,7 @@ public class MinvioApp implements DrawingContext {
     }
 
     /**
-     * This may be optionally overridden, for example if you want to do logic multiple times per frame.
+     * This may be optionally overridden, for example, if you want to do logic multiple times per frame.
      *
      * @param bd    Basic Display object
      * @param delta time in seconds since the last UPDATE call, e.g. 1.0 = 1 second.
