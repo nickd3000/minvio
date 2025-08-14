@@ -12,6 +12,14 @@ import static com.physmo.minvio.utils.gui.support.GuiMessage.MOUSE_BUTTON_DOWN;
 import static com.physmo.minvio.utils.gui.support.GuiMessage.MOUSE_BUTTON_UP;
 import static com.physmo.minvio.utils.gui.support.GuiMessage.MOUSE_MOVE;
 
+/**
+ * Represents a graphical user interface button within a GUI system.
+ * The GuiButton class is responsible for rendering a button, handling mouse interaction,
+ * and executing an associated action when the button is activated.
+ *
+ * This class extends GuiContainer and provides functionality specific to button interaction
+ * and visual representation, including displaying a text label and processing mouse events.
+ */
 public class GuiButton extends GuiContainer {
     Color col = Color.BLUE;
     private final Font font = new Font("Verdana", Font.PLAIN, 15);
@@ -29,6 +37,12 @@ public class GuiButton extends GuiContainer {
         this.text = text;
     }
 
+    /**
+     * Sets the action to be executed when the button is activated.
+     *
+     * @param action the {@link Runnable} to be executed when the button is triggered.
+     *               If set to null, no action will be performed upon activation.
+     */
     public void setAction(Runnable action) {
         this.action = action;
     }
@@ -47,6 +61,7 @@ public class GuiButton extends GuiContainer {
 
         if (text != null) {
             int yShift = visiblyPressed ? 2 : 0;
+            yShift += 2;
             GuiUtils.drawTextWithinRect(dc, rect, guiContext.getGuiStyle(), font, text, 0, yShift);
         }
     }

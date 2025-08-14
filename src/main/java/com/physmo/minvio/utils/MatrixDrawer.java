@@ -5,7 +5,12 @@ import com.physmo.minvio.Utils;
 
 import java.awt.Color;
 
-// TODO: precalc angles and distances
+/**
+ * The MatrixDrawer class is responsible for rendering a matrix of pixels using customized
+ * angles and distances calculated for each coordinate. It provides pre-calculated spatial
+ * properties and uses them along with external components to render the matrix onto a
+ * drawing context.
+ */
 public class MatrixDrawer {
 
     final int width;
@@ -27,13 +32,13 @@ public class MatrixDrawer {
         distances = new double[numCells];
         int index = 0;
 
-        double distanceScale = w / 2;
+        double distanceScale = w / 2.0;
 
         for (int y = 0; y < h; y++) {
             for (int x = 0; x < w; x++) {
 
-                double dx = (w / 2) - x;
-                double dy = (h / 2) - y;
+                double dx = (w / 2.0) - x;
+                double dy = (h / 2.0) - y;
                 double d = Math.sqrt((dx * dx) + (dy * dy));
                 distances[index] = d / distanceScale;
 

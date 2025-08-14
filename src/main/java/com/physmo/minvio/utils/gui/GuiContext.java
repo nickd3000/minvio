@@ -17,8 +17,6 @@ import java.util.List;
 public class GuiContext {
     List<GuiContainer> containers;
     MouseConnector mouseConnector;
-    //    Map<GuiContainer, Rect> map;
-    //List<GuiContainer> allChildren = new ArrayList<>();
     Collection<GuiContainer> allChildren = Collections.synchronizedCollection(new ArrayList<>());
 
     BasicDisplay basicDisplay;
@@ -30,7 +28,7 @@ public class GuiContext {
         containers = new ArrayList<>();
         initMouseConnector();
         basicDisplay.addMouseConnector(mouseConnector);
-        //map = new HashMap<>();
+
         guiStyle = new GuiStyle() {
             @Override
             public Color getBackgroundColor() {

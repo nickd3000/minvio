@@ -9,6 +9,7 @@ import static org.junit.Assert.assertEquals;
 
 public class TestBasicDisplay {
 
+
     @Test
     public void testBasicDisplay() {
         BasicDisplayAwt bd = new BasicDisplayAwt(100, 100);
@@ -19,12 +20,12 @@ public class TestBasicDisplay {
         dc.drawFilledRect(0, 0, 100, 100);
         Color expectingWhite = dc.getColorAtPoint(1, 1);
 
-        assertEquals(expectingBlack.getRed(), 0);
-        assertEquals(expectingBlack.getGreen(), 0);
-        assertEquals(expectingBlack.getBlue(), 0);
-        assertEquals(expectingWhite.getRed(), 0xff);
-        assertEquals(expectingWhite.getGreen(), 0xff);
-        assertEquals(expectingWhite.getBlue(), 0xff);
+        assertEquals(0, expectingBlack.getRed());
+        assertEquals(0, expectingBlack.getGreen());
+        assertEquals(0, expectingBlack.getBlue());
+        assertEquals(0xff, expectingWhite.getRed());
+        assertEquals(0xff, expectingWhite.getGreen());
+        assertEquals(0xff, expectingWhite.getBlue());
 
         bd.close();
     }

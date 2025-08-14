@@ -11,7 +11,7 @@ functionality.
 Great for Programmatic Art, Experiments, POC's, Algorithm Development, Toys, Learning.
 
 Find examples here: https://github.com/nickd3000/minvio-examples
-
+open
 Add maven dependency:
 
 ``` xml

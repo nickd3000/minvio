@@ -1,5 +1,7 @@
 package com.physmo.minvio.types;
 
+import java.util.Objects;
+
 public class Point {
 
     public double x, y;
@@ -15,11 +17,13 @@ public class Point {
     }
 
     public Point(Point p) {
+        if (p == null) throw new IllegalArgumentException("Point cannot be null");
         this.x = p.x;
         this.y = p.y;
     }
 
     public void add(Point other) {
+        if (other == null) throw new IllegalArgumentException("Other point cannot be null");
         this.x += other.x;
         this.y += other.y;
     }
@@ -44,8 +48,21 @@ public class Point {
         return distance(this, other);
     }
 
-    public String toString() {
-        return "[" + x + "," + y + "]";
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Point point = (Point) obj;
+        return Double.compare(point.x, x) == 0 && Double.compare(point.y, y) == 0;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Point{x=%.2f, y=%.2f}", x, y);
+    }
 }

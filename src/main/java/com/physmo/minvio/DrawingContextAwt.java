@@ -13,6 +13,12 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The DrawingContextAwt class is an implementation of the DrawingContext interface
+ * that provides drawing capabilities using the AWT (Abstract Window Toolkit) graphics framework.
+ * It allows for drawing shapes, text, and images on a BufferedImage. This class supports both
+ * basic drawing operations and advanced rendering features such as antialiasing.
+ */
 public class DrawingContextAwt implements DrawingContext {
 
     BufferedImage buffer;
@@ -39,7 +45,11 @@ public class DrawingContextAwt implements DrawingContext {
 
 
     /**
-     * Clear the display to background color.
+     * Clears the drawing area by filling it with the current background color.
+     * <p>
+     * The method temporarily sets the drawing color to the background color,
+     * fills the entire drawing area with a rectangle of the background color,
+     * and restores the original drawing color afterward.
      */
     @Override
     public void cls() {
