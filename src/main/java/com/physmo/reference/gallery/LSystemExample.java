@@ -15,7 +15,7 @@ public class LSystemExample extends MinvioApp {
     Color background = new Color(40, 44, 52);
 
     // Configuration
-    int initialAnchorCount = 6;
+    int initialAnchorCount = 5;
     int iterationDepth = 5;
 
     // L-System variables
@@ -240,8 +240,6 @@ public class LSystemExample extends MinvioApp {
         drawText("• Red line: Prototype shape defined by anchors", 10, 50);
         drawText("• Blue lines: Fractal result", 10, 70);
         drawText("• Drag anchors to change the prototype shape", 10, 90);
-        drawText("• Max iterations: " + maxIterations, 10, 110);
-        drawText("• Min segment length: " + minSegmentLength + " pixels", 10, 130);
-        drawText("• Anchor count: " + anchors.size(), 10, 150);
+
     }
 }
