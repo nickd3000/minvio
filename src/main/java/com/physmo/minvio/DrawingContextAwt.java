@@ -31,7 +31,12 @@ public class DrawingContextAwt implements DrawingContext {
     final Map<Integer, Font> builtInFonts = new HashMap<>();
 
     public DrawingContextAwt(BufferedImage buffer) {
-        this.buffer = buffer;
+        setImageBuffer(buffer);
+    }
+
+    @Override
+    public void setImageBuffer(BufferedImage image) {
+        this.buffer = image;
         g = buffer.getGraphics();
         g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -42,7 +47,6 @@ public class DrawingContextAwt implements DrawingContext {
         width = buffer.getWidth();
         height = buffer.getHeight();
     }
-
 
     /**
      * Clears the drawing area by filling it with the current background color.
@@ -59,6 +63,7 @@ public class DrawingContextAwt implements DrawingContext {
 
         this.setDrawColor(colOld);
     }
+
 
     @Override
     public Color setDrawColor(Color newCol) {

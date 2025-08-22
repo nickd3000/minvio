@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.IntBinaryOperator;
 
 /**
  * The BasicDisplay class defines an abstract framework for creating and manipulating
@@ -28,6 +29,8 @@ public abstract class BasicDisplay {
     /* TIMING ---------------------------------------------------------------*/
     public static long repaintTimerStart = 0;
     List<MouseConnector> mouseConnectors;
+
+    IntBinaryOperator resizeListener;
 
     public BasicDisplay() {
         mouseConnectors = new ArrayList<>();
@@ -217,4 +220,11 @@ public abstract class BasicDisplay {
      * @return Image representing the draw buffer.
      */
     public abstract Image getDrawBuffer();
+
+    public void addResizeListener(IntBinaryOperator resizeListener) {
+        this.resizeListener = resizeListener;
+    }
+
+    // When the main window is resized, we don't respond until outside of the draw loop.
+    public abstract void resizeIfRequested();
 }

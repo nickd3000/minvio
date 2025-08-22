@@ -11,6 +11,7 @@ public class GuiPanel extends GuiContainer {
 
     @Override
     public void draw(GuiContext guiContext) {
+
         dc.setDrawColor(guiContext.getGuiStyle().getBackgroundColor());
         dc.drawFilledRect(0, 0, this.rect.w, this.rect.h);
     }

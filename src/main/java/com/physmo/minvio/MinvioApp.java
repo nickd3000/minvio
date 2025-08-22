@@ -124,6 +124,8 @@ public class MinvioApp implements DrawingContext {
             if (displayFps) drawFps();
             bd.repaint();
 
+            bd.resizeIfRequested();
+
             //bd.repaintTimerStart = System.nanoTime();
         }
 
@@ -221,6 +223,11 @@ public class MinvioApp implements DrawingContext {
     @Override
     public void cls() {
         drawingContext.cls();
+    }
+
+    @Override
+    public void setImageBuffer(BufferedImage image) {
+        drawingContext.setImageBuffer(image);
     }
 
     @Override

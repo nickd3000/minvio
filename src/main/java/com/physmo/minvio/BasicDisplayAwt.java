@@ -2,6 +2,7 @@ package com.physmo.minvio;
 
 // Import the basic graphics classes.
 
+import com.physmo.minvio.types.Rect;
 import com.physmo.minvio.utils.gui.support.MouseConnector;
 
 import javax.swing.JFrame;
@@ -12,6 +13,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -30,8 +33,8 @@ import java.util.List;
 public class BasicDisplayAwt extends BasicDisplay {
 
     private static final int MAX_BUTTONS = 4;
-    private final int width;
-    private final int height;
+    private int width;
+    private int height;
     private JFrame mainFrame;
     private BPanel panel;
     private BufferedImage drawBuffer;
@@ -55,8 +58,9 @@ public class BasicDisplayAwt extends BasicDisplay {
         this.width = width;
         this.height = height;
 
-        drawBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        drawingContext = new DrawingContextAwt(drawBuffer);
+
+        setDisplaySize(width, height);
+        drawingContext.setDrawColor(Color.WHITE);
         drawingContext.cls();
 
         if (GraphicsEnvironment.isHeadless()) {
@@ -65,6 +69,40 @@ public class BasicDisplayAwt extends BasicDisplay {
 
         createAndShowGui();
 
+    }
+
+
+    public void setDisplaySize(int w, int h) {
+        BufferedImage newBuffer = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        newBuffer.getGraphics().drawImage(drawBuffer, 0, 0, null);
+        drawBuffer = newBuffer;
+
+        if (drawingContext == null) {
+            drawingContext = new DrawingContextAwt(drawBuffer);
+        } else {
+            drawingContext.setImageBuffer(drawBuffer);
+        }
+        if (panel != null) panel.setDrawBuffer(drawBuffer);
+    }
+
+    Rect resizeRequest = null;
+
+    public void resizeIfRequested() {
+
+        if (resizeRequest == null) return;
+
+        int newWidth = resizeRequest.w;
+        int newHeight = resizeRequest.h;
+
+        setDisplaySize(newWidth, newHeight);
+        width = newWidth;
+        height = newHeight;
+        if (resizeListener != null) {
+            resizeListener.applyAsInt(newWidth, newHeight);
+        }
+        panel.setSize(newWidth, newHeight);
+        panel.doLayout();
+        mainFrame.doLayout();
     }
 
     public void createAndShowGui() {
@@ -82,6 +120,13 @@ public class BasicDisplayAwt extends BasicDisplay {
             mainFrame.setLocationRelativeTo(null);
             mainFrame.setResizable(true);
             mainFrame.setVisible(true);
+
+            mainFrame.addComponentListener(new ComponentAdapter() {
+                @Override
+                public void componentResized(ComponentEvent e) {
+                    resizeRequest = new Rect(0, 0, panel.getWidth(), panel.getHeight());
+                }
+            });
         }
 
         drawingContext.setDrawColor(new Color(63, 63, 63));
@@ -190,9 +235,7 @@ public class BasicDisplayAwt extends BasicDisplay {
         final int[] keyDown = new int[numKeys];
         final int[] keyDownPrevious = new int[numKeys];
         final boolean[] mouseButtonStates = new boolean[MAX_BUTTONS];
-        final BufferedImage drawBuffer;
-        //final Graphics g;
-        //final Graphics2D g2d;
+        BufferedImage drawBuffer;
         int mouseX = 0;
         int mouseY = 0;
         List<MouseConnector> mouseConnectors;
@@ -211,6 +254,10 @@ public class BasicDisplayAwt extends BasicDisplay {
             this.setFocusable(true);
             this.requestFocusInWindow();
             this.setDoubleBuffered(true);
+        }
+
+        public void setDrawBuffer(BufferedImage drawBuffer) {
+            this.drawBuffer = drawBuffer;
         }
 
         @Override
