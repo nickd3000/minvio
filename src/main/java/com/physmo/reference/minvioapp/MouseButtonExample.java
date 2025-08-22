@@ -1,14 +1,15 @@
 package com.physmo.reference.minvioapp;
 
 import com.physmo.minvio.MinvioApp;
+import com.physmo.minvio.utils.Palette;
 
 import java.awt.Color;
 
 class MouseButtonExample extends MinvioApp {
 
     // Define colours for indicators.
-    Color colOn = new Color(0x3C9ABB, false);
-    Color colOff = new Color(0x652727, false);
+    Color colOn = Palette.BLUE;
+    Color colOff = Palette.RED;
 
     public static void main(String... args) {
         MinvioApp app = new MouseButtonExample();
@@ -17,7 +18,7 @@ class MouseButtonExample extends MinvioApp {
 
     @Override
     public void draw(double delta) {
-        cls(Color.lightGray);
+        cls(Palette.CLAY);
 
         // Draw rectangles representing mouse buttons.
         int span = getWidth() / 3;
@@ -34,7 +35,7 @@ class MouseButtonExample extends MinvioApp {
 
         // Draw the message.
         setFont(15);
-        setDrawColor(Color.black);
+        setDrawColor(Palette.AQUA);
         drawText("Click Left, Middle and Right mouse button.", 40, getHeight() - 30);
     }
 }

@@ -3,6 +3,7 @@ package com.physmo.minvio;
 // Import the basic graphics classes.
 
 import com.physmo.minvio.types.Rect;
+import com.physmo.minvio.utils.Palette;
 import com.physmo.minvio.utils.gui.support.MouseConnector;
 
 import javax.swing.JFrame;
@@ -73,6 +74,7 @@ public class BasicDisplayAwt extends BasicDisplay {
 
 
     public void setDisplaySize(int w, int h) {
+
         BufferedImage newBuffer = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         newBuffer.getGraphics().drawImage(drawBuffer, 0, 0, null);
         drawBuffer = newBuffer;
@@ -93,6 +95,7 @@ public class BasicDisplayAwt extends BasicDisplay {
 
         int newWidth = resizeRequest.w;
         int newHeight = resizeRequest.h;
+        resizeRequest = null; // Clear resize object once we have the size.
 
         setDisplaySize(newWidth, newHeight);
         width = newWidth;
@@ -129,8 +132,8 @@ public class BasicDisplayAwt extends BasicDisplay {
             });
         }
 
-        drawingContext.setDrawColor(new Color(63, 63, 63));
-        drawingContext.setBackgroundColor(new Color(218, 218, 218));
+        drawingContext.setDrawColor(Palette.CYAN);
+        drawingContext.setBackgroundColor(Palette.BLUEBERRY);
 
     }
 

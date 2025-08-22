@@ -4,6 +4,7 @@ import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.MinvioApp;
 import com.physmo.minvio.types.Point;
 import com.physmo.minvio.utils.AnchorManager;
+import com.physmo.minvio.utils.Palette;
 
 import java.awt.Color;
 import java.util.List;
@@ -33,7 +34,7 @@ import java.util.List;
 public class AnchorExample extends MinvioApp {
 
     AnchorManager anchorManager;
-    Color background = new Color(218, 132, 78);
+    Color background = Palette.BRICK;
 
     public static void main(String[] args) {
         MinvioApp app = new AnchorExample();
@@ -76,7 +77,7 @@ public class AnchorExample extends MinvioApp {
         anchorManager.update(getBasicDisplay());
 
 
-        setDrawColor(new Color(225, 209, 118));
+        //setDrawColor(new Color(225, 209, 118));
 
         List<Point> anchors = anchorManager.getAnchors();
         for (int i = 0; i < anchors.size() - 1; i++) {

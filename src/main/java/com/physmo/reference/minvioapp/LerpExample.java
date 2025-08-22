@@ -3,6 +3,7 @@ package com.physmo.reference.minvioapp;
 import com.physmo.minvio.MinvioApp;
 import com.physmo.minvio.Utils;
 import com.physmo.minvio.types.Point;
+import com.physmo.minvio.utils.Palette;
 
 import java.awt.Color;
 
@@ -18,10 +19,10 @@ class LerpExample extends MinvioApp {
     public void draw(double delta) {
         cls(Color.DARK_GRAY);
 
-        Color c1 = new Color(22, 150, 211);
-        Color c2 = new Color(255, 214, 89);
+        Color c1 = Palette.ICE_POP;
+        Color c2 = Palette.AMBER;
         Point p1 = new Point(10, 50);
-        Point p2 = new Point(190, 50);
+        Point p2 = new Point(getWidth() - 10, 50);
 
         int i = 0;
         int width = getWidth() / 5;
@@ -41,8 +42,8 @@ class LerpExample extends MinvioApp {
         setDrawColor(c2);
         drawFilledRect((i++ * width), 75, width, 30);
 
-        setDrawColor(Utils.lerp(c1, c2, getMouseX() / 200.0));
-        drawFilledCircle(Utils.lerp(p1, p2, getMouseX() / 200.0), 10);
+        setDrawColor(Utils.lerp(c1, c2, (double) getMouseX() / getWidth()));
+        drawFilledCircle(Utils.lerp(p1, p2, (double) getMouseX() / getWidth()), 10);
 
     }
 }

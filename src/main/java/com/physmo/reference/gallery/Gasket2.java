@@ -27,6 +27,7 @@ public class Gasket2 extends MinvioApp {
         anchorManager.add(20, 180);
         anchorManager.add(180, 180);
 
+
         floatingPoint.x = anchorManager.getAnchors().get(0).x;
         floatingPoint.y = anchorManager.getAnchors().get(0).y;
     }
@@ -39,14 +40,24 @@ public class Gasket2 extends MinvioApp {
 
         setDrawColor(new Color(0, 0, 0));
 
-        for (int i = 0; i < 15000; i++) {
-            int ii = (int) (Math.random() * (double) anchorManager.getAnchors().size());
+        int ii = 0, ip, ic = 0;
+
+        for (int i = 0; i < 15000 * 4; i++) {
+            ip = ii;
+            ii = (int) (Math.random() * (double) anchorManager.getAnchors().size());
+            ic += ii;
             Point p2 = anchorManager.getAnchors().get(ii);
 
             double divisor = 2.0;
 
             floatingPoint.x = (floatingPoint.x + p2.x) / divisor;
             floatingPoint.y = (floatingPoint.y + p2.y) / divisor;
+
+            switch ((ii + ip) % 3) {
+                case 0 -> setDrawColor(Color.RED);
+                case 1 -> setDrawColor(Color.BLUE);
+                case 2 -> setDrawColor(Color.GREEN);
+            }
 
             drawFilledRect((int) floatingPoint.x, (int) floatingPoint.y, 2, 2);
         }

@@ -4,6 +4,7 @@ import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.MinvioApp;
 import com.physmo.minvio.types.Point;
 import com.physmo.minvio.utils.BasicUtils;
+import com.physmo.minvio.utils.Palette;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -18,9 +19,9 @@ public class FindClosestPointInListExample extends MinvioApp {
 
 
     List<Point> points = new ArrayList<>();
-    Color backgroundColor = new Color(116, 116, 116);
-    Color col1 = new Color(123, 37, 37);
-    Color col2 = new Color(1, 255, 208);
+    Color backgroundColor = Palette.BERRY;
+    Color col1 = Palette.AMBER;
+    Color col2 = Palette.BUBBLEGUM;
 
     public static void main(String... args) {
         MinvioApp app = new FindClosestPointInListExample();
