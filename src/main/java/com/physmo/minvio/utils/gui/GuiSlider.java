@@ -1,6 +1,7 @@
 package com.physmo.minvio.utils.gui;
 
 import com.physmo.minvio.types.Rect;
+import com.physmo.minvio.utils.Palette;
 import com.physmo.minvio.utils.gui.support.GuiMessage;
 import com.physmo.minvio.utils.gui.support.GuiStyle;
 import com.physmo.minvio.utils.gui.support.MouseMessageData;
@@ -47,11 +48,18 @@ public class GuiSlider extends GuiContainer {
 
     @Override
     public void draw(GuiContext guiContext) {
+        recalculateMetrics();
+
         //GuiUtils.drawBevelBoxOut(dc, guiContext.getGuiStyle(), 0, 0, rect.w, rect.h);
         GuiStyle guiStyle = guiContext.getGuiStyle();
 
         dc.setDrawColor(guiStyle.getBackgroundColor());
         dc.drawFilledRect(0, 0, rect.w, rect.h);
+
+        // tmp
+        dc.setDrawColor(Palette.BRICK);
+        dc.drawRect(0, 0, rect.w, rect.h);
+
 
         if (orientation == SLIDER_HORIZONTAL) {
             dc.setDrawColor(guiStyle.getAccent());
