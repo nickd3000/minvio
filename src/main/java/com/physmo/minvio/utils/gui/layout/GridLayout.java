@@ -12,6 +12,14 @@ public class GridLayout implements Layout {
     int hPad = 5;
     int vPad = 5;
 
+    public GridLayout() {
+    }
+
+    public GridLayout(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
+    }
+
     @Override
     public void handleLayout(GuiContainer parent, List<GuiContainer> children) {
 
@@ -32,8 +40,8 @@ public class GridLayout implements Layout {
             int cx = i % effectiveCols;
             int cy = i / effectiveCols;
 
-            int x = parent.getRect().x + (cx * cellWidth) + hPad;
-            int y = parent.getRect().y + (cy * cellHeight) + vPad;
+            int x = (cx * cellWidth) + hPad;
+            int y = (cy * cellHeight) + vPad;
             int w = cellWidth - (hPad * 2);
             int h = cellHeight - (vPad * 2);
 

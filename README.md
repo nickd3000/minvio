@@ -3,6 +3,8 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.nickd3000/minvio/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.nickd3000/minvio)
 ![GitHub](https://img.shields.io/github/license/nickd3000/minvio)
 
+![Image Palette Example](docs/IQPalette.png)
+
 Minvio is a Lightweight Java framework for developing graphical applications.
 
 Minvio handles creating the application window and timed draw loop, and exposes a host of drawing and input

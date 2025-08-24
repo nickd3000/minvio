@@ -35,7 +35,7 @@ public class LayoutTestGridLayout extends MinvioApp {
         guiPanel.add(new GuiSlider(new Rect(10, 10, 150, 20)));
 
         // Create 4 buttons and add them as children of the panel.
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 8; i++) {
             GuiButton guiButton = new GuiButton(new Rect(10, 10, 50, 50));
             guiPanel.add(guiButton);
         }
@@ -45,8 +45,8 @@ public class LayoutTestGridLayout extends MinvioApp {
 
         guiPanel.calculateLayout();
 
-        bd.addResizeListener((left, right) -> {
-            guiPanel.setRect(new Rect(0, 0, left, right));
+        bd.addResizeListener((width, height) -> {
+            guiPanel.setRect(new Rect(0, 0, width, height));
             guiPanel.calculateLayout();
             guiPanel.setDirtyRecursive(true);
             return 0;

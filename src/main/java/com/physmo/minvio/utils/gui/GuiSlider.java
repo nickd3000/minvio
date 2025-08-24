@@ -1,7 +1,6 @@
 package com.physmo.minvio.utils.gui;
 
 import com.physmo.minvio.types.Rect;
-import com.physmo.minvio.utils.Palette;
 import com.physmo.minvio.utils.gui.support.GuiMessage;
 import com.physmo.minvio.utils.gui.support.GuiStyle;
 import com.physmo.minvio.utils.gui.support.MouseMessageData;
@@ -21,8 +20,10 @@ public class GuiSlider extends GuiContainer {
     boolean grabbed = false;
     boolean mouseOverHandle = false;
     int orientation = SLIDER_HORIZONTAL;
-    int sliderPosition = 30;
-    int sliderPositionMax = 30;
+    // Store normalized value [0..1] instead of pixel position
+    double value = 0.0;
+    // Track length in pixels (derived from size)
+    int trackLength = 30;
     int handleSize = 10;
     int endPadding = 0;
 
@@ -43,7 +44,8 @@ public class GuiSlider extends GuiContainer {
 
     public void recalculateMetrics() {
         endPadding = handleSize;
-        sliderPositionMax = rect.w - (endPadding * 2);
+        trackLength = rect.w - (endPadding * 2);
+        if (trackLength < 0) trackLength = 0;
     }
 
     @Override
@@ -56,17 +58,16 @@ public class GuiSlider extends GuiContainer {
         dc.setDrawColor(guiStyle.getBackgroundColor());
         dc.drawFilledRect(0, 0, rect.w, rect.h);
 
-        // tmp
-        dc.setDrawColor(Palette.BRICK);
-        dc.drawRect(0, 0, rect.w, rect.h);
-
-
         if (orientation == SLIDER_HORIZONTAL) {
             dc.setDrawColor(guiStyle.getAccent());
 
-            dc.drawFilledRect(endPadding, (rect.h / 2) - 1, sliderPosition, 2);
+            int handleCenterX = getHandleCenterX();
+            int filled = Math.max(0, Math.min(trackLength, handleCenterX - endPadding));
+            int unfilled = Math.max(0, trackLength - filled);
+
+            dc.drawFilledRect(endPadding, (rect.h / 2) - 1, filled, 2);
             dc.setDrawColor(guiStyle.getBevelDark());
-            dc.drawFilledRect(endPadding + sliderPosition, (rect.h / 2) - 1, sliderPositionMax - sliderPosition, 2);
+            dc.drawFilledRect(endPadding + filled, (rect.h / 2) - 1, unfilled, 2);
 
 
             dc.setDrawColor(guiStyle.getBevelLight());
@@ -74,14 +75,19 @@ public class GuiSlider extends GuiContainer {
             // Handle outline
             if (grabbed || mouseOverHandle) {
                 dc.setDrawColor(guiStyle.getAccent());
-                dc.drawFilledCircle((double) endPadding + sliderPosition, (double) rect.h / 2, 1 + (double) handleSize / 2);
+                dc.drawFilledCircle((double) handleCenterX, (double) rect.h / 2, 1 + (double) handleSize / 2);
             }
 
             dc.setDrawColor(guiStyle.getBevelLight());
             // Central part of handle
-            dc.drawFilledCircle((double) endPadding + sliderPosition, (double) rect.h / 2, (double) handleSize / 2);
+            dc.drawFilledCircle((double) handleCenterX, (double) rect.h / 2, (double) handleSize / 2);
 
         }
+    }
+
+    private int getHandleCenterX() {
+        // endPadding + normalized*trackLength
+        return endPadding + (int) Math.round(value * trackLength);
     }
 
     public void setOnChangedHandler(DoubleConsumer onChanged) {
@@ -91,7 +97,7 @@ public class GuiSlider extends GuiContainer {
     public boolean isMouseOverHandle(int mouseX, int mouseY) {
         if (orientation == SLIDER_HORIZONTAL) {
             int dy = Math.abs(mouseY - rect.h / 2);
-            int dx = Math.abs(mouseX - (endPadding + sliderPosition));
+            int dx = Math.abs(mouseX - getHandleCenterX());
             if (dy > handleSize / 2) return false;
             if (dx < handleSize / 2) return true;
         }
@@ -100,7 +106,7 @@ public class GuiSlider extends GuiContainer {
 
     public void storeGrabOffset(int mouseX, int mouseY) {
         grabOffsetY = mouseY - rect.h / 2;
-        grabOffsetX = mouseX - (endPadding + sliderPosition);
+        grabOffsetX = mouseX - getHandleCenterX();
     }
 
     @Override
@@ -111,7 +117,7 @@ public class GuiSlider extends GuiContainer {
             if (!grabbed) {
                 setMouseOverHandle(isMouseOverHandle(md.x, md.y));
             } else {
-                setSliderPosition(md.x - grabOffsetX);
+                setValueFromPixel(md.x - grabOffsetX);
                 dirty = true;
             }
         }
@@ -122,7 +128,7 @@ public class GuiSlider extends GuiContainer {
                 storeGrabOffset(md.x, md.y);
             }
             if (grabbed) {
-                setSliderPosition(md.x - grabOffsetX);
+                setValueFromPixel(md.x - grabOffsetX);
                 dirty = true;
             }
         }
@@ -146,23 +152,34 @@ public class GuiSlider extends GuiContainer {
         }
     }
 
-    private void setSliderPosition(int value) {
-        sliderPosition = value - (endPadding);
-        clampSliderPosition();
-        if (onChanged != null) onChanged.accept(getValue());
+    // Convert a pixel X (absolute in slider local coords) into normalized [0..1]
+    private void setValueFromPixel(int pixelX) {
+        int pos = pixelX - endPadding;
+        int clampedPos = Math.max(0, Math.min(trackLength, pos));
+        double newValue = (trackLength == 0) ? 0.0 : ((double) clampedPos / (double) trackLength);
+        setValueInternal(newValue, true);
     }
 
-    private void clampSliderPosition() {
-        if (sliderPosition < 0) sliderPosition = 0;
-        if (sliderPosition > sliderPositionMax) sliderPosition = sliderPositionMax;
+    private void setValueInternal(double newValue, boolean fireEvent) {
+        double clamped = Math.max(0.0, Math.min(1.0, newValue));
+        if (clamped != this.value) {
+            this.value = clamped;
+            if (fireEvent && onChanged != null) onChanged.accept(this.value);
+        }
     }
 
     public double getValue() {
-        return (double) sliderPosition / (double) sliderPositionMax;
+        return value;
     }
 
     public void setValue(double value) {
-        sliderPosition = (int) (value * sliderPositionMax);
+        setValueInternal(value, false);
+        setDirty(true);
+    }
+
+    // External setter that updates the value and notifies listeners
+    public void setValueAndNotify(double value) {
+        setValueInternal(value, true);
         setDirty(true);
     }
 }
