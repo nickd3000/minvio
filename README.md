@@ -7,7 +7,7 @@
 
 Minvio is a Lightweight Java framework for developing graphical applications.
 
-Minvio handles creating the application window and timed draw loop, and exposes a host of drawing and input
+Minvio handles creating the application window and timed draw loop and exposes a host of drawing and input
 functionality.
 
 Great for Programmatic Art, Experiments, POC's, Algorithm Development, Toys, Learning.
@@ -58,6 +58,14 @@ class SimpleExample extends MinvioApp {
 
 ### Changelist
 
+###### Version 1.20 - September 2024
+
+* Added Screen resizing functionality
+* Added Initial GUI layout support
+* Added Palette Class with predefined colours
+* Updated to Java 17
+* Added Array class for an efficient List style container that avoids reallocation.
+
 ###### Version 1.10 - September 2024
 
 * Gui: Added Label, Slider and text button.
@@ -71,7 +79,7 @@ class SimpleExample extends MinvioApp {
 
 ###### Version 1.07 - May 2023
 
-* Removed all example - They are now in a separate project - minvio-examples
+* Removed all examples - They are now in a separate project - minvio-examples
 
 ###### Version 1.06 - December 23 2021
 
@@ -84,7 +92,7 @@ class SimpleExample extends MinvioApp {
 * Added Entity-Component example
 * Added Vec3 object
 * Added bucket list utility and gravity particle example
-* Added Ribbons to gallery
+* Added Ribbons to gallery projects
 * Added getMousePointNormalised
 
 ###### Version 1.04 - October 17 2021
