@@ -20,7 +20,7 @@ Add maven dependency:
 <dependency>
     <groupId>io.github.nickd3000</groupId>
     <artifactId>minvio</artifactId>
-    <version>1.10</version>
+    <version>1.20</version>
 </dependency>
 ```
 
@@ -40,9 +40,9 @@ class SimpleExample extends MinvioApp {
 
     @Override
     public void draw(double delta) {
-        cls(new Color(83, 83, 83));
-        setDrawColor(new Color(241, 225, 58));
-
+        cls(Palette.SLATE);
+        setDrawColor(Palette.AMBER);
+        
         drawFilledRect(50, 50, 40, 40);
         drawFilledCircle(120, 70, 20);
         drawCircle(120, 120, 20);
