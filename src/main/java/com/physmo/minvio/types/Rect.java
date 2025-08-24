@@ -12,6 +12,13 @@ public class Rect {
         this.h = h;
     }
 
+    public Rect(Rect rect) {
+        this.x = rect.x;
+        this.y = rect.y;
+        this.w = rect.w;
+        this.h = rect.h;
+    }
+
     public boolean isPointInside(int xx, int yy) {
         if (xx < x || yy < y) return false;
         return xx <= x + w && yy <= y + h;
@@ -52,6 +59,13 @@ public class Rect {
         this.y = y;
         this.w = w;
         this.h = h;
+    }
+
+    public void set(Rect other) {
+        this.x = other.x;
+        this.y = other.y;
+        this.w = other.w;
+        this.h = other.h;
     }
 
     @Override

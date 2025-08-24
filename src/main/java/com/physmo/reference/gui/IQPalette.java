@@ -44,7 +44,7 @@ public class IQPalette {
     }
 
     private double getColorComponent(double x, double A, double B, double C, double D) {
-        return A + B * (Math.cos((2.0 * Math.PI) * (C * x + D)) + 1.0) * 0.5;
+        return A + B * (Math.cos((2.0 * Math.PI) * (C * x + D) * 2) + 1.0) * 0.5;
     }
 
 }

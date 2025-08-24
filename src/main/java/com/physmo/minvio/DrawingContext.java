@@ -19,6 +19,8 @@ public interface DrawingContext {
     void cls();
 
 
+    void setImageBuffer(BufferedImage image);
+
     /**
      * Set the color to use for drawing operations.
      *

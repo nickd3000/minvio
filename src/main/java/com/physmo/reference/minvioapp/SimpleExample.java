@@ -1,8 +1,7 @@
 package com.physmo.reference.minvioapp;
 
 import com.physmo.minvio.MinvioApp;
-
-import java.awt.Color;
+import com.physmo.minvio.utils.Palette;
 
 class SimpleExample extends MinvioApp {
 
@@ -14,8 +13,8 @@ class SimpleExample extends MinvioApp {
 
     @Override
     public void draw(double delta) {
-        cls(new Color(83, 83, 83));
-        setDrawColor(new Color(241, 225, 58));
+        cls(Palette.SLATE);
+        setDrawColor(Palette.AMBER);
 
         drawFilledRect(50, 50, 40, 40);
         drawFilledCircle(120, 70, 20);

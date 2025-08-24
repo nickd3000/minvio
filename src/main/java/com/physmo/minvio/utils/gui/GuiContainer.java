@@ -4,6 +4,7 @@ import com.physmo.minvio.DrawingContext;
 import com.physmo.minvio.DrawingContextAwt;
 import com.physmo.minvio.types.PointInt;
 import com.physmo.minvio.types.Rect;
+import com.physmo.minvio.utils.gui.layout.Layout;
 import com.physmo.minvio.utils.gui.support.GuiMessage;
 
 import java.awt.image.BufferedImage;
@@ -18,17 +19,30 @@ public abstract class GuiContainer {
     BufferedImage buffer;
     DrawingContext dc;
     GuiContainer parent;
+    Layout layout = null;
 
     public GuiContainer(Rect rect) {
         children = new ArrayList<>();
-        this.rect = rect;
-        buffer = new BufferedImage(rect.w, rect.h, BufferedImage.TYPE_INT_ARGB);
-        dc = new DrawingContextAwt(buffer);
+
+        setRect(rect);
         dirty = true;
     }
 
     public Rect getRect() {
         return rect;
+    }
+
+    public void setRect(Rect rect) {
+        if (this.rect != null && this.rect.equals(rect)) return;
+
+        if (this.rect == null) {
+            this.rect = new Rect(rect);
+        } else {
+            this.rect.set(rect);
+        }
+
+        buffer = new BufferedImage(rect.w, rect.h, BufferedImage.TYPE_INT_ARGB);
+        dc = new DrawingContextAwt(buffer);
     }
 
     public DrawingContext getDc() {
@@ -62,8 +76,8 @@ public abstract class GuiContainer {
         for (GuiContainer child : children) {
             child.recursiveDraw(guiContext, baseContext, ox, oy);
         }
-
     }
+
 
     // Used to build a list of container locations
     public void recursiveLocate(Collection<GuiContainer> list) {
@@ -92,6 +106,25 @@ public abstract class GuiContainer {
 
     public void setDirty(boolean val) {
         this.dirty = val;
+    }
+
+    public void setDirtyRecursive(boolean val) {
+        this.dirty = val;
+        for (GuiContainer child : children) {
+            child.setDirtyRecursive(val);
+        }
+    }
+
+    public void setLayout(Layout layout) {
+        this.layout = layout;
+    }
+
+    public Layout getLayout() {
+        return layout;
+    }
+
+    public void calculateLayout() {
+        if (layout != null) layout.handleLayout(this, children);
     }
 }
 
