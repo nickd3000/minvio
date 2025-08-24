@@ -58,7 +58,7 @@ class SimpleExample extends MinvioApp {
 
 ### Changelist
 
-###### Version 1.20 - September 2024
+###### Version 1.20 - Aug 2025
 
 * Added Screen resizing functionality
 * Added Initial GUI layout support
