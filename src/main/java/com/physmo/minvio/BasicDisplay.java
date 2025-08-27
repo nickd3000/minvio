@@ -86,6 +86,12 @@ public abstract class BasicDisplay {
 //    }
 
     /**
+     * Set all values to defaults.
+     * e.g. Draw Colors, fonts.
+     */
+    public abstract void reset();
+
+    /**
      * Get the width and height of the application window as a Point
      *
      * @return The width and height of display as a Point object.

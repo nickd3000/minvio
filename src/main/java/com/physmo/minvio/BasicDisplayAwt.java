@@ -132,11 +132,16 @@ public class BasicDisplayAwt extends BasicDisplay {
             });
         }
 
-        drawingContext.setDrawColor(Palette.CYAN);
-        drawingContext.setBackgroundColor(Palette.BLUEBERRY);
+        reset();
 
     }
 
+    @Override
+    public void reset() {
+        drawingContext.setDrawColor(Palette.GRAY_900);
+        drawingContext.setBackgroundColor(Palette.GRAY_300);
+        drawingContext.setFont(16);
+    }
 
     @Override
     public DrawingContext getDrawingContext() {
