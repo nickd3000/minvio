@@ -3,8 +3,8 @@ package com.physmo.reference.gallery;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.DrawingContext;
 import com.physmo.minvio.MinvioApp;
-import com.physmo.minvio.Utils;
 import com.physmo.minvio.types.Point;
+import com.physmo.minvio.utils.Palette;
 
 import java.awt.Color;
 
@@ -56,7 +56,7 @@ public class GasketApp extends MinvioApp {
 
             // Choose a random distinct color every so often.
             if (loopCount % 50000 == 0) {
-                setDrawColor(Utils.getDistinctColor((int) (Math.random() * 100), 0.7));
+                setDrawColor(Palette.getDistinctColor((int) (Math.random() * 100), 0.7));
             }
         }
     }

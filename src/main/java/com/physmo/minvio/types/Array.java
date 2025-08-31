@@ -211,7 +211,7 @@ public class Array<T> implements Iterable<T> {
      */
     @Override
     public Iterator<T> iterator() {
-        return new Iterator<T>() {
+        return new Iterator<>() {
             int index = 0;
 
             @Override

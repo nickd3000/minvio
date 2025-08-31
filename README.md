@@ -1,6 +1,7 @@
 ![Image Minvio example CubeWave](docs/wiki/appLogo.png)
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.nickd3000/minvio/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.nickd3000/minvio)
+![Maven Central Version](https://img.shields.io/maven-central/v/io.github.nickd3000/minvio)
+
 ![GitHub](https://img.shields.io/github/license/nickd3000/minvio)
 
 ![Image Palette Example](docs/IQPalette.png)
@@ -20,7 +21,7 @@ Add maven dependency:
 <dependency>
     <groupId>io.github.nickd3000</groupId>
     <artifactId>minvio</artifactId>
-    <version>1.20</version>
+    <version>1.21</version>
 </dependency>
 ```
 
@@ -58,7 +59,7 @@ class SimpleExample extends MinvioApp {
 
 ### Changelist
 
-###### Version 1.20 - September 2024
+###### Version 1.20 - Aug 2025
 
 * Added Screen resizing functionality
 * Added Initial GUI layout support

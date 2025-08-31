@@ -84,8 +84,10 @@ public class BasicDisplayAwt extends BasicDisplay {
         } else {
             drawingContext.setImageBuffer(drawBuffer);
         }
+
         if (panel != null) panel.setDrawBuffer(drawBuffer);
     }
+
 
     Rect resizeRequest = null;
 
@@ -132,11 +134,16 @@ public class BasicDisplayAwt extends BasicDisplay {
             });
         }
 
-        drawingContext.setDrawColor(Palette.CYAN);
-        drawingContext.setBackgroundColor(Palette.BLUEBERRY);
+        reset();
 
     }
 
+    @Override
+    public void reset() {
+        drawingContext.setDrawColor(Palette.GRAY_900);
+        drawingContext.setBackgroundColor(Palette.GRAY_300);
+        drawingContext.setFont(16);
+    }
 
     @Override
     public DrawingContext getDrawingContext() {
@@ -160,7 +167,9 @@ public class BasicDisplayAwt extends BasicDisplay {
 
     @Override
     public String getTitle() {
-        return mainFrame.getTitle();
+        if (!headless) {
+            return mainFrame.getTitle();
+        } else return "Headless";
     }
 
     /**
@@ -169,7 +178,9 @@ public class BasicDisplayAwt extends BasicDisplay {
      * @param str Text representing the new window title.
      */
     public void setTitle(String str) {
-        mainFrame.setTitle(str);
+        if (!headless) {
+            mainFrame.setTitle(str);
+        }
     }
 
     @Override
