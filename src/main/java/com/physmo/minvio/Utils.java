@@ -15,10 +15,10 @@ public class Utils {
      * @return A distinct color.
      */
     // TODO: Cache some of these
-    public static Color getDistinctColor(int index, double saturation) {
-        float magicNumber = 0.6180339887f;
-        return new Color(Color.HSBtoRGB(((float) index) * magicNumber, (float) saturation, 1.0f));
-    }
+//    public static Color getDistinctColor(int index, double saturation) {
+//        float magicNumber = 0.6180339887f;
+//        return new Color(Color.HSBtoRGB(((float) index) * magicNumber, (float) saturation, 1.0f));
+//    }
 
     /**
      * Return a blended color between c1 and c2 at position pos.

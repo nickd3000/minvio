@@ -1,6 +1,8 @@
 package com.physmo.minvio.utils;
 
 import java.awt.Color;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Palette {
     // Rainbow
@@ -94,4 +96,22 @@ public class Palette {
     public static Color PEACH_FIZZ = new Color(255, 170, 146);
     public static Color LEMON_SORBET = new Color(255, 246, 150);
     public static Color BERRY = new Color(171, 37, 107);
+
+    static Map<Integer, Color> distinctColorCache = new HashMap<>();
+
+    /**
+     * Returns a new distinct colour for each supplied index
+     * Colours will be the same for a given index each time it is called.
+     *
+     * @param index      integer representing the distinct colour
+     * @param saturation 0..1 double value
+     * @return A distinct color.
+     */
+
+    public static Color getDistinctColor(int index, double saturation) {
+        float magicNumber = 0.6180339887f;
+        return distinctColorCache.computeIfAbsent(index, k -> new Color(Color.HSBtoRGB(((float) index) * magicNumber, (float) saturation, 1.0f)));
+
+    }
+
 }

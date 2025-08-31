@@ -3,6 +3,7 @@ package com.physmo.minvio;
 import com.physmo.minvio.types.Point;
 import com.physmo.minvio.utils.Gradient;
 import com.physmo.minvio.utils.MatrixDrawer;
+import com.physmo.minvio.utils.Palette;
 import com.physmo.minvio.utils.VoronoiNoise;
 import org.junit.Test;
 
@@ -110,10 +111,10 @@ public class WikiExamples {
 
         runExample(200, 200, "getDistinctColor", bd -> {
             DrawingContext dc = bd.getDrawingContext();
-            dc.setDrawColor(Utils.getDistinctColor(1, 1));
+            dc.setDrawColor(Palette.getDistinctColor(1, 1));
             dc.drawFilledRect(50, 50, 50, 100);
 
-            dc.setDrawColor(Utils.getDistinctColor(16, 0.2));
+            dc.setDrawColor(Palette.getDistinctColor(16, 0.2));
             dc.drawFilledRect(100, 50, 50, 100);
 
         });
@@ -223,7 +224,7 @@ public class WikiExamples {
             bd.getDrawingContext().setDrawColor(new Color(255, 0, 0)); // or create a new one.
             bd.getDrawingContext().drawLine(0, 60, 200, 60);
 
-            bd.getDrawingContext().setDrawColor(Utils.getDistinctColor(12, 1)); // Or use distinct colour helper.
+            bd.getDrawingContext().setDrawColor(Palette.getDistinctColor(12, 1)); // Or use distinct colour helper.
             bd.getDrawingContext().drawLine(0, 90, 200, 90);
 
         });

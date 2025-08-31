@@ -3,7 +3,7 @@ package com.physmo.reference.ecs;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
 import com.physmo.minvio.MinvioApp;
-import com.physmo.minvio.Utils;
+import com.physmo.minvio.utils.Palette;
 import com.physmo.minvio.utils.ecs.Entity;
 import com.physmo.minvio.utils.ecs.EntitySystem;
 
@@ -41,7 +41,7 @@ public class EcsExample extends MinvioApp {
             }
 
             if (i % 2 == 0) {
-                newEntity.addDrawComponent(new DrawComponent(Utils.getDistinctColor(i, 1)));
+                newEntity.addDrawComponent(new DrawComponent(Palette.getDistinctColor(i, 1)));
                 newEntity.addComponent(new GravityComponent());
             } else {
                 newEntity.addDrawComponent(new FlashyDrawComponent());

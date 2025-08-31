@@ -1,7 +1,7 @@
 package com.physmo.reference.minvioapp;
 
 import com.physmo.minvio.MinvioApp;
-import com.physmo.minvio.Utils;
+import com.physmo.minvio.utils.Palette;
 
 import java.awt.Color;
 
@@ -35,7 +35,7 @@ class DistinctColorExample extends MinvioApp {
 
         for (int y = 0; y < numRows; y++) {
             for (int x = 0; x < numRows; x++) {
-                setDrawColor(Utils.getDistinctColor(x + (y * numRows), saturation));
+                setDrawColor(Palette.getDistinctColor(x + (y * numRows), saturation));
                 drawFilledCircle(halfSpace + x * space, halfSpace + y * space, halfSpace);
             }
         }

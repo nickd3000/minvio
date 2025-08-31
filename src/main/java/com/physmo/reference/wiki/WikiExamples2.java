@@ -2,7 +2,6 @@ package com.physmo.reference.wiki;
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.MinvioApp;
-import com.physmo.minvio.Utils;
 import com.physmo.minvio.types.Point;
 import com.physmo.minvio.utils.Palette;
 
@@ -61,10 +60,10 @@ class WikiExamples2 extends MinvioApp {
 
         runExample(200, 200, "getDistinctColor", () -> {
 
-            setDrawColor(Utils.getDistinctColor(1, 1));
+            setDrawColor(Palette.getDistinctColor(1, 1));
             drawFilledRect(50, 50, 50, 100);
 
-            setDrawColor(Utils.getDistinctColor(16, 0.2));
+            setDrawColor(Palette.getDistinctColor(16, 0.2));
             drawFilledRect(100, 50, 50, 100);
 
         });
@@ -136,7 +135,7 @@ class WikiExamples2 extends MinvioApp {
             setDrawColor(new Color(255, 0, 0)); // or create a new one.
             drawLine(0, 60, 200, 60);
 
-            setDrawColor(Utils.getDistinctColor(12, 1)); // Or use distinct colour helper.
+            setDrawColor(Palette.getDistinctColor(12, 1)); // Or use distinct colour helper.
             drawLine(0, 90, 200, 90);
 
         });

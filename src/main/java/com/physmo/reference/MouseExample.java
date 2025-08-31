@@ -3,8 +3,8 @@ package com.physmo.reference;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
 import com.physmo.minvio.DrawingContext;
-import com.physmo.minvio.Utils;
 import com.physmo.minvio.utils.BasicUtils;
+import com.physmo.minvio.utils.Palette;
 
 import java.awt.Color;
 
@@ -55,7 +55,7 @@ class MouseExample {
 
             // Chose a random distinct colour every so often.
             count++;
-            dc.setDrawColor(Utils.getDistinctColor(count, 0.7));
+            dc.setDrawColor(Palette.getDistinctColor(count, 0.7));
 
             prevX = bd.getMouseX();
             prevY = bd.getMouseY();

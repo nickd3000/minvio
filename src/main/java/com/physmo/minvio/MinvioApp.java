@@ -53,11 +53,7 @@ public class MinvioApp implements DrawingContext {
      * @return The MinvioApp instance.
      */
     public MinvioApp start(int width, int height) {
-        BasicDisplayAwt bd = new BasicDisplayAwt(width, height);
-        bd.setTitle("Minvio App");
-        bd.getDrawingContext().cls();
-        this.targetFps = 60;
-        start(bd);
+        start(width, height, "Minvio App", 60);
         return this;
     }
 
