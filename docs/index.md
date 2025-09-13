@@ -6,7 +6,7 @@ Lightweight Java framework for fast, minimal graphical apps and experiments.
 - Built‑in window and timed draw loop
 - Great for programmatic art, prototypes, and teaching
 
-![MinVio Logo](../wiki/appLogo.png)
+![MinVio Logo](wiki/appLogo.png)
 
 ---
 
@@ -49,7 +49,7 @@ class SimpleExample extends MinvioApp {
 }
 ```
 
-![Simple Example](../wiki/simpleExample.png)
+![Simple Example](wiki/simpleExample.png)
 
 - Repository: https://github.com/nickd3000/minvio
 - Examples: https://github.com/nickd3000/minvio-examples
@@ -58,7 +58,7 @@ class SimpleExample extends MinvioApp {
 
 ## Blog
 
-- Introduction to MinVio: Getting Started with Lightweight Java Graphics — [Read the first post →](blog001.md)
+- Introduction to MinVio: Getting Started with Lightweight Java Graphics — [Read the first post →](pages/blog001.md)
 
 More posts coming soon.
 
