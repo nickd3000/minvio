@@ -4,7 +4,6 @@
 
 ![GitHub](https://img.shields.io/github/license/nickd3000/minvio)
 
-![Image Palette Example](docs/IQPalette.png)
 
 Minvio is a Lightweight Java framework for developing graphical applications.
 
@@ -14,7 +13,9 @@ functionality.
 Great for Programmatic Art, Experiments, POC's, Algorithm Development, Toys, Learning.
 
 Find examples here: https://github.com/nickd3000/minvio-examples
-open
+
+**Website with FAQ and Blog posts on the project: https://nickd3000.github.io/minvio/**
+
 Add maven dependency:
 
 ``` xml
@@ -56,6 +57,10 @@ class SimpleExample extends MinvioApp {
 ```
 
 ![Image Simple Example](docs/wiki/simpleExample.png)
+
+## More Example Images
+
+![Image Palette Example](docs/IQPalette.png)
 
 ### Changelist
 

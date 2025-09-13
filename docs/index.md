@@ -64,6 +64,12 @@ More posts coming soon.
 
 ---
 
+## FAQ
+
+- Frequently Asked Questions — [Read the FAQ →](pages/faq.md)
+
+---
+
 ## What is MinVio?
 
 MinVio handles boilerplate like window creation and frame timing so you can focus on drawing:
