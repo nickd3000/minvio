@@ -1,27 +1,35 @@
 package com.physmo.reference.minvioapp;
 
 import com.physmo.minvio.MinvioApp;
-import com.physmo.minvio.utils.Palette;
+
+import java.awt.Color;
 
 class SimpleExample extends MinvioApp {
 
 
     public static void main(String... args) {
         MinvioApp app = new SimpleExample();
-        app.start(200, 200, "Simple Example", 60);
+        app.start(600, 300, "Simple Example", 60);
     }
 
     @Override
     public void draw(double delta) {
-        cls(Palette.SLATE);
-        setDrawColor(Palette.AMBER);
+        // Clear the screen with a light beige color
+        cls(new Color(207, 198, 179));
 
-        drawFilledRect(50, 50, 40, 40);
-        drawFilledCircle(120, 70, 20);
-        drawCircle(120, 120, 20);
-        drawRect(50, 100, 40, 40);
+        // Set drawing color to a semi-transparent dark blue
+        setDrawColor(new Color(17, 52, 69, 215));
 
-        drawText("X:" + getMouseX() + " Y:" + getMouseY(), 10, 190);
+        // Draw some text that moves across the screen
+        int x = (int) (System.currentTimeMillis() / 20) % 200;
+        drawText("Hello, MinVio World!", x, 100);
 
+        // Draw some simple shapes
+        drawFilledRect(50, 150, 40, 40);
+        drawFilledCircle(150, 170, 20);
+        drawCircle(250, 170, 20);
+
+        // Show mouse coordinates
+        drawText("Mouse: X:" + getMouseX() + " Y:" + getMouseY(), 10, 270);
     }
 }
