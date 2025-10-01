@@ -30,5 +30,10 @@ public class Tile {
         graphics.setColor(Color.YELLOW);
         graphics.drawString("z:" + zoom + "  x:" + x + "  y:" + y, 20, 20);
         graphics.drawRect(0, 0, tileWidth - 1, tileHeight - 1);
+        graphics.dispose();
+    }
+
+    public void renderInfo() {
+
     }
 }

@@ -9,21 +9,30 @@ public class Renderer {
     public void render(TileManager tileManager, DrawingContext dc, double wZoom, int windowWidth, int windowHeight, double scrollX, double scrollY) {
 
         int iZoom = (int) wZoom;
-        double scale = Math.pow(2, 1 + wZoom);
-        int columns = 3;
-        int rows = 3;
+        double scale = Math.pow(2, 0 + wZoom);
+
 
         double scaledTileSize = Math.pow(2.0, (wZoom - iZoom)) * Tile.tileWidth;
+
+        int columns = (int) (windowWidth / scaledTileSize);
+        int rows = (int) (windowHeight / scaledTileSize);
 
         dc.setDrawColor(Color.white);
         dc.drawText("stz:" + scaledTileSize, 10, 10);
 
-        for (int col = 0; col < columns; col++) {
+        int firstCol = (int) (scrollX / scaledTileSize);
+        int firstRow = (int) (scrollY / scaledTileSize);
 
-            for (int row = 0; row < rows; row++) {
-                Tile tile = tileManager.getTile(iZoom, col, row);
+        int tileWrappedOffsetX = (int) (scrollX % scaledTileSize);
+        int tileWrappedOffsetY = (int) (scrollY % scaledTileSize);
+
+        for (int col = -1; col < columns + 1; col++) {
+
+            for (int row = -1; row < rows + 1; row++) {
+                Tile tile = tileManager.getTile(iZoom, col - firstCol, row - firstRow);
                 dc.drawImage(tile.bufferedImage,
-                        (int) (col * scaledTileSize + scrollX * scale), (int) (row * scaledTileSize + scrollY * scale),
+                        (int) (col * scaledTileSize + tileWrappedOffsetX),
+                        (int) (row * scaledTileSize + tileWrappedOffsetY),
                         (int) scaledTileSize, (int) scaledTileSize);
             }
 
