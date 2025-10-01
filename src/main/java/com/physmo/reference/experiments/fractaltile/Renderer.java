@@ -26,9 +26,9 @@ public class Renderer {
         double tileWrappedOffsetX = (scrollX % scaledTileSize);
         double tileWrappedOffsetY = (scrollY % scaledTileSize);
 
-        for (int col = -1; col < columns + 1; col++) {
+        for (int col = -1; col < columns + 2; col++) {
 
-            for (int row = -1; row < rows + 1; row++) {
+            for (int row = -1; row < rows + 2; row++) {
                 Tile tile = tileManager.getTile(iZoom, col - firstCol, row - firstRow);
                 dc.drawImage(tile.bufferedImage,
                         (int) (col * scaledTileSize + tileWrappedOffsetX),

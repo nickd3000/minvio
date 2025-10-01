@@ -8,7 +8,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 public class TileManager {
     Map<Integer, Tile> tiles = new HashMap<>();
-    ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(2);
+    ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(4);
 
     public Tile getTile(int zoom, int x, int y) {
         Integer encodedKey = encode(zoom, x, y);
@@ -26,11 +26,11 @@ public class TileManager {
 
         Tile newTile = new Tile(zoom, x, y);
 
-        newTile.renderInfo();
+        //newTile.renderInfo();
 
         executor.submit(() -> {
             renderTile(newTile.bufferedImage, zoom, scale, startX, startY);
-            newTile.renderInfo();
+            //newTile.renderInfo();
         });
 
         return newTile;

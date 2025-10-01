@@ -65,9 +65,17 @@ public class FractalTile extends MinvioApp {
             zoomLevel += 0.01;
             double newZoom = Math.pow(2, zoomLevel);
 
-            // Adjust scroll to keep center point stable
-            scrollX = scrollX * (newZoom / oldZoom);
-            scrollY = scrollY * (newZoom / oldZoom);
+            // Get the center point of the window
+            double centerX = getWidth() / 2.0;
+            double centerY = getHeight() / 2.0;
+
+            // Calculate how much the center point moves during zoom
+            double dx = centerX - (centerX * (newZoom / oldZoom));
+            double dy = centerY - (centerY * (newZoom / oldZoom));
+
+            // Adjust scroll position based on zoom center
+            scrollX = scrollX * (newZoom / oldZoom) + dx;
+            scrollY = scrollY * (newZoom / oldZoom) + dy;
         }
 
         if (keyStates[VK_2] != 0) {  // Zoom out
@@ -75,19 +83,25 @@ public class FractalTile extends MinvioApp {
             zoomLevel -= 0.01;
             double newZoom = Math.pow(2, zoomLevel);
 
-            // Adjust scroll to keep center point stable
-            scrollX = scrollX * (newZoom / oldZoom);
-            scrollY = scrollY * (newZoom / oldZoom);
+            // Get the center point of the window
+            double centerX = getWidth() / 2.0;
+            double centerY = getHeight() / 2.0;
+
+            // Calculate how much the center point moves during zoom
+            double dx = centerX - (centerX * (newZoom / oldZoom));
+            double dy = centerY - (centerY * (newZoom / oldZoom));
+
+            // Adjust scroll position based on zoom center
+            scrollX = scrollX * (newZoom / oldZoom) + dx;
+            scrollY = scrollY * (newZoom / oldZoom) + dy;
         }
 
     }
 
     @Override
     public void draw(double delta) {
-//        getDrawingContext()
-//        drawImage(tileManager.getTile(0,0,0).bufferedImage,0,0);
-        cls();
-        renderer.render(tileManager, getDrawingContext(), zoomLevel, 400, 400, scrollX, scrollY);
+        //cls();
+        renderer.render(tileManager, getDrawingContext(), zoomLevel, getWidth(), getHeight(), scrollX, scrollY);
     }
 
 }
