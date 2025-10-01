@@ -11,7 +11,7 @@ public class FractalTile extends MinvioApp {
     Renderer renderer = new Renderer();
     TileManager tileManager = new TileManager();
 
-    double scrollX, scrollY;
+    double scrollX = 300, scrollY = 300;
     int mouseXPrev, mouseYPrev;
     boolean leftButtonHeld;
     double zoomLevel = 0;

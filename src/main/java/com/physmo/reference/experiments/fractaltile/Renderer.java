@@ -8,7 +8,7 @@ public class Renderer {
 
     public void render(TileManager tileManager, DrawingContext dc, double wZoom, int windowWidth, int windowHeight, double scrollX, double scrollY) {
 
-        int iZoom = (int) wZoom;
+        int iZoom = (int) wZoom + 1;
         double scale = Math.pow(2, 0 + wZoom);
 
 
