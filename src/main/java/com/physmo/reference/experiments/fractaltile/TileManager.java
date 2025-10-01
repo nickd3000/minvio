@@ -3,10 +3,12 @@ package com.physmo.reference.experiments.fractaltile;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class TileManager {
     Map<Integer, Tile> tiles = new HashMap<>();
-
+    ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(2);
 
     public Tile getTile(int zoom, int x, int y) {
         Integer encodedKey = encode(zoom, x, y);
@@ -14,17 +16,22 @@ public class TileManager {
     }
 
     public Tile initTile(int zoom, int x, int y) {
-        double scale = Math.pow(2, 1 + zoom);
+        double scale = Math.pow(2, zoom);
 
-        double logicalWidth = 2 / scale;
-        double logicalHeight = 2 / scale;
+        double logicalWidth = 1 / scale;
+        double logicalHeight = 1 / scale;
 
         double startX = x * logicalWidth;
         double startY = y * logicalHeight;
 
         Tile newTile = new Tile(zoom, x, y);
-        renderImage(newTile.bufferedImage, zoom, scale, (int) startX, (int) startY);
 
+        newTile.renderInfo();
+
+        executor.submit(() -> {
+            renderTile(newTile.bufferedImage, zoom, scale, startX, startY);
+            newTile.renderInfo();
+        });
 
         return newTile;
     }
@@ -43,9 +50,7 @@ public class TileManager {
     }
 
 
-    public void renderImage(BufferedImage image, int zoom, double scale, double xStart, double yStart) {
-        //Graphics graphics = image.getGraphics();
-
+    public void renderTile(BufferedImage image, int zoom, double scale, double xStart, double yStart) {
 
         double z = (1.0 / Tile.tileHeight) / (scale);
 
@@ -55,11 +60,12 @@ public class TileManager {
                 double yy = yStart + y * z;
                 int c = (int) ((functionMandelbrot(xx, yy)) % 255) & 0xff;
 
-                //graphics.setColor(new java.awt.Color(c, c, c));
-                //graphics.drawRect(x,y,2,2);
+
                 image.setRGB(x, y, c << 16 | c << 8 | c);
             }
         }
+
+
     }
 
     private int functionMandelbrot(double x, double y) {

@@ -18,7 +18,7 @@ public class FractalTile extends MinvioApp {
 
     public static void main(String[] args) {
         MinvioApp app = new FractalTile();
-        app.start(400, 400, "FractalTile", 30);
+        app.start(600, 600, "FractalTile", 30);
     }
 
     @Override
@@ -41,9 +41,9 @@ public class FractalTile extends MinvioApp {
         if (leftButtonHeld) {
             int dx = getMouseX() - mouseXPrev;
             int dy = getMouseY() - mouseYPrev;
-            double z = Math.pow(2, 1 + zoomLevel);
-            scrollX += dx / z;
-            scrollY += dy / z;
+            double z = Math.pow(2, zoomLevel);
+            scrollX += dx;// / z;
+            scrollY += dy;// / z;
         }
 
 
@@ -53,12 +53,33 @@ public class FractalTile extends MinvioApp {
 
         int[] keyStates = getBasicDisplay().getKeyState();
 
-        if (keyStates[VK_1] != 0) {
+//        if (keyStates[VK_1] != 0) {
+//            zoomLevel += 0.01;
+//        }
+//        if (keyStates[VK_2] != 0) {
+//            zoomLevel -= 0.01;
+//        }
+
+        if (keyStates[VK_1] != 0) {  // Zoom in
+            double oldZoom = Math.pow(2, zoomLevel);
             zoomLevel += 0.01;
+            double newZoom = Math.pow(2, zoomLevel);
+
+            // Adjust scroll to keep center point stable
+            scrollX = scrollX * (newZoom / oldZoom);
+            scrollY = scrollY * (newZoom / oldZoom);
         }
-        if (keyStates[VK_2] != 0) {
+
+        if (keyStates[VK_2] != 0) {  // Zoom out
+            double oldZoom = Math.pow(2, zoomLevel);
             zoomLevel -= 0.01;
+            double newZoom = Math.pow(2, zoomLevel);
+
+            // Adjust scroll to keep center point stable
+            scrollX = scrollX * (newZoom / oldZoom);
+            scrollY = scrollY * (newZoom / oldZoom);
         }
+
     }
 
     @Override

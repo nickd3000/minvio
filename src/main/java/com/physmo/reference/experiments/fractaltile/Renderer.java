@@ -23,8 +23,8 @@ public class Renderer {
         int firstCol = (int) (scrollX / scaledTileSize);
         int firstRow = (int) (scrollY / scaledTileSize);
 
-        int tileWrappedOffsetX = (int) (scrollX % scaledTileSize);
-        int tileWrappedOffsetY = (int) (scrollY % scaledTileSize);
+        double tileWrappedOffsetX = (scrollX % scaledTileSize);
+        double tileWrappedOffsetY = (scrollY % scaledTileSize);
 
         for (int col = -1; col < columns + 1; col++) {
 
