@@ -29,7 +29,9 @@ public class TileManager {
         //newTile.renderInfo();
 
         executor.submit(() -> {
-            renderTile(newTile.bufferedImage, zoom, scale, startX, startY);
+            BufferedImage newImage = new BufferedImage(newTile.bufferedImage.getWidth(), newTile.bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+            renderTile(newImage, zoom, scale, startX, startY);
+            newTile.bufferedImage = newImage;
             //newTile.renderInfo();
         });
 
