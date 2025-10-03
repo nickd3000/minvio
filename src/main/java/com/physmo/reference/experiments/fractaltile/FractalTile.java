@@ -101,7 +101,8 @@ public class FractalTile extends MinvioApp {
     @Override
     public void draw(double delta) {
         cls();
-        renderer.render(tileManager, getDrawingContext(), zoomLevel, getWidth(), getHeight(), scrollX, scrollY);
+        renderer.render(tileManager, getDrawingContext(), zoomLevel + 0.1, getWidth(), getHeight(), scrollX, scrollY, false);
+        renderer.render(tileManager, getDrawingContext(), zoomLevel, getWidth(), getHeight(), scrollX, scrollY, true);
     }
 
 }

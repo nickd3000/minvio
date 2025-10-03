@@ -30,7 +30,7 @@ public class TileManager {
 
         executor.submit(() -> {
             BufferedImage newImage = new BufferedImage(newTile.bufferedImage.getWidth(), newTile.bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
-            renderTile(newImage, zoom, scale, startX, startY);
+            renderTile(newImage, zoom, scale, startX, startY, 1);
             newTile.bufferedImage = newImage;
             //newTile.renderInfo();
         });
@@ -52,12 +52,12 @@ public class TileManager {
     }
 
 
-    public void renderTile(BufferedImage image, int zoom, double scale, double xStart, double yStart) {
+    public void renderTile(BufferedImage image, int zoom, double scale, double xStart, double yStart, int skip) {
 
         double z = (1.0 / Tile.tileHeight) / (scale);
 
-        for (int y = 0; y < Tile.tileHeight; y++) {
-            for (int x = 0; x < Tile.tileWidth; x++) {
+        for (int y = 0; y < Tile.tileHeight; y += skip) {
+            for (int x = 0; x < Tile.tileWidth; x += skip) {
                 double xx = xStart + x * z;
                 double yy = yStart + y * z;
                 int c = (int) ((functionMandelbrot(xx, yy)) % 255) & 0xff;
