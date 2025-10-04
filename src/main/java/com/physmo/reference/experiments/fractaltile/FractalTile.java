@@ -3,6 +3,9 @@ package com.physmo.reference.experiments.fractaltile;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.MinvioApp;
 
+import java.awt.Color;
+import java.util.List;
+
 import static java.awt.event.KeyEvent.VK_1;
 import static java.awt.event.KeyEvent.VK_2;
 
@@ -101,8 +104,15 @@ public class FractalTile extends MinvioApp {
     @Override
     public void draw(double delta) {
         cls();
-        renderer.render(tileManager, getDrawingContext(), zoomLevel + 0.1, getWidth(), getHeight(), scrollX, scrollY, false);
-        renderer.render(tileManager, getDrawingContext(), zoomLevel, getWidth(), getHeight(), scrollX, scrollY, true);
+        //renderer.render(tileManager, getDrawingContext(), zoomLevel + 0.1, getWidth(), getHeight(), scrollX, scrollY, false);
+        List<Integer[]> activeTiles = renderer.render(tileManager, getDrawingContext(), zoomLevel, getWidth(), getHeight(), scrollX, scrollY, true);
+
+        tileManager.setActiveTiles(activeTiles);
+
+        setDrawColor(Color.ORANGE);
+        for (int i = 0; i < tileManager.getPendingTaskCount(); i++) {
+            drawFilledCircle(15 + (i * 10), 15, 5);
+        }
     }
 
 }

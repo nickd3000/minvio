@@ -2,9 +2,12 @@ package com.physmo.reference.experiments.fractaltile;
 
 import com.physmo.minvio.DrawingContext;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Renderer {
 
-    public void render(TileManager tileManager, DrawingContext dc,
+    public List<Integer[]> render(TileManager tileManager, DrawingContext dc,
                        double wZoom, int windowWidth, int windowHeight,
                        double scrollX, double scrollY, boolean draw) {
 
@@ -13,10 +16,6 @@ public class Renderer {
 
         int columns = (int) (windowWidth / scaledTileSize);
         int rows = (int) (windowHeight / scaledTileSize);
-
-        //dc.setDrawColor(Color.white);
-        //dc.drawText("stz:" + scaledTileSize, 10, 10);
-
         int firstCol = (int) (scrollX / scaledTileSize);
         int firstRow = (int) (scrollY / scaledTileSize);
 
@@ -26,10 +25,14 @@ public class Renderer {
         // Integer version of scaledTileSize
         int stzi = (int) scaledTileSize;
 
+        // Keep track of what we actually want to draw, these tiles will be prioritized.
+        List<Integer[]> activeTiles = new ArrayList<>();
+
         for (int col = -1; col < columns + 2; col++) {
 
             for (int row = -1; row < rows + 2; row++) {
                 Tile tile = tileManager.getTile(iZoom, col - firstCol, row - firstRow);
+                activeTiles.add(new Integer[]{iZoom, col - firstCol, row - firstRow});
                 if (!draw) continue;
                 dc.drawImage(tile.bufferedImage,
                         (int) (col * stzi + tileWrappedOffsetX),
@@ -39,21 +42,8 @@ public class Renderer {
 
         }
 
-//        double pixelSize = tile.span/(double)tile.imageSize;
-//        BufferedImage bufferedImage = new BufferedImage(tile.imageSize,tile.imageSize,BufferedImage.TYPE_INT_RGB);
-//
-//        var g = bufferedImage.getGraphics();
-//        for (int x=0;x< tile.imageSize;x++) {
-//            for (int y=0;y< tile.imageSize;y++) {
-//
-//                double noise = functionMandelbrot(tile.x+(x*pixelSize),tile.y+(y*pixelSize));
-//                int c = (int) ((noise) % 255) & 0xff;
-//                g.setColor(new Color(c, c, c));
-//                g.fillRect(x, y, 1, 1);
-//            }
-//        }
-//
-//        tile.bufferedImage = bufferedImage;
+        return activeTiles;
+
     }
 
     private int functionMandelbrot(double x, double y) {
