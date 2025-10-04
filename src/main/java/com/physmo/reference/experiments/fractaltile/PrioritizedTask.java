@@ -1,34 +1,33 @@
 package com.physmo.reference.experiments.fractaltile;
 
-import java.util.List;
-
 public class PrioritizedTask implements Runnable, Comparable<PrioritizedTask> {
     private final int priority;
     private final Runnable runnable;
     int zoom;
     int column;
     int row;
-    List<Integer[]> activeTiles;
+    TileManager tileManager;
 
-    public PrioritizedTask(int priority, List<Integer[]> activeTiles, int zoom, int column, int row, Runnable runnable) {
+    public PrioritizedTask(int priority, TileManager tileManager, int zoom, int column, int row, Runnable runnable) {
         this.priority = priority;
         this.runnable = runnable;
         this.row = row;
         this.column = column;
         this.zoom = zoom;
-        this.activeTiles = activeTiles;
+        this.tileManager = tileManager;
     }
 
     public int getAdjustedPriority() {
         int adjustedPriority = this.priority;
         boolean found = false;
-        for (Integer[] activeTile : activeTiles) {
-            if (activeTile[0] == zoom && activeTile[1] == column && activeTile[2] == row) {
-                found = true;
-                break;
-            }
+
+        ActiveWindow activeWindow = tileManager.getActiveWindow();
+
+        if (column >= activeWindow.x() && column <= activeWindow.x() + activeWindow.width() && row >= activeWindow.y() && row <= activeWindow.y() + activeWindow.height()) {
+            found = true;
         }
-        if (!found) adjustedPriority *= 30;
+
+        if (!found) adjustedPriority += 30;
         return adjustedPriority;
     }
 

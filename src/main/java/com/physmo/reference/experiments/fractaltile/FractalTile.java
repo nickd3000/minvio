@@ -4,7 +4,6 @@ import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.MinvioApp;
 
 import java.awt.Color;
-import java.util.List;
 
 import static java.awt.event.KeyEvent.VK_1;
 import static java.awt.event.KeyEvent.VK_2;
@@ -105,9 +104,9 @@ public class FractalTile extends MinvioApp {
     public void draw(double delta) {
         cls();
         //renderer.render(tileManager, getDrawingContext(), zoomLevel + 0.1, getWidth(), getHeight(), scrollX, scrollY, false);
-        List<Integer[]> activeTiles = renderer.render(tileManager, getDrawingContext(), zoomLevel, getWidth(), getHeight(), scrollX, scrollY, true);
+        ActiveWindow activeWindow = renderer.render(tileManager, getDrawingContext(), zoomLevel, getWidth(), getHeight(), scrollX, scrollY, true);
 
-        tileManager.setActiveTiles(activeTiles);
+        tileManager.setActiveWindow(activeWindow);
 
         setDrawColor(Color.ORANGE);
         for (int i = 0; i < tileManager.getPendingTaskCount(); i++) {

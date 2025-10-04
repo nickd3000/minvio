@@ -13,16 +13,12 @@ public class Tile {
 
     double x, y;
 
-    double span;
-
-    Tile parentTile;
 
     public static int tileWidth = 128;
     public static int tileHeight = 128;
 
-    Tile[] subTiles = new Tile[]{null, null, null, null};
-
-    boolean dirty;
+    public boolean locked = false;
+    public int renderedLevel = 0;
 
     public Tile(int zoom, int x, int y) {
         this.zoom = zoom;

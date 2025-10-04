@@ -4,9 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -18,7 +16,7 @@ public class TileManager {
 
     Map<Integer, Tile> tiles = new HashMap<>();
     ThreadPoolExecutor executor = new ThreadPoolExecutor(
-            5, 14, 1, TimeUnit.MINUTES,
+            1, 4, 1, TimeUnit.MINUTES,
             new PriorityBlockingQueue<>()
     );
 
@@ -52,24 +50,29 @@ public class TileManager {
 //        });
 
         // very Low res
-        executor.execute(new PrioritizedTask(1, activeTiles, zoom, x, y, () -> {
+        executor.execute(new PrioritizedTask(1, this, zoom, x, y, () -> {
+            if (newTile.renderedLevel != 0 && newTile.renderedLevel < 32) return;
             BufferedImage newImage = new BufferedImage(newTile.bufferedImage.getWidth(), newTile.bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
             renderTile(newImage, zoom, scale, startX, startY, 32);
             newTile.bufferedImage = newImage;
+            newTile.renderedLevel = 32;
         }));
 
-        // Low res
-        executor.execute(new PrioritizedTask(5, activeTiles, zoom, x, y, () -> {
-            BufferedImage newImage = new BufferedImage(newTile.bufferedImage.getWidth(), newTile.bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
-            renderTile(newImage, zoom, scale, startX, startY, 8);
-            newTile.bufferedImage = newImage;
-        }));
+//        // Low res
+//        executor.execute(new PrioritizedTask(5, this, zoom, x, y, () -> {
+//            if (newTile.renderedLevel<8) return;
+//            BufferedImage newImage = new BufferedImage(newTile.bufferedImage.getWidth(), newTile.bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+//            renderTile(newImage, zoom, scale, startX, startY, 8);
+//            newTile.bufferedImage = newImage;
+//            newTile.renderedLevel=8;
+//        }));
 
         // Hi-res
-        executor.execute(new PrioritizedTask(10, activeTiles, zoom, x, y, () -> {
+        executor.execute(new PrioritizedTask(10, this, zoom, x, y, () -> {
             BufferedImage newImage = new BufferedImage(newTile.bufferedImage.getWidth(), newTile.bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
             renderTile(newImage, zoom, scale, startX, startY, 1);
             newTile.bufferedImage = newImage;
+            newTile.renderedLevel = 1;
         }));
 
 
@@ -127,11 +130,15 @@ public class TileManager {
         return iter;
     }
 
-    List<Integer[]> activeTiles = new CopyOnWriteArrayList<>();
+    ActiveWindow activeWindow = new ActiveWindow(0, 0, 0, 0, 0);
 
 
-    public void setActiveTiles(List<Integer[]> activeTiles) {
-        this.activeTiles.addAll(activeTiles);
+    public void setActiveWindow(ActiveWindow activeWindow) {
+        this.activeWindow = activeWindow;
+    }
+
+    public ActiveWindow getActiveWindow() {
+        return activeWindow;
     }
 
     public int getPendingTaskCount() {

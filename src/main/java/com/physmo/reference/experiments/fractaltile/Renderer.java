@@ -2,12 +2,9 @@ package com.physmo.reference.experiments.fractaltile;
 
 import com.physmo.minvio.DrawingContext;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Renderer {
 
-    public List<Integer[]> render(TileManager tileManager, DrawingContext dc,
+    public ActiveWindow render(TileManager tileManager, DrawingContext dc,
                        double wZoom, int windowWidth, int windowHeight,
                        double scrollX, double scrollY, boolean draw) {
 
@@ -25,14 +22,13 @@ public class Renderer {
         // Integer version of scaledTileSize
         int stzi = (int) scaledTileSize;
 
-        // Keep track of what we actually want to draw, these tiles will be prioritized.
-        List<Integer[]> activeTiles = new ArrayList<>();
+        ActiveWindow activeWindow = new ActiveWindow(iZoom, -1 - firstCol, -1 - firstRow, columns, rows);
 
         for (int col = -1; col < columns + 2; col++) {
 
             for (int row = -1; row < rows + 2; row++) {
                 Tile tile = tileManager.getTile(iZoom, col - firstCol, row - firstRow);
-                activeTiles.add(new Integer[]{iZoom, col - firstCol, row - firstRow});
+
                 if (!draw) continue;
                 dc.drawImage(tile.bufferedImage,
                         (int) (col * stzi + tileWrappedOffsetX),
@@ -42,7 +38,7 @@ public class Renderer {
 
         }
 
-        return activeTiles;
+        return activeWindow;
 
     }
 
