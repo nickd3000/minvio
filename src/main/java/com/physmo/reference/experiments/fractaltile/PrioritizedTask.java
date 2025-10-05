@@ -18,7 +18,7 @@ public class PrioritizedTask implements Runnable, Comparable<PrioritizedTask> {
     }
 
     public int getAdjustedPriority() {
-        int adjustedPriority = this.priority;
+
         boolean found = false;
 
         ActiveWindow activeWindow = tileManager.getActiveWindow();
@@ -27,8 +27,8 @@ public class PrioritizedTask implements Runnable, Comparable<PrioritizedTask> {
             found = true;
         }
 
-        if (!found) adjustedPriority += 30;
-        return adjustedPriority;
+        if (found) return priority;
+        return priority + 30;
     }
 
 

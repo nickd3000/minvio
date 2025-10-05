@@ -7,6 +7,10 @@ import java.awt.Color;
 
 import static java.awt.event.KeyEvent.VK_1;
 import static java.awt.event.KeyEvent.VK_2;
+import static java.awt.event.KeyEvent.VK_DOWN;
+import static java.awt.event.KeyEvent.VK_LEFT;
+import static java.awt.event.KeyEvent.VK_RIGHT;
+import static java.awt.event.KeyEvent.VK_UP;
 
 public class FractalTile extends MinvioApp {
 
@@ -96,6 +100,21 @@ public class FractalTile extends MinvioApp {
             // Adjust scroll position based on zoom center
             scrollX = scrollX * (newZoom / oldZoom) + dx;
             scrollY = scrollY * (newZoom / oldZoom) + dy;
+        }
+
+        double arrowMoveSpeed = 2.0;
+        double scale = Math.pow(2, zoomLevel);
+        if (keyStates[VK_LEFT] != 0) {
+            scrollX += arrowMoveSpeed;
+        }
+        if (keyStates[VK_RIGHT] != 0) {
+            scrollX -= arrowMoveSpeed;
+        }
+        if (keyStates[VK_UP] != 0) {
+            scrollY += arrowMoveSpeed;
+        }
+        if (keyStates[VK_DOWN] != 0) {
+            scrollY -= arrowMoveSpeed;
         }
 
     }
