@@ -5,25 +5,92 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 public class TileManager {
 
     Color[] palette = new Color[0xff];
 
+    int numThreads = 10;
 
     Map<Integer, Tile> tiles = new HashMap<>();
-    ThreadPoolExecutor executor = new ThreadPoolExecutor(
-            1, 4, 1, TimeUnit.MINUTES,
-            new PriorityBlockingQueue<>()
-    );
+    ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(numThreads);
 
     public TileManager() {
         for (int c = 0; c < 0xff; c++) {
             palette[c] = new Color(c, c, c);
         }
+    }
+
+    public void tick() {
+        processWindow(activeWindow);
+
+        ActiveWindow futureWindow = new ActiveWindow(activeWindow.zoom() + 1, activeWindow.x(), activeWindow.y(), activeWindow.width(), activeWindow.height());
+        processWindow(futureWindow);
+    }
+
+    public void processWindow(ActiveWindow currentWindow) {
+
+        Tile[] windowTiles = getTilesWithinWindow(currentWindow);
+
+        int activeThreads = executor.getActiveCount();
+        int addedTasks = 0;
+        if (activeThreads + addedTasks >= numThreads) return;
+
+        double scale = Math.pow(2, currentWindow.zoom());
+        double logicalWidth = 1 / scale;
+        double logicalHeight = 1 / scale;
+
+
+        for (Tile tile : windowTiles) {
+            if (activeThreads + addedTasks >= numThreads) break;
+
+            if (tile.tileState == TileState.UNINITIALIZED) {
+                addedTasks++;
+                tile.tileState = TileState.RENDERING_PREVIEW;
+                executor.submit(() -> {
+                    double startX = tile.x * logicalWidth;
+                    double startY = tile.y * logicalHeight;
+                    BufferedImage newImage = new BufferedImage(tile.bufferedImage.getWidth(), tile.bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+                    renderTile(newImage, currentWindow.zoom(), scale, startX, startY, 8);
+                    tile.bufferedImage = newImage;
+                    tile.tileState = TileState.AWAITING_FULL_RENDER;
+                });
+            }
+        }
+
+        if (activeThreads + addedTasks >= numThreads) return;
+
+        for (Tile tile : windowTiles) {
+            if (activeThreads + addedTasks >= numThreads) break;
+
+            if (tile.tileState == TileState.AWAITING_FULL_RENDER) {
+                addedTasks++;
+                tile.tileState = TileState.RENDERING_FULL;
+                executor.submit(() -> {
+                    double startX = tile.x * logicalWidth;
+                    double startY = tile.y * logicalHeight;
+                    BufferedImage newImage = new BufferedImage(tile.bufferedImage.getWidth(), tile.bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+                    renderTile(newImage, activeWindow.zoom(), scale, startX, startY, 1);
+                    tile.bufferedImage = newImage;
+                    tile.tileState = TileState.COMPLETED;
+                });
+            }
+        }
+
+    }
+
+    public Tile[] getTilesWithinWindow(ActiveWindow window) {
+        int numTiles = (window.width() + 3) * (window.height() + 3);
+        Tile[] windowTiles = new Tile[numTiles];
+
+        for (int y = -1, count = 0; y < window.height() + 2; y++) {
+            for (int x = -1; x < window.width() + 2; x++) {
+                windowTiles[count++] = getTile(window.zoom(), window.x() + x, window.y() + y);
+            }
+        }
+        return windowTiles;
     }
 
     public Tile getTile(int zoom, int x, int y) {
@@ -32,51 +99,8 @@ public class TileManager {
     }
 
     public Tile initTile(int zoom, int x, int y) {
-        double scale = Math.pow(2, zoom);
 
-        double logicalWidth = 1 / scale;
-        double logicalHeight = 1 / scale;
-
-        double startX = x * logicalWidth;
-        double startY = y * logicalHeight;
-
-        Tile newTile = new Tile(zoom, x, y);
-
-
-//        executor.submit(() -> {
-//            BufferedImage newImage = new BufferedImage(newTile.bufferedImage.getWidth(), newTile.bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
-//            renderTile(newImage, zoom, scale, startX, startY, 1);
-//            newTile.bufferedImage = newImage;
-//        });
-
-        // very Low res
-        executor.execute(new PrioritizedTask(1, this, zoom, x, y, () -> {
-            if (newTile.renderedLevel != 0 && newTile.renderedLevel < 32) return;
-            BufferedImage newImage = new BufferedImage(newTile.bufferedImage.getWidth(), newTile.bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
-            renderTile(newImage, zoom, scale, startX, startY, 32);
-            newTile.bufferedImage = newImage;
-            newTile.renderedLevel = 32;
-        }));
-
-//        // Low res
-//        executor.execute(new PrioritizedTask(5, this, zoom, x, y, () -> {
-//            if (newTile.renderedLevel<8) return;
-//            BufferedImage newImage = new BufferedImage(newTile.bufferedImage.getWidth(), newTile.bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
-//            renderTile(newImage, zoom, scale, startX, startY, 8);
-//            newTile.bufferedImage = newImage;
-//            newTile.renderedLevel=8;
-//        }));
-
-        // Hi-res
-        executor.execute(new PrioritizedTask(10, this, zoom, x, y, () -> {
-            BufferedImage newImage = new BufferedImage(newTile.bufferedImage.getWidth(), newTile.bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
-            renderTile(newImage, zoom, scale, startX, startY, 1);
-            newTile.bufferedImage = newImage;
-            newTile.renderedLevel = 1;
-        }));
-
-
-        return newTile;
+        return new Tile(zoom, x, y);
     }
 
     // Encode 3 input values into one integer.

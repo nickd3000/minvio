@@ -117,6 +117,7 @@ public class FractalTile extends MinvioApp {
             scrollY -= arrowMoveSpeed;
         }
 
+        tileManager.tick();
     }
 
     @Override

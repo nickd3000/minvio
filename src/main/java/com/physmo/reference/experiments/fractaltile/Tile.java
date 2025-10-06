@@ -6,28 +6,27 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 public class Tile {
+    public static int tileWidth = 128 / 2;
+    public static int tileHeight = 128 / 2;
+    public static int RENDER_LEVEL_NONE = -1;
 
     BufferedImage bufferedImage;
 
     int zoom;
 
-    double x, y;
+    int x, y;
 
-
-    public static int tileWidth = 128;
-    public static int tileHeight = 128;
-
-    public boolean locked = false;
-    public int renderedLevel = 0;
+    public TileState tileState = TileState.UNINITIALIZED;
 
     public Tile(int zoom, int x, int y) {
         this.zoom = zoom;
         this.x = x;
         this.y = y;
 
+
         bufferedImage = new BufferedImage(tileWidth, tileHeight, BufferedImage.TYPE_INT_RGB);
 
-        renderInfo();
+        //renderInfo();
     }
 
     public void renderInfo() {
