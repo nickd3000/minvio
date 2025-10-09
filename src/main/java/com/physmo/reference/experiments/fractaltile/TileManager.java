@@ -12,7 +12,7 @@ public class TileManager {
 
     Color[] palette = new Color[0xff];
 
-    int numThreads = 10;
+    int numThreads = 4;
 
     Map<Integer, Tile> tiles = new HashMap<>();
     ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(numThreads);
@@ -27,6 +27,9 @@ public class TileManager {
         processWindow(activeWindow);
 
         ActiveWindow futureWindow = new ActiveWindow(activeWindow.zoom() + 1, activeWindow.x(), activeWindow.y(), activeWindow.width(), activeWindow.height());
+        processWindow(futureWindow);
+
+        futureWindow = new ActiveWindow(activeWindow.zoom() + 2, activeWindow.x(), activeWindow.y(), activeWindow.width(), activeWindow.height());
         processWindow(futureWindow);
     }
 
@@ -127,11 +130,13 @@ public class TileManager {
             for (int x = 0; x < Tile.tileWidth; x += skip) {
                 double xx = xStart + x * z;
                 double yy = yStart + y * z;
-                int c = ((functionMandelbrot(xx, yy)) % 255) & 0xff;
+                int c = ((functionMandelbrot2(xx, yy)) % 255) & 0xff;
+
                 if (c != prevC) {
                     prevC = c;
                     g.setColor(palette[c % 0xff]);
                 }
+
                 //image.setRGB(x, y, c << 16 | c << 8 | c);
                 g.fillRect(x, y, skip, skip);
             }
@@ -141,6 +146,20 @@ public class TileManager {
     }
 
     private int functionMandelbrot(double x, double y) {
+        int MAX_ITERATIONS = 600;
+        double xx = 0.0;
+        double yy = 0.0;
+        int iter = 0;
+        while (xx * xx + yy * yy <= 4.0 && iter < MAX_ITERATIONS) {
+            double temp = xx * xx - yy * yy + x;
+            yy = 2.0 * xx * yy + y;
+            xx = temp;
+            iter++;
+        }
+        return iter;
+    }
+
+    private int functionMandelbrot2(double x, double y) {
         int MAX_ITERATIONS = 600;
         double xx = 0.0;
         double yy = 0.0;

@@ -59,51 +59,33 @@ public class FractalTile extends MinvioApp {
 
         int[] keyStates = getBasicDisplay().getKeyState();
 
-//        if (keyStates[VK_1] != 0) {
-//            zoomLevel += 0.01;
-//        }
-//        if (keyStates[VK_2] != 0) {
-//            zoomLevel -= 0.01;
-//        }
 
-        if (keyStates[VK_1] != 0) {  // Zoom in
+        if (keyStates[VK_1] != 0 || keyStates[VK_2] != 0) {
+            // Store old zoom
             double oldZoom = Math.pow(2, zoomLevel);
-            zoomLevel += 0.01;
+
+            // Modify zoom level
+            if (keyStates[VK_1] != 0) zoomLevel += 0.01; // Zoom in
+            if (keyStates[VK_2] != 0) zoomLevel -= 0.01; // Zoom out
+
+            // Apply bounds if needed, e.g. zoomLevel = Math.max(min, zoomLevel);
             double newZoom = Math.pow(2, zoomLevel);
 
-            // Get the center point of the window
+            // Focus on screen center (can use the mouse position for under-mouse zoom)
             double centerX = getWidth() / 2.0;
             double centerY = getHeight() / 2.0;
 
-            // Calculate how much the center point moves during zoom
-            double dx = centerX - (centerX * (newZoom / oldZoom));
-            double dy = centerY - (centerY * (newZoom / oldZoom));
+            // Logical coordinates under center before zoom
+            double focusX = (centerX - scrollX) / oldZoom;
+            double focusY = (centerY - scrollY) / oldZoom;
 
-            // Adjust scroll position based on zoom center
-            scrollX = scrollX * (newZoom / oldZoom) + dx;
-            scrollY = scrollY * (newZoom / oldZoom) + dy;
-        }
-
-        if (keyStates[VK_2] != 0) {  // Zoom out
-            double oldZoom = Math.pow(2, zoomLevel);
-            zoomLevel -= 0.01;
-            double newZoom = Math.pow(2, zoomLevel);
-
-            // Get the center point of the window
-            double centerX = getWidth() / 2.0;
-            double centerY = getHeight() / 2.0;
-
-            // Calculate how much the center point moves during zoom
-            double dx = centerX - (centerX * (newZoom / oldZoom));
-            double dy = centerY - (centerY * (newZoom / oldZoom));
-
-            // Adjust scroll position based on zoom center
-            scrollX = scrollX * (newZoom / oldZoom) + dx;
-            scrollY = scrollY * (newZoom / oldZoom) + dy;
+            // After zoom, compute new scrollXY to keep logical pos fixed
+            scrollX = centerX - focusX * newZoom;
+            scrollY = centerY - focusY * newZoom;
         }
 
         double arrowMoveSpeed = 2.0;
-        double scale = Math.pow(2, zoomLevel);
+
         if (keyStates[VK_LEFT] != 0) {
             scrollX += arrowMoveSpeed;
         }
@@ -123,7 +105,7 @@ public class FractalTile extends MinvioApp {
     @Override
     public void draw(double delta) {
         cls();
-        //renderer.render(tileManager, getDrawingContext(), zoomLevel + 0.1, getWidth(), getHeight(), scrollX, scrollY, false);
+
         ActiveWindow activeWindow = renderer.render(tileManager, getDrawingContext(), zoomLevel, getWidth(), getHeight(), scrollX, scrollY, true);
 
         tileManager.setActiveWindow(activeWindow);

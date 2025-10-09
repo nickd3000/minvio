@@ -6,9 +6,8 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 public class Tile {
-    public static int tileWidth = 128 / 2;
-    public static int tileHeight = 128 / 2;
-    public static int RENDER_LEVEL_NONE = -1;
+    public static int tileWidth = 128;
+    public static int tileHeight = 128;
 
     BufferedImage bufferedImage;
 
