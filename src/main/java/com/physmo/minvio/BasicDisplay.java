@@ -71,20 +71,6 @@ public abstract class BasicDisplay {
 
     public abstract DrawingContext getDrawingContext();
 
-//    /**
-//     * Returns a new distinct colour for each supplied index
-//     * Colours will be the same for a given index each time it is called.
-//     *
-//     * @param index      integer representing the distinct colour
-//     * @param saturation 0..1 double value
-//     * @return A distinct color.
-//     */
-//    // TODO: Cache some of these
-//    public Color getDistinctColor(int index, double saturation) {
-//        float magicNumber = 0.6180339887f;
-//        return new Color(Color.HSBtoRGB(((float) index) * magicNumber, (float) saturation, 1.0f));
-//    }
-
     /**
      * Set all values to defaults.
      * e.g. Draw Colors, fonts.

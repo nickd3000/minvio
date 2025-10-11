@@ -27,13 +27,6 @@ public class FractalTile extends MinvioApp {
         app.start(600, 600, "FractalTile", 30);
     }
 
-    @Override
-    public void init(BasicDisplay bd) {
-
-//        Renderer renderer = new Renderer();
-//        renderer.render(parentTile);
-
-    }
 
     @Override
     public void update(BasicDisplay bd, double delta) {
@@ -47,11 +40,9 @@ public class FractalTile extends MinvioApp {
         if (leftButtonHeld) {
             int dx = getMouseX() - mouseXPrev;
             int dy = getMouseY() - mouseYPrev;
-            double z = Math.pow(2, zoomLevel);
-            scrollX += dx;// / z;
-            scrollY += dy;// / z;
+            scrollX += dx;
+            scrollY += dy;
         }
-
 
         mouseXPrev = getMouseX();
         mouseYPrev = getMouseY();
@@ -65,8 +56,8 @@ public class FractalTile extends MinvioApp {
             double oldZoom = Math.pow(2, zoomLevel);
 
             // Modify zoom level
-            if (keyStates[VK_1] != 0) zoomLevel += 0.01; // Zoom in
-            if (keyStates[VK_2] != 0) zoomLevel -= 0.01; // Zoom out
+            if (keyStates[VK_2] != 0) zoomLevel += 0.01; // Zoom in
+            if (keyStates[VK_1] != 0) zoomLevel -= 0.01; // Zoom out
 
             // Apply bounds if needed, e.g. zoomLevel = Math.max(min, zoomLevel);
             double newZoom = Math.pow(2, zoomLevel);
@@ -106,14 +97,18 @@ public class FractalTile extends MinvioApp {
     public void draw(double delta) {
         cls();
 
-        ActiveWindow activeWindow = renderer.render(tileManager, getDrawingContext(), zoomLevel, getWidth(), getHeight(), scrollX, scrollY, true);
+        TileWindow activeWindow = renderer.render(tileManager, getDrawingContext(), zoomLevel, getWidth(), getHeight(), scrollX, scrollY, true);
+        TileWindow nextWindow = renderer.render(tileManager, getDrawingContext(), zoomLevel + 1, getWidth(), getHeight(), scrollX, scrollY, false);
 
         tileManager.setActiveWindow(activeWindow);
+        tileManager.setNextWindow(nextWindow);
 
         setDrawColor(Color.ORANGE);
         for (int i = 0; i < tileManager.getPendingTaskCount(); i++) {
             drawFilledCircle(15 + (i * 10), 15, 5);
         }
+
+        drawText("Z:" + (int) zoomLevel, 20, 40);
     }
 
 }

@@ -12,10 +12,13 @@ public class TileManager {
 
     Color[] palette = new Color[0xff];
 
-    int numThreads = 4;
+    int numThreads = 2;
 
     Map<Integer, Tile> tiles = new HashMap<>();
     ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(numThreads);
+    TileWindow activeWindow = new TileWindow(0, 0, 0, 0, 0);
+    TileWindow nextWindow = new TileWindow(0, 0, 0, 0, 0);
+
 
     public TileManager() {
         for (int c = 0; c < 0xff; c++) {
@@ -24,16 +27,13 @@ public class TileManager {
     }
 
     public void tick() {
+
         processWindow(activeWindow);
+        processWindow(nextWindow);
 
-        ActiveWindow futureWindow = new ActiveWindow(activeWindow.zoom() + 1, activeWindow.x(), activeWindow.y(), activeWindow.width(), activeWindow.height());
-        processWindow(futureWindow);
-
-        futureWindow = new ActiveWindow(activeWindow.zoom() + 2, activeWindow.x(), activeWindow.y(), activeWindow.width(), activeWindow.height());
-        processWindow(futureWindow);
     }
 
-    public void processWindow(ActiveWindow currentWindow) {
+    public void processWindow(TileWindow currentWindow) {
 
         Tile[] windowTiles = getTilesWithinWindow(currentWindow);
 
@@ -84,7 +84,7 @@ public class TileManager {
 
     }
 
-    public Tile[] getTilesWithinWindow(ActiveWindow window) {
+    public Tile[] getTilesWithinWindow(TileWindow window) {
         int numTiles = (window.width() + 3) * (window.height() + 3);
         Tile[] windowTiles = new Tile[numTiles];
 
@@ -96,30 +96,6 @@ public class TileManager {
         return windowTiles;
     }
 
-    public Tile getTile(int zoom, int x, int y) {
-        Integer encodedKey = encode(zoom, x, y);
-        return tiles.computeIfAbsent(encodedKey, integer -> initTile(zoom, x, y));
-    }
-
-    public Tile initTile(int zoom, int x, int y) {
-
-        return new Tile(zoom, x, y);
-    }
-
-    // Encode 3 input values into one integer.
-    public Integer encode(int zoom, int x, int y) {
-        // Use the layout: [zoom: 8 bits][x: 12 bits][y: 12 bits]
-        return ((zoom & 0xFF) << 24) | ((x & 0xFFF) << 12) | (y & 0xFFF);
-    }
-
-    public int[] decode(Integer encoded) {
-        int zoom = (encoded >> 24) & 0xFF;
-        int x = (encoded >> 12) & 0xFFF;
-        int y = encoded & 0xFFF;
-        return new int[]{zoom, x, y};
-    }
-
-
     public void renderTile(BufferedImage image, int zoom, double scale, double xStart, double yStart, int skip) {
 
         int prevC = -1;
@@ -130,7 +106,7 @@ public class TileManager {
             for (int x = 0; x < Tile.tileWidth; x += skip) {
                 double xx = xStart + x * z;
                 double yy = yStart + y * z;
-                int c = ((functionMandelbrot2(xx, yy)) % 255) & 0xff;
+                int c = ((functionMandelbrot(xx, yy)) % 255) & 0xff;
 
                 if (c != prevC) {
                     prevC = c;
@@ -143,6 +119,10 @@ public class TileManager {
         }
 
 
+    }
+
+    public Tile getTile(int zoom, int x, int y) {
+        return tiles.computeIfAbsent(encode(zoom, x, y), integer -> initTile(zoom, x, y));
     }
 
     private int functionMandelbrot(double x, double y) {
@@ -159,6 +139,24 @@ public class TileManager {
         return iter;
     }
 
+    // Encode 3 input values into one integer.
+    public Integer encode(int zoom, int x, int y) {
+        // Use the layout: [zoom: 8 bits][x: 12 bits][y: 12 bits]
+        return ((zoom & 0xFF) << 24) | ((x & 0xFFF) << 12) | (y & 0xFFF);
+    }
+
+    public Tile initTile(int zoom, int x, int y) {
+
+        return new Tile(zoom, x, y);
+    }
+
+    public int[] decode(Integer encoded) {
+        int zoom = (encoded >> 24) & 0xFF;
+        int x = (encoded >> 12) & 0xFFF;
+        int y = encoded & 0xFFF;
+        return new int[]{zoom, x, y};
+    }
+
     private int functionMandelbrot2(double x, double y) {
         int MAX_ITERATIONS = 600;
         double xx = 0.0;
@@ -173,15 +171,16 @@ public class TileManager {
         return iter;
     }
 
-    ActiveWindow activeWindow = new ActiveWindow(0, 0, 0, 0, 0);
-
-
-    public void setActiveWindow(ActiveWindow activeWindow) {
-        this.activeWindow = activeWindow;
+    public TileWindow getActiveWindow() {
+        return activeWindow;
     }
 
-    public ActiveWindow getActiveWindow() {
-        return activeWindow;
+    public void setActiveWindow(TileWindow window) {
+        this.activeWindow = window;
+    }
+
+    public void setNextWindow(TileWindow window) {
+        this.nextWindow = window;
     }
 
     public int getPendingTaskCount() {

@@ -8,24 +8,19 @@ import java.awt.image.BufferedImage;
 public class Tile {
     public static int tileWidth = 128;
     public static int tileHeight = 128;
-
-    BufferedImage bufferedImage;
-
-    int zoom;
-
-    int x, y;
-
     public TileState tileState = TileState.UNINITIALIZED;
+    BufferedImage bufferedImage;
+    int zoom;
+    int x, y;
 
     public Tile(int zoom, int x, int y) {
         this.zoom = zoom;
         this.x = x;
         this.y = y;
 
-
         bufferedImage = new BufferedImage(tileWidth, tileHeight, BufferedImage.TYPE_INT_RGB);
 
-        //renderInfo();
+        renderInfo();
     }
 
     public void renderInfo() {
