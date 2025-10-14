@@ -1,8 +1,8 @@
 package com.physmo.minvio.utils;
 
 /**
- * A faster random number generator that is good enough for graphics,
- * do not use for anything important.
+ * A faster random number generator that is good enough for graphics
+ * does not use it for anything important.
  */
 public class QuickRandom {
     private long seed;

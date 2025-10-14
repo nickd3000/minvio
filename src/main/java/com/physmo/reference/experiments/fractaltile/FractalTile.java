@@ -109,6 +109,13 @@ public class FractalTile extends MinvioApp {
         }
 
         drawText("Z:" + (int) zoomLevel, 20, 40);
+
+
+        int tileCount = tileManager.tiles.size();
+        int mem = (tileCount * Tile.tileWidth * Tile.tileWidth) / 1024;
+        drawText("Tiles:" + tileCount, 20, 60);
+        drawText("Mem k:" + mem, 20, 80);
+
     }
 
 }
