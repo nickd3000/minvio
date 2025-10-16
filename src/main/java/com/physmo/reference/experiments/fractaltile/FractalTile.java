@@ -31,7 +31,12 @@ public class FractalTile extends MinvioApp {
     @Override
     public void update(BasicDisplay bd, double delta) {
 
-        double scale = Math.pow(2, zoomLevel);
+        // Calculate pixels per world unit at current zoom
+        int iZoom = (int) zoomLevel;
+        double fractionalZoom = zoomLevel - iZoom;
+        double scaledTileSize = Math.pow(2.0, fractionalZoom) * Tile.tileWidth;
+        double worldUnitsPerTile = 1.0 / Math.pow(2.0, iZoom);
+        double pixelsPerWorldUnit = scaledTileSize / worldUnitsPerTile;
 
         // Panning logic - dragging mouse changes center location
         if (getBasicDisplay().getMouseButtonLeft()) {
@@ -41,8 +46,8 @@ public class FractalTile extends MinvioApp {
         }
 
         if (leftButtonHeld) {
-            double dx = (getMouseX() - mouseXPrev) / scale;
-            double dy = (getMouseY() - mouseYPrev) / scale;
+            double dx = (getMouseX() - mouseXPrev) / pixelsPerWorldUnit;
+            double dy = (getMouseY() - mouseYPrev) / pixelsPerWorldUnit;
             // Move logical center opposite direction to mouse drag (standard for pan)
             scrollX -= dx;
             scrollY -= dy;
@@ -57,7 +62,7 @@ public class FractalTile extends MinvioApp {
             if (keyStates[VK_1] != 0) zoomLevel -= 0.01; // Zoom out
         }
 
-        double arrowMoveSpeed = 2.0;
+        double arrowMoveSpeed = 2.0 / pixelsPerWorldUnit;
 
         if (keyStates[VK_LEFT] != 0) {
             scrollX -= arrowMoveSpeed;

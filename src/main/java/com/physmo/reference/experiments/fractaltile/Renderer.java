@@ -15,26 +15,40 @@ public class Renderer {
                              double wZoom, int windowWidth, int windowHeight,
                              double scrollX, double scrollY, boolean draw) {
 
-        double scale = Math.pow(2.0, wZoom); // scale: world-units per pixel
         int iZoom = (int) wZoom;
-        double scaledTileSize = Math.pow(2.0, (wZoom - iZoom)) * Tile.tileWidth;
+        double fractionalZoom = wZoom - iZoom;
 
+        // scaledTileSize: how many screen pixels one tile occupies (with fractional zoom)
+        double scaledTileSize = Math.pow(2.0, fractionalZoom) * Tile.tileWidth;
 
-        // The logical (world) coords of the top-left pixel:
-        double worldLeft = scrollX - ((windowWidth / 2.0) / scale);
-        double worldTop = scrollY - ((windowHeight / 2.0) / scale);
+        // At integer zoom level, each tile represents this many world units
+        // zoom 0: 1 tile = 1.0 world unit
+        // zoom 1: 1 tile = 0.5 world units  
+        // zoom 2: 1 tile = 0.25 world units
+        double worldUnitsPerTile = 1.0 / Math.pow(2.0, iZoom);
 
-        // The index of the first (top-left) tile:
-        int firstCol = (int) Math.floor(worldLeft / scaledTileSize);
-        int firstRow = (int) Math.floor(worldTop / scaledTileSize);
+        // How many screen pixels equal one world unit (at current zoom)
+        double pixelsPerWorldUnit = scaledTileSize / worldUnitsPerTile;
 
-        // How much the top-left pixel is offset into the first tile:
-        double offsetX = worldLeft - firstCol * scaledTileSize;
-        double offsetY = worldTop - firstRow * scaledTileSize;
+        // Convert half the window size to world coordinates
+        double halfWorldWidth = (windowWidth / 2.0) / pixelsPerWorldUnit;
+        double halfWorldHeight = (windowHeight / 2.0) / pixelsPerWorldUnit;
 
-        // Number of tiles to cover window (plus one for partial tiles on each border)
-        int columns = (int) Math.ceil(windowWidth / scale / scaledTileSize) + 2;
-        int rows = (int) Math.ceil(windowHeight / scale / scaledTileSize) + 2;
+        // The world coords of the top-left corner of the window
+        double worldLeft = scrollX - halfWorldWidth;
+        double worldTop = scrollY - halfWorldHeight;
+
+        // Which tile indices contain the top-left corner
+        int firstCol = (int) Math.floor(worldLeft / worldUnitsPerTile);
+        int firstRow = (int) Math.floor(worldTop / worldUnitsPerTile);
+
+        // How far into the first tile (in world units) is the top-left corner
+        double offsetX = worldLeft - firstCol * worldUnitsPerTile;
+        double offsetY = worldTop - firstRow * worldUnitsPerTile;
+
+        // How many tiles we need to cover the window
+        int columns = (int) Math.ceil(windowWidth / scaledTileSize) + 1;
+        int rows = (int) Math.ceil(windowHeight / scaledTileSize) + 1;
 
         TileWindow activeWindow = new TileWindow(iZoom, firstCol, firstRow, columns, rows);
 
@@ -47,16 +61,15 @@ public class Renderer {
 
                 Tile tile = tileManager.getTile(iZoom, tileX, tileY);
 
-                // Now scale tile size in *pixels* by 'scale':
-                double pixelLeft = (col * scaledTileSize - offsetX) * scale;
-                double pixelTop = (row * scaledTileSize - offsetY) * scale;
-                double pixelRight = pixelLeft + scaledTileSize * scale;
-                double pixelBottom = pixelTop + scaledTileSize * scale;
+                // Position in screen pixels
+                // Each tile starts at col * scaledTileSize, minus the offset (converted to pixels)
+                double pixelLeft = col * scaledTileSize - (offsetX * pixelsPerWorldUnit);
+                double pixelTop = row * scaledTileSize - (offsetY * pixelsPerWorldUnit);
 
                 int drawX = (int) Math.round(pixelLeft);
                 int drawY = (int) Math.round(pixelTop);
-                int drawW = (int) Math.round(pixelRight) - drawX;
-                int drawH = (int) Math.round(pixelBottom) - drawY;
+                int drawW = (int) Math.round(pixelLeft + scaledTileSize) - drawX;
+                int drawH = (int) Math.round(pixelTop + scaledTileSize) - drawY;
 
                 dc.drawImage(tile.bufferedImage, drawX, drawY, drawW, drawH);
             }

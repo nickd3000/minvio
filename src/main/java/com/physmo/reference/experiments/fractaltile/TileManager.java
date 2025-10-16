@@ -12,13 +12,13 @@ public class TileManager {
 
     Color[] palette = new Color[0xff];
 
-    int numThreads = 2;
+    int numThreads = 4;
 
     Map<Integer, Tile> tiles = new HashMap<>();
     ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(numThreads);
     TileWindow activeWindow = new TileWindow(0, 0, 0, 0, 0);
     TileWindow nextWindow = new TileWindow(0, 0, 0, 0, 0);
-
+    Color gridColor = new Color(0.0f, 1.0f, 1.0f, 0.1f);
 
     public TileManager() {
         for (int c = 0; c < 0xff; c++) {
@@ -118,8 +118,10 @@ public class TileManager {
             }
         }
 
-
+        g.setColor(gridColor);
+        g.drawRect(0, 0, Tile.tileWidth, Tile.tileHeight);
     }
+
 
     public Tile getTile(int zoom, int x, int y) {
         return tiles.computeIfAbsent(encode(zoom, x, y), integer -> initTile(zoom, x, y));
