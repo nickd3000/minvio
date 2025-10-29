@@ -6,8 +6,8 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 public class Tile {
-    public static int tileWidth = 128;
-    public static int tileHeight = 128;
+    public static int tileWidth = 256;
+    public static int tileHeight = tileWidth;
     public TileState tileState = TileState.UNINITIALIZED;
     BufferedImage bufferedImage;
     int zoom;
