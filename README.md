@@ -4,8 +4,8 @@
 
 ![GitHub](https://img.shields.io/github/license/nickd3000/minvio)
 
-
-Minvio is a Lightweight Java framework for developing graphical applications.
+Processing-style sketches in plain Java. Minvio handles the window + draw loop so you can focus on graphics and
+experiments.
 
 Minvio handles creating the application window and timed draw loop and exposes a host of drawing and input
 functionality.
