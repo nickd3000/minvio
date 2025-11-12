@@ -77,6 +77,25 @@ public class TileManager {
                     BufferedImage newImage = new BufferedImage(tile.bufferedImage.getWidth(), tile.bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
                     renderTile(newImage, activeWindow.zoom(), scale, startX, startY, 1);
                     tile.bufferedImage = newImage;
+                    tile.tileState = TileState.AWAITING_AA_RENDER;
+                });
+            }
+        }
+
+        if (activeThreads + addedTasks >= numThreads) return;
+
+        for (Tile tile : windowTiles) {
+            if (activeThreads + addedTasks >= numThreads) break;
+
+            if (tile.tileState == TileState.AWAITING_AA_RENDER) {
+                addedTasks++;
+                tile.tileState = TileState.RENDERING_AA;
+                executor.submit(() -> {
+                    double startX = tile.x * logicalWidth;
+                    double startY = tile.y * logicalHeight;
+                    BufferedImage newImage = new BufferedImage(tile.bufferedImage.getWidth(), tile.bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+                    renderTileAA(newImage, activeWindow.zoom(), scale, startX, startY, 2);
+                    tile.bufferedImage = newImage;
                     tile.tileState = TileState.COMPLETED;
                 });
             }
@@ -122,6 +141,47 @@ public class TileManager {
         g.drawRect(0, 0, Tile.tileWidth, Tile.tileHeight);
     }
 
+    public void renderTileAA(BufferedImage image, int zoom, double scale, double xStart, double yStart, int subd) {
+
+        int prevC = -1;
+        double z = (1.0 / Tile.tileHeight) / (scale);
+        Graphics g = image.getGraphics();
+
+        double z2 = z / (double) subd;
+
+        for (int y = 0; y < Tile.tileHeight; y++) {
+            for (int x = 0; x < Tile.tileWidth; x++) {
+                double _xx = xStart + x * z;
+                double _yy = yStart + y * z;
+
+//                int c = ((functionMandelbrot(xx, yy)) % 255) & 0xff;
+//                c += ((functionMandelbrot(xx+z2, yy)) % 255) & 0xff;
+//                c += ((functionMandelbrot(xx+z2, yy+z2)) % 255) & 0xff;
+//                c += ((functionMandelbrot(xx, yy+z2)) % 255) & 0xff;
+//                c=c/4;
+
+                int c = 0;
+                for (int yy = 0; yy < subd; yy++) {
+                    for (int xx = 0; xx < subd; xx++) {
+                        c += ((functionMandelbrot(_xx + (z2 * xx), _yy + (z2 * yy))) % 255) & 0xff;
+                    }
+                }
+                c /= (subd * subd);
+
+
+                if (c != prevC) {
+                    prevC = c;
+                    g.setColor(palette[c % 0xff]);
+                }
+
+                //image.setRGB(x, y, c << 16 | c << 8 | c);
+                g.fillRect(x, y, 1, 1);
+            }
+        }
+
+        g.setColor(gridColor);
+        g.drawRect(0, 0, Tile.tileWidth, Tile.tileHeight);
+    }
 
     public Tile getTile(int zoom, int x, int y) {
         return tiles.computeIfAbsent(encode(zoom, x, y), integer -> initTile(zoom, x, y));
