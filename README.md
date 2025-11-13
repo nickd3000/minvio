@@ -22,7 +22,7 @@ Add maven dependency:
 <dependency>
     <groupId>io.github.nickd3000</groupId>
     <artifactId>minvio</artifactId>
-    <version>1.21</version>
+    <version>1.22</version>
 </dependency>
 ```
 
@@ -63,6 +63,10 @@ class SimpleExample extends MinvioApp {
 ![Image Palette Example](docs/IQPalette.png)
 
 ### Changelist
+
+###### Version 1.22 - Sep 2025
+
+* Added Fractal Tile example
 
 ###### Version 1.20 - Aug 2025
 
