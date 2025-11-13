@@ -4,7 +4,6 @@ package com.physmo.reference.experiments;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.MinvioApp;
 import com.physmo.minvio.types.Rect;
-import com.physmo.minvio.utils.PerlinNoise;
 import com.physmo.minvio.utils.VoronoiNoise;
 import com.physmo.minvio.utils.gui.GuiContext;
 import com.physmo.minvio.utils.gui.GuiPanel;
@@ -35,7 +34,7 @@ public class FunctionExplorer extends MinvioApp {
     GuiContext guiContext;
     GuiPanel guiPanel;
     double scale = 0.010;
-    BufferedImage bufferedImage = new BufferedImage(400, 400, BufferedImage.TYPE_INT_RGB);
+    BufferedImage bufferedImage = new BufferedImage(600, 600, BufferedImage.TYPE_INT_RGB);
     boolean dirty = false;
     int renderRow = 0;
 
@@ -55,19 +54,24 @@ public class FunctionExplorer extends MinvioApp {
     public void init(BasicDisplay bd) {
         guiContext = new GuiContext(getBasicDisplay());
 
-        guiPanel = new GuiPanel(new Rect(20, 20, 400, 400)) {
-            boolean leftHeld = false;
-            boolean rightHeld = false;
+        guiPanel = new GuiPanel(new Rect(20, 20, 550, 550)) {
+            boolean zoomBoxHeld = false;
+            boolean scrollHeld = false;
 
             int dragInitialX = 0;
             int dragInitialY = 0;
+
 
             @Override
             public void onMessage(GuiMessage guiMessage, Object object) {
                 MouseMessageData mouseMessageData = (MouseMessageData) object;
 
+                int SCROLL_BUTTON = 1;
+                int ZOOM_IN_BUTTON = 2;
+                int ZOOM_OUT_BUTTON = 3;
+
                 if (guiMessage == MOUSE_MOVE) {
-                    if (rightHeld) {
+                    if (scrollHeld) {
                         scrollX = ((double) (dragInitialX - mouseMessageData.x)) * scale;
                         scrollY = ((double) (dragInitialY - mouseMessageData.y)) * scale;
                         setRenderDirty(true);
@@ -75,29 +79,29 @@ public class FunctionExplorer extends MinvioApp {
                 }
 
                 if (guiMessage == MOUSE_BUTTON_DOWN) {
-                    if (mouseMessageData.button == 1) {
-                        leftHeld = true;
+                    if (mouseMessageData.button == ZOOM_IN_BUTTON) {
+                        zoomBoxHeld = true;
                         dragInitialX = mouseMessageData.x;
                         dragInitialY = mouseMessageData.y;
-                    } else if (mouseMessageData.button == 3) {
-                        rightHeld = true;
+                    } else if (mouseMessageData.button == SCROLL_BUTTON) {
+                        scrollHeld = true;
                         dragInitialX = mouseMessageData.x;
                         dragInitialY = mouseMessageData.y;
-                    } else if (mouseMessageData.button == 2) {
+                    } else if (mouseMessageData.button == ZOOM_OUT_BUTTON) {
                         // middle
                         changeZoom(scale * 2);
                     }
                 }
 
                 if (guiMessage == MOUSE_BUTTON_UP) {
-                    if (mouseMessageData.button == 3) {
-                        rightHeld = false;
+                    if (mouseMessageData.button == SCROLL_BUTTON) {
+                        scrollHeld = false;
                         centerX += scrollX;
                         centerY += scrollY;
                         scrollX = 0;
                         scrollY = 0;
-                    } else if (mouseMessageData.button == 1) {
-                        leftHeld = false;
+                    } else if (mouseMessageData.button == ZOOM_IN_BUTTON) {
+                        zoomBoxHeld = false;
 
                         int dx = Math.abs(mouseMessageData.x - dragInitialX);
                         int dy = Math.abs(mouseMessageData.y - dragInitialY);
@@ -157,7 +161,7 @@ public class FunctionExplorer extends MinvioApp {
         int width = bufferedImage.getWidth();
         int height = bufferedImage.getHeight();
 
-        int skip = renderFine ? 1 : 4;
+        int skip = renderFine ? 2 : 8;
         int endHeight = height - skip;
 
         double cx = centerX + scrollX - (200 * scale);
@@ -168,10 +172,13 @@ public class FunctionExplorer extends MinvioApp {
             for (int x = 0; x < width; x += skip) {
                 double xx = x * scale;
                 double yy = y * scale;
-                double noise = PerlinNoise.noise(cx + xx, cy + yy, 0);
+                //double noise = PerlinNoise.noise(cx + xx, cy + yy, 0);
                 //double noise = functionMandelbrot((float) (cx + xx), (float) (cy + yy));
+                //double noise = functionMandelbrotDist((float) (cx + xx), (float) (cy + yy));
+                double noise = functionMandelbrotTest((float) (cx + xx), (float) (cy + yy));
                 //double noise = voronioNoise((float) (cx + xx), (float) (cy + yy));
                 //double noise = functionNickbrot((float) (cx + xx), (float) (cy + yy));
+
                 int c = (int) ((noise) % 255) & 0xff;
                 g.setColor(new Color(c, c, c));
                 g.fillRect(x, y, skip, skip);
@@ -223,6 +230,60 @@ public class FunctionExplorer extends MinvioApp {
         }
         return iter;
     }
+
+    private int functionMandelbrotAngle(double x, double y) {
+
+        double xx = 0.0;
+        double yy = 0.0;
+        int iter = 0;
+        while (xx * xx + yy * yy <= 4.0 && iter < 15) {
+            double temp = xx * xx - yy * yy + x;
+            yy = 2.0 * xx * yy + y;
+            xx = temp;
+            iter++;
+        }
+
+        return (int) Math.min(Math.atan2(yy - y, xx - x) * 100, 0xff);
+
+    }
+
+    private int functionMandelbrotDist(double x, double y) {
+
+        double xx = 0.0;
+        double yy = 0.0;
+        int iter = 0;
+        while (xx * xx + yy * yy <= 4.0 && iter < 100) {
+            double temp = xx * xx - yy * yy + x;
+            yy = 2.0 * xx * yy + y;
+            xx = temp;
+            iter++;
+        }
+
+        double dx = xx - x;
+        double dy = yy - y;
+        return (int) Math.min(50 * Math.sqrt((dx * dx) + (dy * dy)), 0xff);
+
+    }
+
+    private int functionMandelbrotTest(double x, double y) {
+        int MAX_ITERATIONS = 1600;
+        double xx = 0.0;
+        double yy = 0.0;
+        int iter = 0;
+        double xa = 0, ya = 0;
+        while (xx * xx + yy * yy <= 4.0 && iter < MAX_ITERATIONS) {
+            double temp = xx * xx - yy * yy + x;
+            yy = 2.0 * xx * yy + y;
+            xx = temp;
+            iter++;
+
+            xa += xx;
+            ya += yy;
+            if (xa * xa + ya * ya > 20.0) return 100;
+        }
+        return iter;
+    }
+
 
     private int voronioNoise(double x, double y) {
         return (int) (255 * VoronoiNoise.noise(x, y, 0.1));

@@ -4,8 +4,8 @@
 
 ![GitHub](https://img.shields.io/github/license/nickd3000/minvio)
 
-
-Minvio is a Lightweight Java framework for developing graphical applications.
+Processing-style sketches in plain Java. Minvio handles the window + draw loop so you can focus on graphics and
+experiments.
 
 Minvio handles creating the application window and timed draw loop and exposes a host of drawing and input
 functionality.
@@ -22,7 +22,7 @@ Add maven dependency:
 <dependency>
     <groupId>io.github.nickd3000</groupId>
     <artifactId>minvio</artifactId>
-    <version>1.21</version>
+    <version>1.22</version>
 </dependency>
 ```
 
@@ -63,6 +63,10 @@ class SimpleExample extends MinvioApp {
 ![Image Palette Example](docs/IQPalette.png)
 
 ### Changelist
+
+###### Version 1.22 - Sep 2025
+
+* Added Fractal Tile example
 
 ###### Version 1.20 - Aug 2025
 
