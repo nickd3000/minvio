@@ -159,6 +159,12 @@ public class BasicDisplayAwt extends BasicDisplay {
     }
 
     @Override
+    public boolean isVisible() {
+        if (headless) return true;
+        return mainFrame.isVisible();
+    }
+
+    @Override
     public void repaint() {
         if (!headless) {
             panel.paintImmediately(0, 0, width, height);

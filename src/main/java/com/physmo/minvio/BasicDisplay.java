@@ -106,6 +106,13 @@ public abstract class BasicDisplay {
     public abstract void close();
 
     /**
+     * Check if the display is still visible (not closed).
+     *
+     * @return true if the display is visible.
+     */
+    public abstract boolean isVisible();
+
+    /**
      * Update the display with drawing changes.
      * This variant delays execution to keep the refresh rate at fps frames per second.
      *
