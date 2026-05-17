@@ -19,6 +19,7 @@ public class AnchorManager {
 
     final List<Point> anchors;
     final double anchorRadius;
+    double hitBoxMultiplier = 3.0;
     boolean prevMouseButtonState = false;
     boolean grabActive = false;
     int grabbedId = 0;
@@ -71,11 +72,19 @@ public class AnchorManager {
         return anchors;
     }
 
+    public double getHitBoxMultiplier() {
+        return hitBoxMultiplier;
+    }
+
+    public void setHitBoxMultiplier(double hitBoxMultiplier) {
+        this.hitBoxMultiplier = hitBoxMultiplier;
+    }
+
     public void update(BasicDisplay bd) {
         boolean mouseButtonState = bd.getMouseButtonLeft();
 
         if (mouseButtonState && !prevMouseButtonState) {
-            int id = findCloseAnchor(bd.getMouseX(), bd.getMouseY(), anchorRadius);
+            int id = findCloseAnchor(bd.getMouseX(), bd.getMouseY(), anchorRadius * hitBoxMultiplier);
             if (id != -1) {
                 grabbedId = id;
                 grabActive = true;
@@ -91,7 +100,7 @@ public class AnchorManager {
             anchors.get(grabbedId).y = mp.y;
         }
 
-        mouseOverId = findCloseAnchor(bd.getMouseX(), bd.getMouseY(), anchorRadius);
+        mouseOverId = findCloseAnchor(bd.getMouseX(), bd.getMouseY(), anchorRadius * hitBoxMultiplier);
 
         prevMouseButtonState = mouseButtonState;
     }
