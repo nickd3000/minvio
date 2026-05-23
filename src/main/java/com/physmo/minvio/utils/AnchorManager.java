@@ -10,7 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A basic system that provides a set of draggable points.
+ * The AnchorManager class manages a collection of anchor points and provides
+ * functionality for rendering, updating, and interacting with these anchors.
+ * It supports custom drawing delegates for the anchors, mouse interactions,
+ * and optional screen boundary constraints.
  */
 public class AnchorManager {
 

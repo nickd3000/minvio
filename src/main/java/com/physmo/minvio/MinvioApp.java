@@ -98,8 +98,12 @@ public class MinvioApp implements DrawingContext {
             while (bd.getElapsedTime() < msPerFrame) {
                 int remainingTime = (int) (msPerFrame - bd.getElapsedTime());
 
-                if (remainingTime < 10) continue;
                 try {
+                    if (remainingTime < 10) {
+                        if (remainingTime > 0) Thread.sleep(remainingTime);
+                        continue;
+                    }
+
                     Thread.sleep(5);
                     delta = (double) (System.nanoTime() - lastUpdateTime);
                     lastUpdateTime = System.nanoTime();
@@ -157,6 +161,7 @@ public class MinvioApp implements DrawingContext {
      */
     public void draw(double delta) {
     }
+
 
     private void drawFps() {
         DrawingContext dc = bd.getDrawingContext();
