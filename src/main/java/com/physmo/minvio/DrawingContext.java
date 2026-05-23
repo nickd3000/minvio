@@ -48,6 +48,18 @@ public interface DrawingContext {
 
     /**
      * Draw an image to the display.
+     * Coordinates are cast to integers.
+     *
+     * @param sourceImage Source image as a Buffered Image
+     * @param x           x-coordinate
+     * @param y           y-coordinate
+     */
+    default void drawImage(BufferedImage sourceImage, double x, double y) {
+        drawImage(sourceImage, (int) x, (int) y);
+    }
+
+    /**
+     * Draw an image to the display.
      *
      * @param sourceImage Source image as a Buffered Image
      * @param x           x-coordinate
@@ -56,6 +68,20 @@ public interface DrawingContext {
      * @param h           height
      */
     void drawImage(BufferedImage sourceImage, int x, int y, int w, int h);
+
+    /**
+     * Draw an image to the display.
+     * Coordinates are cast to integers.
+     *
+     * @param sourceImage Source image as a Buffered Image
+     * @param x           x-coordinate
+     * @param y           y-coordinate
+     * @param w           width
+     * @param h           height
+     */
+    default void drawImage(BufferedImage sourceImage, double x, double y, double w, double h) {
+        drawImage(sourceImage, (int) x, (int) y, (int) w, (int) h);
+    }
 
     /**
      * Get the colour at the defined position.
@@ -79,6 +105,18 @@ public interface DrawingContext {
         return new Color(rgb);
     }
 
+    /**
+     * Get the colour at the defined position.
+     * Coordinates are cast to integers.
+     *
+     * @param x x-coordinate
+     * @param y y-coordinate
+     * @return Color value
+     */
+    default Color getColorAtPoint(double x, double y) {
+        return getColorAtPoint((int) x, (int) y);
+    }
+
     /* LINE ---------------------------------------------------------------*/
 
     /**
@@ -91,6 +129,20 @@ public interface DrawingContext {
      * @return integer RGB value
      */
     int getRGBAtPoint(int x, int y);
+
+    /**
+     * Get the color in RGB packed integer format at the defined position.
+     * <p>
+     * Format in hex: 0xAARRGGBB
+     * Coordinates are cast to integers.
+     *
+     * @param x x-coordinate
+     * @param y y-coordinate
+     * @return integer RGB value
+     */
+    default int getRGBAtPoint(double x, double y) {
+        return getRGBAtPoint((int) x, (int) y);
+    }
 
     /**
      * Drawing function - Draw a pixel using current draw color.
@@ -108,6 +160,17 @@ public interface DrawingContext {
      * @param y y-coordinate
      */
     void drawPoint(int x, int y);
+
+    /**
+     * Drawing function - Draw a pixel using current draw color.
+     * Coordinates are cast to integers.
+     *
+     * @param x x-coordinate
+     * @param y y-coordinate
+     */
+    default void drawPoint(double x, double y) {
+        drawPoint((int) x, (int) y);
+    }
 
     /**
      * Drawing function - draw a line
@@ -179,6 +242,19 @@ public interface DrawingContext {
      */
     void drawFilledRect(int x, int y, int width, int height);
 
+    /**
+     * Drawing function - draw a filled rectangle
+     * Coordinates are cast to integers.
+     *
+     * @param x      x-coordinate
+     * @param y      y-coordinate
+     * @param width  width
+     * @param height height
+     */
+    default void drawFilledRect(double x, double y, double width, double height) {
+        drawFilledRect((int) x, (int) y, (int) width, (int) height);
+    }
+
     default void drawFilledRect(Rect rect) {
         this.drawFilledRect(rect.x, rect.y, rect.w, rect.h);
     }
@@ -192,6 +268,19 @@ public interface DrawingContext {
      * @param height height
      */
     void drawRect(int x, int y, int width, int height);
+
+    /**
+     * Drawing function - draw an unfilled rectangle
+     * Coordinates are cast to integers.
+     *
+     * @param x      x-coordinate
+     * @param y      y-coordinate
+     * @param width  width
+     * @param height height
+     */
+    default void drawRect(double x, double y, double width, double height) {
+        drawRect((int) x, (int) y, (int) width, (int) height);
+    }
 
     default void drawRect(Rect rect) {
         drawRect(rect.x, rect.y, rect.w, rect.h);
@@ -253,6 +342,18 @@ public interface DrawingContext {
      * @param y   y-coordinate
      */
     void drawText(String str, int x, int y);
+
+    /**
+     * Draw the supplied string using the active font.
+     * Coordinates are cast to integers.
+     *
+     * @param str text to draw
+     * @param x   x-coordinate
+     * @param y   y-coordinate
+     */
+    default void drawText(String str, double x, double y) {
+        drawText(str, (int) x, (int) y);
+    }
 
     /**
      * Set current font to the specified font.

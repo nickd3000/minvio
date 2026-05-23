@@ -246,8 +246,36 @@ public class MinvioApp implements DrawingContext {
         drawingContext.drawImage(sourceImage, x, y);
     }
 
+    /**
+     * Draw an image to the display.
+     * Coordinates are cast to integers.
+     *
+     * @param sourceImage Source image as a Buffered Image
+     * @param x           x-coordinate
+     * @param y           y-coordinate
+     */
+    @Override
+    public void drawImage(BufferedImage sourceImage, double x, double y) {
+        drawingContext.drawImage(sourceImage, x, y);
+    }
+
     @Override
     public void drawImage(BufferedImage sourceImage, int x, int y, int w, int h) {
+        drawingContext.drawImage(sourceImage, x, y, w, h);
+    }
+
+    /**
+     * Draw an image to the display.
+     * Coordinates are cast to integers.
+     *
+     * @param sourceImage Source image as a Buffered Image
+     * @param x           x-coordinate
+     * @param y           y-coordinate
+     * @param w           width
+     * @param h           height
+     */
+    @Override
+    public void drawImage(BufferedImage sourceImage, double x, double y, double w, double h) {
         drawingContext.drawImage(sourceImage, x, y, w, h);
     }
 
@@ -256,8 +284,35 @@ public class MinvioApp implements DrawingContext {
         return drawingContext.getRGBAtPoint(x, y);
     }
 
+    /**
+     * Get the color in RGB packed integer format at the defined position.
+     * <p>
+     * Format in hex: 0xAARRGGBB
+     * Coordinates are cast to integers.
+     *
+     * @param x x-coordinate
+     * @param y y-coordinate
+     * @return integer RGB value
+     */
+    @Override
+    public int getRGBAtPoint(double x, double y) {
+        return drawingContext.getRGBAtPoint(x, y);
+    }
+
     @Override
     public void drawPoint(int x, int y) {
+        drawingContext.drawPoint(x, y);
+    }
+
+    /**
+     * Drawing function - Draw a pixel using current draw color.
+     * Coordinates are cast to integers.
+     *
+     * @param x x-coordinate
+     * @param y y-coordinate
+     */
+    @Override
+    public void drawPoint(double x, double y) {
         drawingContext.drawPoint(x, y);
     }
 
@@ -276,8 +331,36 @@ public class MinvioApp implements DrawingContext {
         drawingContext.drawFilledRect(x, y, width, height);
     }
 
+    /**
+     * Drawing function - draw a filled rectangle
+     * Coordinates are cast to integers.
+     *
+     * @param x      x-coordinate
+     * @param y      y-coordinate
+     * @param width  width
+     * @param height height
+     */
+    @Override
+    public void drawFilledRect(double x, double y, double width, double height) {
+        drawingContext.drawFilledRect(x, y, width, height);
+    }
+
     @Override
     public void drawRect(int x, int y, int width, int height) {
+        drawingContext.drawRect(x, y, width, height);
+    }
+
+    /**
+     * Drawing function - draw an unfilled rectangle
+     * Coordinates are cast to integers.
+     *
+     * @param x      x-coordinate
+     * @param y      y-coordinate
+     * @param width  width
+     * @param height height
+     */
+    @Override
+    public void drawRect(double x, double y, double width, double height) {
         drawingContext.drawRect(x, y, width, height);
     }
 
@@ -298,6 +381,19 @@ public class MinvioApp implements DrawingContext {
 
     @Override
     public void drawText(String str, int x, int y) {
+        drawingContext.drawText(str, x, y);
+    }
+
+    /**
+     * Draw the supplied string using the active font.
+     * Coordinates are cast to integers.
+     *
+     * @param str text to draw
+     * @param x   x-coordinate
+     * @param y   y-coordinate
+     */
+    @Override
+    public void drawText(String str, double x, double y) {
         drawingContext.drawText(str, x, y);
     }
 
