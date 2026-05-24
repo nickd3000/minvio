@@ -5,7 +5,9 @@ import com.physmo.minvio.utils.RollingAverage;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 
 public class MinvioApp implements DrawingContext {
 
@@ -15,6 +17,8 @@ public class MinvioApp implements DrawingContext {
     boolean running = true;
     int targetFps = 60;
     boolean displayFps = false;
+    private int screenshotKey = KeyEvent.VK_F12;
+    private boolean screenshotEnabled = true;
     private DrawingContext drawingContext;
 
     public BasicDisplay getBasicDisplay() {
@@ -95,6 +99,12 @@ public class MinvioApp implements DrawingContext {
         double delta;
 
         while (running) {
+            // Check for system-level triggers (like screenshots)
+            handleSystemInputs();
+
+            // Synchronize keyboard/mouse state for the current frame
+            bd.tickInput();
+
             while (bd.getElapsedTime() < msPerFrame) {
                 int remainingTime = (int) (msPerFrame - bd.getElapsedTime());
 
@@ -125,8 +135,6 @@ public class MinvioApp implements DrawingContext {
             bd.repaint();
 
             bd.resizeIfRequested();
-
-            //bd.repaintTimerStart = System.nanoTime();
         }
 
 
@@ -504,5 +512,36 @@ public class MinvioApp implements DrawingContext {
 
     public void saveScreenshot(String path) {
         bd.saveScreenshot(path);
+    }
+
+    private void handleSystemInputs() {
+        if (!screenshotEnabled) return;
+
+        int[] keyState = bd.getKeyState();
+        int[] keyStatePrevious = bd.getKeyStatePrevious();
+
+        // Detect "just pressed" state for the screenshot key
+        if (keyState[screenshotKey] != 0 && keyStatePrevious[screenshotKey] == 0) {
+            takeScreenshot();
+        }
+    }
+
+    private void takeScreenshot() {
+        String title = getTitle().replaceAll("\\s+", ""); // Remove spaces
+        if (title.isEmpty()) title = "screenshot";
+
+        String fileName = title + ".png";
+        File file = new File(fileName);
+        int count = 1;
+
+        // Increment number until we find a name that doesn't exist
+        while (file.exists()) {
+            fileName = title + "_" + count + ".png";
+            file = new File(fileName);
+            count++;
+        }
+
+        saveScreenshot(file.getAbsolutePath());
+        System.out.println("Screenshot saved: " + file.getAbsolutePath());
     }
 }

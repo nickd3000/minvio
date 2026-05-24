@@ -27,7 +27,6 @@ class KeyboardExample extends MinvioApp {
     @Override
     public void draw(double delta) {
 
-        getBasicDisplay().tickInput();
         int[] keyStates = getBasicDisplay().getKeyState();
 
         if (keyStates[VK_W] != 0) {

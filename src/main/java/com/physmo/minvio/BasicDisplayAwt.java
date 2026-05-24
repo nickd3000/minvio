@@ -310,14 +310,19 @@ public class BasicDisplayAwt extends BasicDisplay {
 
         @Override
         public void keyPressed(KeyEvent e) {
-            //System.out.println("Key Pressed:" + e.getKeyCode());
-            keyDown[e.getKeyCode()] = 1;
+            int keyCode = e.getKeyCode();
+            // System.out.println("[DEBUG_LOG] keyPressed: " + keyCode);
+            if (keyCode >= 0 && keyCode < numKeys) {
+                keyDown[keyCode] = 1;
+            }
         }
 
         @Override
         public void keyReleased(KeyEvent e) {
-            //System.out.println("keyReleased "+e.getKeyCode());
-            keyDown[e.getKeyCode()] = 0;
+            int keyCode = e.getKeyCode();
+            if (keyCode >= 0 && keyCode < numKeys) {
+                keyDown[keyCode] = 0;
+            }
         }
 
         @Override

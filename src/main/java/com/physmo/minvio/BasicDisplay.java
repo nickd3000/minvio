@@ -186,6 +186,7 @@ public abstract class BasicDisplay {
     public void saveScreenshot() {
         String filePath = System.getProperty("user.home");
         filePath += File.separator + getTitle().replaceAll("\\s+", "") + ".png";
+        System.out.println("Saving screenshot to: " + filePath);
         saveScreenshot(filePath);
     }
 
@@ -209,7 +210,8 @@ public abstract class BasicDisplay {
             File outputFile = new File(fullPath);
             ImageIO.write(bi, "png", outputFile);
         } catch (IOException e) {
-            System.out.println("Error writing to file: ");
+            System.out.println("Error writing to file: " + fullPath);
+            e.printStackTrace();
         }
     }
 
