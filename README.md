@@ -64,10 +64,16 @@ class SimpleExample extends MinvioApp {
 
 ### Changelist
 
-###### Version 1.22 - Sep 2025
+###### Version PENDING
 
-* Added Rotations1 gallery example (concentric animated rings)
+* Added Screenshot Functionality
+  * Implemented automatic screenshot saving using the F12 key in MinvioApp.
+  * Added takeScreenshot() and saveScreenshot() methods with automatic file naming (e.g., AppName_1.png).
+* Enhanced Drawing Precision
+  * Added overloaded drawing methods across MinvioApp and DrawingContext that accept double coordinates (e.g.,
+    drawPoint, drawRect, drawText, drawImage) for more sub-pixel precision.
 * Added Transformation and State Management (pushMatrix, popMatrix, translate, rotate, scale)
+* Added Rotations1 gallery example (concentric animated rings)
 * Added TransformationExample, FractalTreeExample, and KaleidoscopeExample gallery examples
 * Added Fractal Tile example
 

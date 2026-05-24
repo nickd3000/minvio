@@ -6,6 +6,7 @@ import com.physmo.minvio.utils.ecs.Entity;
 
 import java.awt.Color;
 
+// This component draws a simple colored circle for the entity.
 public class DrawComponent extends Component {
     Color color;
 
@@ -15,11 +16,13 @@ public class DrawComponent extends Component {
 
     @Override
     public void tick(DrawingContext dc, Entity e, double d) {
+        // Set the color and draw a circle at the entity's position.
         dc.setDrawColor(color);
         dc.drawFilledCircle(e.position.x, e.position.y, 20);
 
+        // Check if the entity has a "special" property. If it does, draw an extra inner circle.
         e.getProperty("special").ifPresent(o -> {
-            if ((boolean) o == true) {
+            if ((boolean) o) {
                 dc.setDrawColor(Color.white);
                 dc.drawFilledCircle(e.position.x, e.position.y, 10);
             }
