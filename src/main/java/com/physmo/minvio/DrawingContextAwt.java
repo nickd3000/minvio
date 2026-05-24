@@ -8,8 +8,11 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +32,7 @@ public class DrawingContextAwt implements DrawingContext {
     private Color drawColor;
     private Color backgroundColor;
     final Map<Integer, Font> builtInFonts = new HashMap<>();
+    private final Deque<AffineTransform> transformStack = new ArrayDeque<>();
 
     public DrawingContextAwt(BufferedImage buffer) {
         setImageBuffer(buffer);
@@ -243,4 +247,35 @@ public class DrawingContextAwt implements DrawingContext {
 
     }
 
+    @Override
+    public void pushMatrix() {
+        transformStack.push(g2d.getTransform());
+    }
+
+    @Override
+    public void popMatrix() {
+        if (!transformStack.isEmpty()) {
+            g2d.setTransform(transformStack.pop());
+        }
+    }
+
+    @Override
+    public void translate(double x, double y) {
+        g2d.translate(x, y);
+    }
+
+    @Override
+    public void rotate(double angle) {
+        g2d.rotate(angle);
+    }
+
+    @Override
+    public void scale(double s) {
+        g2d.scale(s, s);
+    }
+
+    @Override
+    public void scale(double x, double y) {
+        g2d.scale(x, y);
+    }
 }

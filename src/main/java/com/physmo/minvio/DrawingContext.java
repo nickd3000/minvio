@@ -408,4 +408,44 @@ public interface DrawingContext {
     int getWidth();
 
     int getHeight();
+
+    /**
+     * Saves the current transformation state onto a stack.
+     */
+    void pushMatrix();
+
+    /**
+     * Restores the last saved transformation state from the stack.
+     */
+    void popMatrix();
+
+    /**
+     * Moves the origin of the coordinate system.
+     *
+     * @param x The distance to move along the x-axis.
+     * @param y The distance to move along the y-axis.
+     */
+    void translate(double x, double y);
+
+    /**
+     * Rotates the coordinate system.
+     *
+     * @param angle The angle of rotation in radians.
+     */
+    void rotate(double angle);
+
+    /**
+     * Scales the coordinate system uniformly.
+     *
+     * @param s The scale factor.
+     */
+    void scale(double s);
+
+    /**
+     * Scales the coordinate system non-uniformly.
+     *
+     * @param x The scale factor along the x-axis.
+     * @param y The scale factor along the y-axis.
+     */
+    void scale(double x, double y);
 }

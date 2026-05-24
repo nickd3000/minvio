@@ -440,6 +440,64 @@ public class MinvioApp implements DrawingContext {
         return bd.getHeight();
     }
 
+    /**
+     * Saves the current transformation state onto a stack.
+     */
+    @Override
+    public void pushMatrix() {
+        drawingContext.pushMatrix();
+    }
+
+    /**
+     * Restores the last saved transformation state from the stack.
+     */
+    @Override
+    public void popMatrix() {
+        drawingContext.popMatrix();
+    }
+
+    /**
+     * Moves the origin of the coordinate system.
+     *
+     * @param x The distance to move along the x-axis.
+     * @param y The distance to move along the y-axis.
+     */
+    @Override
+    public void translate(double x, double y) {
+        drawingContext.translate(x, y);
+    }
+
+    /**
+     * Rotates the coordinate system.
+     *
+     * @param angle The angle of rotation in radians.
+     */
+    @Override
+    public void rotate(double angle) {
+        drawingContext.rotate(angle);
+    }
+
+    /**
+     * Scales the coordinate system uniformly.
+     *
+     * @param s The scale factor.
+     */
+    @Override
+    public void scale(double s) {
+        drawingContext.scale(s);
+    }
+
+    /**
+     * Scales the coordinate system non-uniformly.
+     *
+     * @param x The scale factor along the x-axis.
+     * @param y The scale factor along the y-axis.
+     */
+    @Override
+    public void scale(double x, double y) {
+        drawingContext.scale(x, y);
+    }
+
     public String getTitle() {
         return bd.getTitle();
     }

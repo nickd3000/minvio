@@ -66,6 +66,9 @@ class SimpleExample extends MinvioApp {
 
 ###### Version 1.22 - Sep 2025
 
+* Added Rotations1 gallery example (concentric animated rings)
+* Added Transformation and State Management (pushMatrix, popMatrix, translate, rotate, scale)
+* Added TransformationExample, FractalTreeExample, and KaleidoscopeExample gallery examples
 * Added Fractal Tile example
 
 ###### Version 1.20 - Aug 2025
