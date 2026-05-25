@@ -21,7 +21,7 @@ public class ParticleWaveExample extends MinvioApp {
         // Create a grid of particles
         for (int x = 0; x < 40; x++) {
             for (int y = 0; y < 30; y++) {
-                particles.add(new Particle(x * 20 + 40, y * 20 + 40));
+                particles.add(new Particle((x - 2) * 20 + 40, (y - 2) * 20 + 40));
             }
         }
     }
@@ -34,12 +34,12 @@ public class ParticleWaveExample extends MinvioApp {
         cls(new Color(15, 15, 35));
 
         // Update and draw particles
-        double mouseInfluence = 100.0;
+        double mouseInfluence = 200.0;
 
         for (Particle p : particles) {
             // Wave motion
-            double waveX = Math.sin(p.baseX * 0.01 + time * 2) * 15;
-            double waveY = Math.cos(p.baseY * 0.008 + time * 1.5) * 10;
+            double waveX = Math.sin(p.baseX * 0.01 + time * 4) * 15;
+            double waveY = Math.cos(p.baseY * 0.008 + time * 2.5) * 10;
 
             // Mouse interaction
             double dx = getMouseX() - p.baseX;
