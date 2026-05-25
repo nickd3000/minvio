@@ -5,6 +5,8 @@ import com.physmo.minvio.utils.gui.support.GuiMessage;
 import com.physmo.minvio.utils.gui.support.GuiStyle;
 import com.physmo.minvio.utils.gui.support.MouseMessageData;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.DoubleConsumer;
 
 import static com.physmo.minvio.utils.gui.support.GuiMessage.MOUSE_BUTTON_DOWN;
@@ -27,7 +29,7 @@ public class GuiSlider extends GuiContainer {
     int handleSize = 10;
     int endPadding = 0;
 
-    DoubleConsumer onChanged = null;
+    private final List<DoubleConsumer> changeListeners = new ArrayList<>();
     int grabOffsetY;
     int grabOffsetX;
 
@@ -90,8 +92,8 @@ public class GuiSlider extends GuiContainer {
         return endPadding + (int) Math.round(value * trackLength);
     }
 
-    public void setOnChangedHandler(DoubleConsumer onChanged) {
-        this.onChanged = onChanged;
+    public void addChangeListener(DoubleConsumer onChanged) {
+        this.changeListeners.add(onChanged);
     }
 
     public boolean isMouseOverHandle(int mouseX, int mouseY) {
@@ -164,7 +166,11 @@ public class GuiSlider extends GuiContainer {
         double clamped = Math.max(0.0, Math.min(1.0, newValue));
         if (clamped != this.value) {
             this.value = clamped;
-            if (fireEvent && onChanged != null) onChanged.accept(this.value);
+            if (fireEvent) {
+                for (DoubleConsumer listener : changeListeners) {
+                    listener.accept(this.value);
+                }
+            }
         }
     }
 

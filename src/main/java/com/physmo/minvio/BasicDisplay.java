@@ -3,6 +3,7 @@ package com.physmo.minvio;
 import com.physmo.minvio.types.Point;
 import com.physmo.minvio.utils.gui.support.MouseConnector;
 
+import com.physmo.minvio.utils.MinvioLogger;
 import javax.imageio.ImageIO;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
@@ -186,7 +187,7 @@ public abstract class BasicDisplay {
     public void saveScreenshot() {
         String filePath = System.getProperty("user.home");
         filePath += File.separator + getTitle().replaceAll("\\s+", "") + ".png";
-        System.out.println("Saving screenshot to: " + filePath);
+        MinvioLogger.info("Saving screenshot to: " + filePath);
         saveScreenshot(filePath);
     }
 
@@ -210,7 +211,7 @@ public abstract class BasicDisplay {
             File outputFile = new File(fullPath);
             ImageIO.write(bi, "png", outputFile);
         } catch (IOException e) {
-            System.out.println("Error writing to file: " + fullPath);
+            MinvioLogger.error("Error writing to file: " + fullPath);
             e.printStackTrace();
         }
     }

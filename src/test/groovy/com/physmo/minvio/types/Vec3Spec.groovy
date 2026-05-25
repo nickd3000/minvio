@@ -168,4 +168,46 @@ class Vec3Spec extends Specification {
           str == "Vec3{x=1.23, y=5.68, z=9.00}"
     }
 
+    def "dot product should calculate correctly"() {
+        given:
+          def v1 = new Vec3(1, 2, 3)
+          def v2 = new Vec3(4, 5, 6)
+
+        expect:
+          v1.dot(v2) == 1 * 4 + 2 * 5 + 3 * 6
+    }
+
+    def "cross product should calculate correctly"() {
+        given:
+          def v1 = new Vec3(1, 0, 0)
+          def v2 = new Vec3(0, 1, 0)
+
+        when:
+          def result = v1.cross(v2)
+
+        then:
+          result == new Vec3(0, 0, 1)
+    }
+
+    def "lerp should interpolate correctly"() {
+        given:
+          def v1 = new Vec3(0, 0, 0)
+          def v2 = new Vec3(10, 10, 10)
+
+        expect:
+          v1.lerp(v2, 0.5) == new Vec3(5, 5, 5)
+          v1.lerp(v2, 0.1) == new Vec3(1, 1, 1)
+          v1.lerp(v2, 0.0) == v1
+          v1.lerp(v2, 1.0) == v2
+    }
+
+    def "angleBetween should calculate correctly"() {
+        given:
+          def v1 = new Vec3(1, 0, 0)
+          def v2 = new Vec3(0, 1, 0)
+
+        expect:
+          Math.abs(v1.angleBetween(v2) - Math.PI / 2) < 1e-10
+          Math.abs(v1.angleBetween(v1) - 0.0) < 1e-10
+    }
 }

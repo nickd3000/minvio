@@ -191,17 +191,20 @@ public class BasicDisplayAwt extends BasicDisplay {
 
     @Override
     public int[] getKeyState() {
+        if (panel == null) return new int[1000];
         return panel.keyDown;
     }
 
     @Override
     public int[] getKeyStatePrevious() {
+        if (panel == null) return new int[1000];
         return panel.keyDownPrevious;
     }
 
     // Update previous keys with current keys so we can tell what changed next time.
     @Override
     public void tickInput() {
+        if (panel == null) return;
         System.arraycopy(panel.keyDown, 0, panel.keyDownPrevious, 0, panel.keyDown.length);
     }
 
@@ -212,28 +215,33 @@ public class BasicDisplayAwt extends BasicDisplay {
 
     @Override
     public int getMouseX() {
+        if (panel == null) return 0;
         return panel.mouseX;
     }
 
     @Override
     public int getMouseY() {
+        if (panel == null) return 0;
         return panel.mouseY;
     }
 
     @Override
     public boolean getMouseButtonLeft() {
+        if (panel == null) return false;
         int MOUSE_BUTTON_ID_LEFT = 1;
         return panel.mouseButtonStates[MOUSE_BUTTON_ID_LEFT];
     }
 
     @Override
     public boolean getMouseButtonMiddle() {
+        if (panel == null) return false;
         int MOUSE_BUTTON_ID_MIDDLE = 2;
         return panel.mouseButtonStates[MOUSE_BUTTON_ID_MIDDLE];
     }
 
     @Override
     public boolean getMouseButtonRight() {
+        if (panel == null) return false;
         int MOUSE_BUTTON_ID_RIGHT = 3;
         return panel.mouseButtonStates[MOUSE_BUTTON_ID_RIGHT];
     }

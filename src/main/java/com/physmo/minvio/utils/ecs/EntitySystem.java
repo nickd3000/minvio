@@ -17,6 +17,10 @@ public class EntitySystem {
         entities.forEach(entity -> entity.draw(dc, delta));
     }
 
+    public List<Entity> getEntities() {
+        return entities;
+    }
+
     public void addEntity(Entity entity) {
         this.entities.add(entity);
     }

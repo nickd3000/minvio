@@ -28,16 +28,16 @@ public class PanelWithButtons extends MinvioApp {
 
         // Create the first button, add an action, then add it as a child of the panel.
         GuiButton minusButton = new GuiButton(new Rect(10, 10, 30, 30), "-");
-        minusButton.setAction(() -> counter--);
+        minusButton.addActionListener(() -> counter--);
         guiPanel.add(minusButton);
 
         // Create the second button, add an action, then add it as a child of the panel.
         GuiButton plusButton = new GuiButton(new Rect(45, 10, 30, 30), "+");
-        plusButton.setAction(() -> counter++);
+        plusButton.addActionListener(() -> counter++);
         guiPanel.add(plusButton);
 
         GuiButton resetButton = new GuiButton(new Rect(95, 10, 70, 30), "Reset");
-        resetButton.setAction(() -> counter = 0);
+        resetButton.addActionListener(() -> counter = 0);
         guiPanel.add(resetButton);
 
         // Finally, add the panel to the GUI context.

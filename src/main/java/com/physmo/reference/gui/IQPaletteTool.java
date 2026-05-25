@@ -98,7 +98,7 @@ public class IQPaletteTool extends MinvioApp {
 
             GuiSlider slider = new GuiSlider(new Rect(10 + (column * (sliderWidth + 10)), (row * (sliderHeight + 5)), sliderWidth, sliderHeight));
             int finalI = i;
-            slider.setOnChangedHandler(val -> {
+            slider.addChangeListener(val -> {
                 sliderValues[finalI] = val;
                 updateIQPaletteControls();
             });
@@ -111,11 +111,11 @@ public class IQPaletteTool extends MinvioApp {
         retrieveAllSliderValues();
 
         GuiButton randomizeButton = new GuiButton(new Rect(10, 370, 110, 25), "Randomize");
-        randomizeButton.setAction(this::randomizeSliders);
+        randomizeButton.addActionListener(this::randomizeSliders);
         sliderPanel.add(randomizeButton);
 
         GuiButton exportButton = new GuiButton(new Rect(10 + 150, 370, 110, 25), "Export");
-        exportButton.setAction(this::export);
+        exportButton.addActionListener(this::export);
         sliderPanel.add(exportButton);
 
         componentColors = new Color[3];

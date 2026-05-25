@@ -140,4 +140,56 @@ public class Vec3 {
                 Math.abs(vec3.y - y) < epsilon &&
                 Math.abs(vec3.z - z) < epsilon;
     }
+
+    /**
+     * Calculates the dot product of this vector and another vector.
+     *
+     * @param other the other vector
+     * @return the dot product
+     */
+    public double dot(Vec3 other) {
+        return x * other.x + y * other.y + z * other.z;
+    }
+
+    /**
+     * Calculates the cross product of this vector and another vector.
+     *
+     * @param other the other vector
+     * @return a new Vec3 object that is the cross product of this vector and the other vector
+     */
+    public Vec3 cross(Vec3 other) {
+        return new Vec3(
+                y * other.z - z * other.y,
+                z * other.x - x * other.z,
+                x * other.y - y * other.x
+        );
+    }
+
+    /**
+     * Linearly interpolates between this vector and another vector.
+     *
+     * @param other the other vector
+     * @param t     the interpolation factor (typically between 0 and 1)
+     * @return a new Vec3 object that is the result of the linear interpolation
+     */
+    public Vec3 lerp(Vec3 other, double t) {
+        return new Vec3(
+                x + (other.x - x) * t,
+                y + (other.y - y) * t,
+                z + (other.z - z) * t
+        );
+    }
+
+    /**
+     * Calculates the angle between this vector and another vector in radians.
+     *
+     * @param other the other vector
+     * @return the angle between the two vectors in radians
+     */
+    public double angleBetween(Vec3 other) {
+        double dotProduct = dot(other);
+        double magnitude1 = Math.sqrt(x * x + y * y + z * z);
+        double magnitude2 = Math.sqrt(other.x * other.x + other.y * other.y + other.z * other.z);
+        return Math.acos(dotProduct / (magnitude1 * magnitude2));
+    }
 }

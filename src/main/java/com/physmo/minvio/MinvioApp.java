@@ -2,7 +2,11 @@ package com.physmo.minvio;
 
 import com.physmo.minvio.utils.RollingAverage;
 
+import com.physmo.minvio.utils.ecs.Entity;
+import com.physmo.minvio.utils.ecs.EntitySystem;
 import java.awt.Color;
+
+import com.physmo.minvio.utils.MinvioLogger;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
@@ -17,6 +21,8 @@ public class MinvioApp implements DrawingContext {
     boolean running = true;
     int targetFps = 60;
     boolean displayFps = false;
+    boolean debugMode = false;
+    EntitySystem debugEntitySystem = null;
     private int screenshotKey = KeyEvent.VK_F12;
     private boolean screenshotEnabled = true;
     private DrawingContext drawingContext;
@@ -132,6 +138,7 @@ public class MinvioApp implements DrawingContext {
             draw((delta) / 1_000_000_000.0);
 
             if (displayFps) drawFps();
+            if (debugMode) drawDebugInfo();
             bd.repaint();
 
             bd.resizeIfRequested();
@@ -172,16 +179,52 @@ public class MinvioApp implements DrawingContext {
 
 
     private void drawFps() {
+        drawTextWithShadow(String.format("FPS: %.2f", 1000.0 / tickRollingAverage.getAverage()), 10, 15);
+    }
+
+    private void drawDebugInfo() {
         DrawingContext dc = bd.getDrawingContext();
         Font currentFont = dc.getFont();
         Color currentColor = dc.getDrawColor();
         dc.setFont(fpsFont);
+
         String fpsText = String.format("FPS: %.2f", 1000.0 / tickRollingAverage.getAverage());
-        dc.setDrawColor(Color.BLACK);
-        dc.drawText(fpsText, 11, 16);
-        dc.setDrawColor(Color.WHITE);
-        dc.drawText(fpsText, 10, 15);
+        String mouseText = String.format("Mouse: %d, %d", getMouseX(), getMouseY());
+
+        drawTextWithShadow(fpsText, 10, 15);
+        drawTextWithShadow(mouseText, 10, 30);
+
+        if (debugEntitySystem != null) {
+            drawEntityDebug();
+        }
+
         dc.setFont(currentFont);
+        dc.setDrawColor(currentColor);
+    }
+
+    private void drawTextWithShadow(String text, int x, int y) {
+        DrawingContext dc = bd.getDrawingContext();
+        Font currentFont = dc.getFont();
+        Color currentColor = dc.getDrawColor();
+
+        dc.setDrawColor(Color.BLACK);
+        dc.drawText(text, x + 1, y + 1);
+        dc.setDrawColor(Color.WHITE);
+        dc.drawText(text, x, y);
+
+        dc.setDrawColor(currentColor);
+    }
+
+    private void drawEntityDebug() {
+        if (debugEntitySystem == null) return;
+        DrawingContext dc = bd.getDrawingContext();
+        Color currentColor = dc.getDrawColor();
+
+        dc.setDrawColor(Color.RED);
+        for (Entity entity : debugEntitySystem.getEntities()) {
+            dc.drawRect(entity.position.x - 5, entity.position.y - 5, 10, 10);
+        }
+
         dc.setDrawColor(currentColor);
     }
 
@@ -210,6 +253,35 @@ public class MinvioApp implements DrawingContext {
      */
     public void setDisplayFps(boolean set) {
         displayFps = set;
+    }
+
+    /**
+     * Enable or disable debug mode.
+     * When enabled, displays FPS and mouse coordinates.
+     *
+     * @param set Boolean value representing desired debug state.
+     */
+    public void setDebugMode(boolean set) {
+        debugMode = set;
+    }
+
+    /**
+     * Returns whether debug mode is enabled.
+     *
+     * @return true if debug mode is enabled.
+     */
+    public boolean isDebugMode() {
+        return debugMode;
+    }
+
+    /**
+     * Attach an EntitySystem for debug visualization.
+     * When debug mode is enabled, it will draw markers for entities.
+     *
+     * @param entitySystem The EntitySystem to monitor.
+     */
+    public void setDebugEntitySystem(EntitySystem entitySystem) {
+        this.debugEntitySystem = entitySystem;
     }
 
     public DrawingContext getDrawingContext() {
@@ -542,6 +614,6 @@ public class MinvioApp implements DrawingContext {
         }
 
         saveScreenshot(file.getAbsolutePath());
-        System.out.println("Screenshot saved: " + file.getAbsolutePath());
+        MinvioLogger.info("Screenshot saved: " + file.getAbsolutePath());
     }
 }

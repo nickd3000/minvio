@@ -7,6 +7,8 @@ import com.physmo.minvio.utils.gui.support.MouseMessageData;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.physmo.minvio.utils.gui.support.GuiMessage.MOUSE_BUTTON_DOWN;
 import static com.physmo.minvio.utils.gui.support.GuiMessage.MOUSE_BUTTON_UP;
@@ -25,7 +27,7 @@ public class GuiButton extends GuiContainer {
     private final Font font = new Font("Verdana", Font.PLAIN, 15);
     boolean visiblyPressed = false;
     boolean buttonActivated = false;
-    Runnable action = null;
+    private final List<Runnable> actionListeners = new ArrayList<>();
     private String text = null;
 
     public GuiButton(Rect rect) {
@@ -38,13 +40,12 @@ public class GuiButton extends GuiContainer {
     }
 
     /**
-     * Sets the action to be executed when the button is activated.
+     * Adds an action listener to the button.
      *
      * @param action the {@link Runnable} to be executed when the button is triggered.
-     *               If set to null, no action will be performed upon activation.
      */
-    public void setAction(Runnable action) {
-        this.action = action;
+    public void addActionListener(Runnable action) {
+        this.actionListeners.add(action);
     }
 
     @Override
@@ -95,7 +96,9 @@ public class GuiButton extends GuiContainer {
         if (guiMessage == MOUSE_BUTTON_UP) {
             MouseMessageData md = (MouseMessageData) object;
             if (isPointInside(md.x, md.y)) {
-                if (action != null) action.run();
+                for (Runnable actionListener : actionListeners) {
+                    actionListener.run();
+                }
             }
 
             this.dirty = true;
