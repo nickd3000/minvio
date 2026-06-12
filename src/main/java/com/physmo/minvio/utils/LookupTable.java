@@ -1,5 +1,6 @@
 package com.physmo.minvio.utils;
 
+import java.util.Objects;
 import java.util.function.DoubleUnaryOperator;
 
 /**
@@ -22,6 +23,13 @@ public class LookupTable {
      * @param func     DoubleUnaryOperator Lambda function
      */
     public LookupTable(double min, double max, int numItems, DoubleUnaryOperator func) {
+        if (max <= min) {
+            throw new IllegalArgumentException("Maximum must be greater than minimum");
+        }
+        if (numItems <= 0) {
+            throw new IllegalArgumentException("Number of items must be greater than zero");
+        }
+        Objects.requireNonNull(func, "func");
         this.min = min;
         this.numItems = numItems;
         double range = max - min;
@@ -44,6 +52,12 @@ public class LookupTable {
 
     public double getInterpolatedValue(double x) {
         double scaledIndex = (x - min) * numItems_range;
+        if (scaledIndex <= 0) {
+            return values[0];
+        }
+        if (scaledIndex >= numItems - 1) {
+            return values[numItems - 1];
+        }
         int lowerIndex = Math.max(0, Math.min(numItems - 1, (int) scaledIndex));
         int upperIndex = Math.min(numItems - 1, lowerIndex + 1);
 

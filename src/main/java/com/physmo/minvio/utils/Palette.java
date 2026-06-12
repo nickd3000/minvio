@@ -97,7 +97,10 @@ public class Palette {
     public static Color LEMON_SORBET = new Color(255, 246, 150);
     public static Color BERRY = new Color(171, 37, 107);
 
-    static Map<Integer, Color> distinctColorCache = new HashMap<>();
+    private record DistinctColorKey(int index, int saturationBits) {
+    }
+
+    static Map<DistinctColorKey, Color> distinctColorCache = new HashMap<>();
 
     /**
      * Returns a new distinct colour for each supplied index
@@ -110,7 +113,10 @@ public class Palette {
 
     public static Color getDistinctColor(int index, double saturation) {
         float magicNumber = 0.6180339887f;
-        return distinctColorCache.computeIfAbsent(index, k -> new Color(Color.HSBtoRGB(((float) index) * magicNumber, (float) saturation, 1.0f)));
+        float clampedSaturation = (float) Math.max(0.0, Math.min(1.0, saturation));
+        DistinctColorKey key = new DistinctColorKey(index, Float.floatToIntBits(clampedSaturation));
+        return distinctColorCache.computeIfAbsent(key,
+                k -> new Color(Color.HSBtoRGB(((float) index) * magicNumber, clampedSaturation, 1.0f)));
 
     }
 

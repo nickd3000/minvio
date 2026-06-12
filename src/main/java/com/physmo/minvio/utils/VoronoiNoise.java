@@ -9,6 +9,9 @@ package com.physmo.minvio.utils;
 public class VoronoiNoise {
 
     public static double noise(double x, double y, double z, int order) {
+        if (order < 2) {
+            throw new IllegalArgumentException("Order must be at least 2");
+        }
         double sum = 0;
         double total = 0;
         for (int i = 1; i < order; i++) {
@@ -39,13 +42,12 @@ public class VoronoiNoise {
 
         double mind = 100;
         double mind2 = 100;
-        double mind3 = 100;
-
         for (double d : distances) {
             if (d < mind) {
-                mind3 = mind2;
                 mind2 = mind;
                 mind = d;
+            } else if (d < mind2) {
+                mind2 = d;
             }
 
         }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 /**
  * Manage a positional list of colours and allows fast access to
@@ -23,6 +23,7 @@ public class Gradient {
     public Gradient() {
         colorList.put(0.0, Color.BLACK);
         colorList.put(1.0, Color.BLACK);
+        recalculateList();
     }
 
     public Gradient(Color startColor, Color endColor) {
@@ -39,6 +40,10 @@ public class Gradient {
      * @param color    the colour to insert.
      */
     public void addColor(double position, Color color) {
+        if (position < 0.0 || position > 1.0) {
+            throw new IllegalArgumentException("Position must be between 0 and 1");
+        }
+        Objects.requireNonNull(color, "color");
         colorList.remove(position);
         colorList.put(position, color);
         recalculateList();
@@ -47,7 +52,7 @@ public class Gradient {
     private void recalculateList() {
         preComputedList.clear();
         for (int i = 0; i < preComputedListSize; i++) {
-            double pos = ((double) i) / (double) preComputedListSize;
+            double pos = ((double) i) / (double) (preComputedListSize - 1);
             preComputedList.add(calculateColor(pos));
         }
     }
@@ -55,7 +60,10 @@ public class Gradient {
     private Color calculateColor(double pos) {
         pos = Utils.clamp(0.0, 1.0, pos);
 
-        List<Double> sortedKeys = colorList.keySet().stream().sorted().collect(Collectors.toList());
+        List<Double> sortedKeys = colorList.keySet().stream().sorted().toList();
+        if (pos >= sortedKeys.get(sortedKeys.size() - 1)) {
+            return colorList.get(sortedKeys.get(sortedKeys.size() - 1));
+        }
 
         double firstKey = -1;
         double secondKey = -1;
@@ -88,6 +96,7 @@ public class Gradient {
      * @return Interpolated colour.
      */
     public Color getColor(double pos) {
+        pos = Utils.clamp(0.0, 1.0, pos);
         int index = (int) (pos * (double) preComputedListSize);
         if (index >= preComputedListSize) index = preComputedListSize - 1;
         return preComputedList.get(index);

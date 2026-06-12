@@ -16,6 +16,9 @@ public class GridLayout implements Layout {
     }
 
     public GridLayout(int rows, int cols) {
+        if (rows <= 0 || cols <= 0) {
+            throw new IllegalArgumentException("Rows and columns must be positive");
+        }
         this.rows = rows;
         this.cols = cols;
     }
@@ -42,8 +45,8 @@ public class GridLayout implements Layout {
 
             int x = (cx * cellWidth) + hPad;
             int y = (cy * cellHeight) + vPad;
-            int w = cellWidth - (hPad * 2);
-            int h = cellHeight - (vPad * 2);
+            int w = Math.max(1, cellWidth - (hPad * 2));
+            int h = Math.max(1, cellHeight - (vPad * 2));
 
             child.setRect(new Rect(x, y, w, h));
             child.calculateLayout();

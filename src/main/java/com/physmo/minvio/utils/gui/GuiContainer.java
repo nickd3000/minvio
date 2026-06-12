@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class GuiContainer {
     List<GuiContainer> children;
@@ -33,6 +34,10 @@ public abstract class GuiContainer {
     }
 
     public void setRect(Rect rect) {
+        Objects.requireNonNull(rect, "rect");
+        if (rect.w <= 0 || rect.h <= 0) {
+            throw new IllegalArgumentException("Rectangle dimensions must be positive");
+        }
         if (this.rect != null && this.rect.equals(rect)) return;
 
         if (this.rect == null) {
@@ -52,8 +57,14 @@ public abstract class GuiContainer {
     public abstract void draw(GuiContext guiContext);
 
     public void add(GuiContainer child) {
+        Objects.requireNonNull(child, "child");
+        if (child.parent != null && child.parent != this) {
+            throw new IllegalArgumentException("Child already has a parent");
+        }
         child.parent = this;
-        children.add(child);
+        if (!children.contains(child)) {
+            children.add(child);
+        }
     }
 
     public PointInt getInheritedPosition() {
@@ -61,7 +72,7 @@ public abstract class GuiContainer {
         PointInt p = new PointInt(rect.x, rect.y);
         GuiContainer reader = this;
         while (reader.parent != null) {
-            reader = parent;
+            reader = reader.parent;
             p.add(reader.getRect().x, reader.getRect().y);
         }
         return p;
@@ -94,10 +105,6 @@ public abstract class GuiContainer {
         dirty = false;
     }
 
-    private boolean isDirty() {
-        return dirty;
-    }
-
     public abstract void onMessage(GuiMessage guiMessage, Object object);
 
     public boolean getDirty() {
@@ -127,4 +134,3 @@ public abstract class GuiContainer {
         if (layout != null) layout.handleLayout(this, children);
     }
 }
-

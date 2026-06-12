@@ -33,7 +33,9 @@ public class Entity {
     }
 
     public void draw(DrawingContext dc, double t) {
-        drawComponent.tick(dc, this, t);
+        if (drawComponent != null) {
+            drawComponent.tick(dc, this, t);
+        }
     }
 
     public void setProperty(String name, Object value) {

@@ -92,9 +92,10 @@ public class Utils {
      * @return the inverted distance value
      */
     public static double invertDistance(double distance, double max) {
-        if (distance > max) {
-            distance = max;
+        if (max <= 0) {
+            throw new IllegalArgumentException("Maximum distance must be greater than zero");
         }
+        distance = clamp(0.0, max, distance);
         return (max - distance) / max;
     }
 }

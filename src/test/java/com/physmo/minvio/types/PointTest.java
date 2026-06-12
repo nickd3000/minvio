@@ -110,6 +110,7 @@ class PointTest {
         assertEquals(equal, first);
         assertEquals(first.hashCode(), equal.hashCode());
         assertNotEquals(first, different);
+        assertNotEquals(first, new Point(1.1, 99.0));
         assertNotEquals(first.hashCode(), different.hashCode());
         assertNotEquals(null, first);
         assertNotEquals("a string", first);

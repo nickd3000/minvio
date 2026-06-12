@@ -28,6 +28,7 @@ class ArrayTest {
         array.add("c");
 
         assertEquals(3, array.size());
+        assertFalse(array.isEmpty());
         assertEquals("a", array.get(0));
         assertEquals("b", array.get(1));
         assertEquals("c", array.get(2));
