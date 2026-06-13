@@ -2,12 +2,16 @@ package com.physmo.minvio;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Paint;
 import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
@@ -15,6 +19,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * The DrawingContextAwt class is an implementation of the DrawingContext interface
@@ -40,13 +45,49 @@ public class DrawingContextAwt implements DrawingContext {
 
     @Override
     public void setImageBuffer(BufferedImage image) {
-        this.buffer = image;
-        g = buffer.getGraphics();
-        g2d = (Graphics2D) g;
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        Objects.requireNonNull(image, "Image buffer cannot be null");
 
-        Font fnt = new Font("window", Font.BOLD, 20);
-        g.setFont(fnt);
+        Color previousColor = null;
+        Font previousFont = null;
+        Stroke previousStroke = null;
+        AffineTransform previousTransform = null;
+        Shape previousClip = null;
+        Composite previousComposite = null;
+        Paint previousPaint = null;
+        Color previousGraphicsBackground = null;
+        RenderingHints previousRenderingHints = null;
+
+        if (g2d != null) {
+            previousColor = g2d.getColor();
+            previousFont = g2d.getFont();
+            previousStroke = g2d.getStroke();
+            previousTransform = g2d.getTransform();
+            previousClip = g2d.getClip();
+            previousComposite = g2d.getComposite();
+            previousPaint = g2d.getPaint();
+            previousGraphicsBackground = g2d.getBackground();
+            previousRenderingHints = g2d.getRenderingHints();
+            g2d.dispose();
+        }
+
+        this.buffer = image;
+        g2d = buffer.createGraphics();
+        g = g2d;
+
+        if (previousRenderingHints == null) {
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.setFont(new Font("window", Font.BOLD, 20));
+        } else {
+            g2d.setRenderingHints(previousRenderingHints);
+            g2d.setColor(previousColor);
+            g2d.setFont(previousFont);
+            g2d.setStroke(previousStroke);
+            g2d.setTransform(previousTransform);
+            g2d.setClip(previousClip);
+            g2d.setComposite(previousComposite);
+            g2d.setPaint(previousPaint);
+            g2d.setBackground(previousGraphicsBackground);
+        }
 
         width = buffer.getWidth();
         height = buffer.getHeight();
@@ -162,8 +203,13 @@ public class DrawingContextAwt implements DrawingContext {
 
     @Override
     public void drawLine(double x1, double y1, double x2, double y2, double thickness) {
-        g2d.setStroke(new BasicStroke((float) thickness));
-        g2d.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
+        Stroke previousStroke = g2d.getStroke();
+        try {
+            g2d.setStroke(new BasicStroke((float) thickness));
+            g2d.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
+        } finally {
+            g2d.setStroke(previousStroke);
+        }
     }
 
     @Override

@@ -13,6 +13,7 @@ import javax.swing.WindowConstants;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.event.ComponentAdapter;
@@ -78,7 +79,12 @@ public class BasicDisplayAwt extends BasicDisplay {
     public void setDisplaySize(int w, int h) {
 
         BufferedImage newBuffer = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-        newBuffer.getGraphics().drawImage(drawBuffer, 0, 0, null);
+        Graphics2D resizeGraphics = newBuffer.createGraphics();
+        try {
+            resizeGraphics.drawImage(drawBuffer, 0, 0, null);
+        } finally {
+            resizeGraphics.dispose();
+        }
         drawBuffer = newBuffer;
 
         if (drawingContext == null) {
