@@ -42,7 +42,7 @@ public class GravityParticles extends MinvioApp {
 
     int numParticles = 4096 / 2;
 
-    int cellSize = 128;
+    int cellSize = 128 / 2;
     GravityGrid grid;
 
     // Instead of interleaved data, separate arrays for better cache locality

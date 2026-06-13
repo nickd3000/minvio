@@ -119,6 +119,9 @@ public class Vec3 {
      */
     public double normalise() {
         double magnitude = Math.sqrt(x * x + y * y + z * z);
+        if (magnitude == 0.0) {
+            return 0.0;
+        }
         x = x / magnitude;
         y = y / magnitude;
         z = z / magnitude;
@@ -135,10 +138,27 @@ public class Vec3 {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Vec3 vec3 = (Vec3) obj;
-        double epsilon = 1e-10; // Precision threshold
-        return Math.abs(vec3.x - x) < epsilon &&
-                Math.abs(vec3.y - y) < epsilon &&
-                Math.abs(vec3.z - z) < epsilon;
+        return Double.compare(x, vec3.x) == 0 &&
+                Double.compare(y, vec3.y) == 0 &&
+                Double.compare(z, vec3.z) == 0;
+    }
+
+    /**
+     * Checks whether each component of another vector is within the supplied
+     * absolute tolerance of this vector.
+     *
+     * @param other   the vector to compare
+     * @param epsilon the maximum absolute difference for each component
+     * @return true when all component differences are within the tolerance
+     */
+    public boolean approximatelyEquals(Vec3 other, double epsilon) {
+        Objects.requireNonNull(other, "Other vector cannot be null");
+        if (epsilon < 0.0 || Double.isNaN(epsilon)) {
+            throw new IllegalArgumentException("Epsilon must be non-negative");
+        }
+        return Math.abs(other.x - x) <= epsilon &&
+                Math.abs(other.y - y) <= epsilon &&
+                Math.abs(other.z - z) <= epsilon;
     }
 
     /**
@@ -190,6 +210,10 @@ public class Vec3 {
         double dotProduct = dot(other);
         double magnitude1 = Math.sqrt(x * x + y * y + z * z);
         double magnitude2 = Math.sqrt(other.x * other.x + other.y * other.y + other.z * other.z);
-        return Math.acos(dotProduct / (magnitude1 * magnitude2));
+        if (magnitude1 == 0.0 || magnitude2 == 0.0) {
+            throw new IllegalArgumentException("Cannot calculate an angle involving a zero-length vector");
+        }
+        double cosine = dotProduct / (magnitude1 * magnitude2);
+        return Math.acos(Math.max(-1.0, Math.min(1.0, cosine)));
     }
 }

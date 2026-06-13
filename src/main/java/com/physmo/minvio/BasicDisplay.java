@@ -120,8 +120,11 @@ public abstract class BasicDisplay {
      * @param fps frames per second
      */
     public void repaint(int fps) {
+        if (fps <= 0) {
+            throw new IllegalArgumentException("FPS must be greater than zero");
+        }
 
-        int msPerFrame = 1000 / fps; // e.g.g 33.3 for 30fps
+        double msPerFrame = 1000.0 / fps;
         while (getElapsedTime() < msPerFrame) {
 
             int remainingTime = (int) (msPerFrame - getElapsedTime());
@@ -131,7 +134,8 @@ public abstract class BasicDisplay {
                 Thread.sleep(5);
 
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
+                return;
             }
 
         }

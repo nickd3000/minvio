@@ -8,6 +8,7 @@ import com.physmo.minvio.utils.gui.support.MouseConnector;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -41,6 +42,7 @@ public class BasicDisplayAwt extends BasicDisplay {
     private BufferedImage drawBuffer;
     private DrawingContext drawingContext;
     private boolean headless = false;
+    private volatile boolean closed = false;
 
     /**
      * Default constructor - creates display with default size
@@ -119,7 +121,7 @@ public class BasicDisplayAwt extends BasicDisplay {
 
             mainFrame = new JFrame("...");
             mainFrame.getContentPane().add(panel);
-            mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            mainFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
             mainFrame.pack();
             mainFrame.setLocationRelativeTo(null);
@@ -155,13 +157,21 @@ public class BasicDisplayAwt extends BasicDisplay {
      */
     @Override
     public void close() {
-        //panel.dispose();
+        closed = true;
+        if (mainFrame == null) return;
+
+        if (SwingUtilities.isEventDispatchThread()) {
+            mainFrame.dispose();
+        } else {
+            SwingUtilities.invokeLater(mainFrame::dispose);
+        }
     }
 
     @Override
     public boolean isVisible() {
+        if (closed) return false;
         if (headless) return true;
-        return mainFrame.isVisible();
+        return mainFrame != null && mainFrame.isVisible();
     }
 
     @Override

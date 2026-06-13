@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class Vec3Test {
 
@@ -105,7 +106,7 @@ class Vec3Test {
     }
 
     @Test
-    void equalsAndHashCodeCurrentBehavior() {
+    void equalsAndHashCodeUseExactComponents() {
         Vec3 first = new Vec3(1.0, 2.0, 3.0);
         Vec3 equal = new Vec3(1.0, 2.0, 3.0);
         Vec3 withinEpsilon = new Vec3(1.0, 2.0, 3.00000000001);
@@ -115,13 +116,35 @@ class Vec3Test {
         assertEquals(first, equal);
         assertEquals(equal, first);
         assertEquals(first.hashCode(), equal.hashCode());
-        assertEquals(first, withinEpsilon);
-        assertEquals(withinEpsilon, first);
+        assertNotEquals(first, withinEpsilon);
         assertNotEquals(first.hashCode(), withinEpsilon.hashCode());
         assertNotEquals(first, different);
+        assertNotEquals(first, new Vec3(1.0, 5.0, 3.0));
         assertNotEquals(first.hashCode(), different.hashCode());
         assertFalse(first.equals(null));
         assertFalse(first.equals("a string"));
+    }
+
+    @Test
+    void approximateEqualityUsesExplicitTolerance() {
+        Vec3 vector = new Vec3(1.0, 2.0, 3.0);
+        Vec3 close = new Vec3(1.0, 2.0, 3.0001);
+
+        assertTrue(vector.approximatelyEquals(close, 0.00011));
+        assertFalse(vector.approximatelyEquals(close, 0.00001));
+        assertFalse(vector.approximatelyEquals(new Vec3(2.0, 2.0, 3.0), 0.1));
+        assertFalse(vector.approximatelyEquals(new Vec3(1.0, 3.0, 3.0), 0.1));
+        assertThrows(IllegalArgumentException.class, () -> vector.approximatelyEquals(close, -0.1));
+        assertThrows(IllegalArgumentException.class, () -> vector.approximatelyEquals(close, Double.NaN));
+        assertThrows(NullPointerException.class, () -> vector.approximatelyEquals(null, 0.1));
+    }
+
+    @Test
+    void normalisingZeroVectorLeavesItUnchanged() {
+        Vec3 vector = new Vec3(0.0, 0.0, 0.0);
+
+        assertEquals(0.0, vector.normalise());
+        assertEquals(new Vec3(0.0, 0.0, 0.0), vector);
     }
 
     @Test
@@ -157,6 +180,14 @@ class Vec3Test {
 
         assertEquals(Math.PI / 2, first.angleBetween(second), DELTA);
         assertEquals(0.0, first.angleBetween(first), DELTA);
+    }
+
+    @Test
+    void angleBetweenRejectsZeroLengthVector() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new Vec3(0, 0, 0).angleBetween(new Vec3(1, 0, 0)));
+        assertThrows(IllegalArgumentException.class,
+                () -> new Vec3(1, 0, 0).angleBetween(new Vec3(0, 0, 0)));
     }
 
     private static Stream<Arguments> additionCases() {

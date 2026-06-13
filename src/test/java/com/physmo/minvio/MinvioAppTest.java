@@ -7,7 +7,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class MinvioAppTest {
 
@@ -47,5 +49,58 @@ class MinvioAppTest {
         assertDoesNotThrow(() -> app.start(200, 200, "Simple Example", 60));
 
         assertEquals(1, drawCalls.get());
+    }
+
+    @Test
+    void rejectsInvalidFpsTargets() {
+        MinvioApp app = new MinvioApp();
+        TestBasicDisplay display = new TestBasicDisplay(20, 20);
+
+        assertThrows(IllegalArgumentException.class, () -> app.setFpsTarget(0));
+        assertThrows(IllegalArgumentException.class, () -> app.setFpsTarget(-1));
+        assertThrows(IllegalArgumentException.class, () -> app.start(display, "Invalid", 0));
+        assertThrows(IllegalArgumentException.class, () -> display.repaint(0));
+    }
+
+    @Test
+    @Timeout(2)
+    void closesDisplayAndCallsDestroyWhenStopped() {
+        TestBasicDisplay display = new TestBasicDisplay(20, 20);
+        AtomicInteger destroyCalls = new AtomicInteger();
+        MinvioApp app = new MinvioApp() {
+            @Override
+            public void draw(double delta) {
+                stop();
+            }
+
+            @Override
+            public void destroy(BasicDisplay bd) {
+                destroyCalls.incrementAndGet();
+            }
+        };
+
+        app.start(display);
+
+        assertEquals(1, destroyCalls.get());
+        assertFalse(display.isVisible());
+    }
+
+    @Test
+    @Timeout(2)
+    void exitsWhenDisplayIsClosed() {
+        TestBasicDisplay display = new TestBasicDisplay(20, 20);
+        AtomicInteger drawCalls = new AtomicInteger();
+        MinvioApp app = new MinvioApp() {
+            @Override
+            public void draw(double delta) {
+                drawCalls.incrementAndGet();
+                display.close();
+            }
+        };
+
+        app.start(display);
+
+        assertEquals(1, drawCalls.get());
+        assertFalse(display.isVisible());
     }
 }

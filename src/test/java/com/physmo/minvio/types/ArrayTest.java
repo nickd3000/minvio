@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -72,6 +73,21 @@ class ArrayTest {
         assertEquals("a", array.get(0));
         assertEquals("b", array.get(1));
         assertEquals("c", array.get(2));
+    }
+
+    @Test
+    void zeroCapacityArrayCanGrow() {
+        Array<String> array = new Array<>(0);
+
+        array.add("a");
+
+        assertEquals(1, array.getCapacity());
+        assertEquals("a", array.get(0));
+    }
+
+    @Test
+    void constructorRejectsNegativeCapacity() {
+        assertThrows(IllegalArgumentException.class, () -> new Array<>(-1));
     }
 
     @Test
@@ -141,6 +157,19 @@ class ArrayTest {
         assertEquals("c", array.get(1));
     }
 
+    @Test
+    void nullElementsAreHandledConsistently() {
+        Array<String> array = new Array<>(2);
+        array.add(null);
+        array.add("value");
+
+        assertTrue(array.contains(null));
+        assertEquals(0, array.indexOf(null));
+
+        array.setAt(1, null);
+        assertTrue(array.contains(null));
+    }
+
     @ParameterizedTest(name = "setAt({0}, {1}) throws {2}")
     @MethodSource("invalidSetCases")
     void setAtThrowsForInvalidArguments(int index, String element, Class<? extends Throwable> exceptionType) {
@@ -162,14 +191,36 @@ class ArrayTest {
     }
 
     @Test
-    void iteratorNextReturnsNullWhenNoMoreElements() {
+    void iteratorNextThrowsWhenNoMoreElements() {
         Array<String> array = new Array<>(1);
         array.add("a");
         Iterator<String> iterator = array.iterator();
 
         assertEquals("a", iterator.next());
-        assertNull(iterator.next());
+        assertThrows(NoSuchElementException.class, iterator::next);
         assertFalse(iterator.hasNext());
+    }
+
+    @Test
+    void getRejectsIndexesOutsideLogicalSize() {
+        Array<String> array = new Array<>(5);
+        array.add("a");
+
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> array.get(-1));
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> array.get(1));
+    }
+
+    @Test
+    void removeIfClearsDiscardedBackingReferences() throws ReflectiveOperationException {
+        Array<String> array = new Array<>(4);
+        array.addAll(List.of("a", "b", "c", "d"));
+
+        array.removeIf(value -> value.equals("b") || value.equals("d"));
+
+        Object[] backingArray = (Object[]) Array.class.getField("array").get(array);
+        assertEquals(List.of("a", "c"), toList(array));
+        assertNull(backingArray[2]);
+        assertNull(backingArray[3]);
     }
 
     private static Array<String> stringArray() {
@@ -197,8 +248,7 @@ class ArrayTest {
     private static Stream<Arguments> invalidSetCases() {
         return Stream.of(
                 Arguments.of(1, "c", ArrayIndexOutOfBoundsException.class),
-                Arguments.of(-1, "c", ArrayIndexOutOfBoundsException.class),
-                Arguments.of(0, null, NullPointerException.class)
+                Arguments.of(-1, "c", ArrayIndexOutOfBoundsException.class)
         );
     }
 

@@ -1,12 +1,11 @@
 package com.physmo.minvio;
 
+import com.physmo.minvio.utils.MinvioLogger;
 import com.physmo.minvio.utils.RollingAverage;
-
 import com.physmo.minvio.utils.ecs.Entity;
 import com.physmo.minvio.utils.ecs.EntitySystem;
-import java.awt.Color;
 
-import com.physmo.minvio.utils.MinvioLogger;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
@@ -18,8 +17,8 @@ public class MinvioApp implements DrawingContext {
     final RollingAverage tickRollingAverage = new RollingAverage(30);
     final Font fpsFont = new Font("Verdana", Font.PLAIN, 12);
     BasicDisplay bd = null;
-    boolean running = true;
-    int targetFps = 60;
+    volatile boolean running = true;
+    volatile int targetFps = 60;
     boolean displayFps = false;
     boolean debugMode = false;
     EntitySystem debugEntitySystem = null;
@@ -34,7 +33,6 @@ public class MinvioApp implements DrawingContext {
     /**
      * Stop the application.
      */
-    // TODO: This should call a user implemented destroy method.
     public void stop() {
         running = false;
     }
@@ -48,10 +46,10 @@ public class MinvioApp implements DrawingContext {
      * @param fps   Frames-per-second of the draw loop.
      */
     public void start(BasicDisplay bd, String title, int fps) {
+        setFpsTarget(fps);
         this.bd = bd;
         bd.setTitle(title);
         bd.getDrawingContext().cls();
-        this.targetFps = fps;
         start(bd);
     }
 
@@ -78,10 +76,10 @@ public class MinvioApp implements DrawingContext {
      * @return The MinvioApp instance.
      */
     public MinvioApp start(int width, int height, String title, int fps) {
+        setFpsTarget(fps);
         BasicDisplayAwt bd = new BasicDisplayAwt(width, height);
         bd.setTitle(title);
         bd.getDrawingContext().cls();
-        this.targetFps = fps;
         start(bd);
         return this;
     }
@@ -94,57 +92,71 @@ public class MinvioApp implements DrawingContext {
     public void start(BasicDisplay bd) {
         this.bd = bd;
         this.drawingContext = bd.getDrawingContext();
+        running = true;
 
-        // Call init() once only.
-        init(bd);
+        try {
+            // Call init() once only.
+            init(bd);
 
-        long lastUpdateTime = System.nanoTime();
-        long lastDrawTime = System.nanoTime();
+            long lastUpdateTime = System.nanoTime();
+            long lastDrawTime = System.nanoTime();
 
-        int msPerFrame = 1000 / targetFps; // e.g.g 33.3 for 30fps
-        double delta;
+            double delta;
 
-        while (running) {
-            // Check for system-level triggers (like screenshots)
-            handleSystemInputs();
+            while (running && bd.isVisible()) {
+                double msPerFrame = 1000.0 / targetFps;
 
-            // Synchronize keyboard/mouse state for the current frame
-            bd.tickInput();
+                // Check for system-level triggers (like screenshots)
+                handleSystemInputs();
 
-            while (bd.getElapsedTime() < msPerFrame) {
-                int remainingTime = (int) (msPerFrame - bd.getElapsedTime());
+                // Synchronize keyboard/mouse state for the current frame
+                bd.tickInput();
 
-                try {
-                    if (remainingTime < 10) {
-                        if (remainingTime > 0) Thread.sleep(remainingTime);
-                        continue;
+                while (running && bd.isVisible() && bd.getElapsedTime() < msPerFrame) {
+                    int remainingTime = (int) (msPerFrame - bd.getElapsedTime());
+
+                    try {
+                        if (remainingTime < 10) {
+                            if (remainingTime > 0) Thread.sleep(remainingTime);
+                            continue;
+                        }
+
+                        Thread.sleep(5);
+                        long currentTime = System.nanoTime();
+                        delta = (double) (currentTime - lastUpdateTime);
+                        lastUpdateTime = currentTime;
+                        update(bd, (delta) / 1_000_000_000.0);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        running = false;
                     }
-
-                    Thread.sleep(5);
-                    delta = (double) (System.nanoTime() - lastUpdateTime);
-                    lastUpdateTime = System.nanoTime();
-                    update(bd, (delta) / 1_000_000_000.0);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
+
+                if (!running || !bd.isVisible()) break;
+
+                long currentTime = System.nanoTime();
+                long lDelta = currentTime - lastDrawTime;
+                delta = (double) lDelta;
+
+                tickRollingAverage.add(lDelta / (double) 1000_000);
+                lastDrawTime = currentTime;
+                BasicDisplay.repaintTimerStart = System.nanoTime();
+                draw((delta) / 1_000_000_000.0);
+
+                if (displayFps) drawFps();
+                if (debugMode) drawDebugInfo();
+                bd.repaint();
+
+                bd.resizeIfRequested();
             }
-
-            long lDelta = System.nanoTime() - lastDrawTime;
-            delta = (double) lDelta;
-
-            tickRollingAverage.add(lDelta / (double) 1000_000);
-            lastDrawTime = System.nanoTime();
-            BasicDisplay.repaintTimerStart = System.nanoTime();
-            draw((delta) / 1_000_000_000.0);
-
-            if (displayFps) drawFps();
-            if (debugMode) drawDebugInfo();
-            bd.repaint();
-
-            bd.resizeIfRequested();
+        } finally {
+            running = false;
+            try {
+                destroy(bd);
+            } finally {
+                bd.close();
+            }
         }
-
-
     }
 
     /**
@@ -164,6 +176,15 @@ public class MinvioApp implements DrawingContext {
      * @param delta time in seconds since the last UPDATE call, e.g. 1.0 = 1 second.
      */
     public void update(BasicDisplay bd, double delta) {
+    }
+
+    /**
+     * Skeleton destroy function - override this to release application resources.
+     * This is called once when the application loop exits, including after an exception.
+     *
+     * @param bd the instance of BasicDisplay.
+     */
+    public void destroy(BasicDisplay bd) {
     }
 
 
@@ -234,6 +255,9 @@ public class MinvioApp implements DrawingContext {
      * @param targetFps integer frames per second target.
      */
     public void setFpsTarget(int targetFps) {
+        if (targetFps <= 0) {
+            throw new IllegalArgumentException("Target FPS must be greater than zero");
+        }
         this.targetFps = targetFps;
     }
 
