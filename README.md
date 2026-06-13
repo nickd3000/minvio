@@ -4,19 +4,36 @@
 
 ![GitHub](https://img.shields.io/github/license/nickd3000/minvio)
 
-Processing-style sketches in plain Java. Minvio handles the window + draw loop so you can focus on graphics and
-experiments.
+## Interactive 2D graphics in plain Java
 
-Minvio handles creating the application window and timed draw loop and exposes a host of drawing and input
-functionality.
+Minvio makes interactive 2D graphics simple in plain Java. It removes the
+repetitive Java2D setup while preserving a small API, no runtime dependencies,
+and direct access to standard types such as `BufferedImage`, `Color`, and
+`Font`.
 
-Great for Programmatic Art, Experiments, POC's, Algorithm Development, Toys, Learning.
+Minvio creates the application window and runs the timed update and draw loop,
+leaving you to focus on your graphics and experiments.
+
+It is designed for:
+
+- Generative and programmatic art
+- Algorithm visualization and development
+- Experiments and proofs of concept
+- Teaching and learning
+- Small interactive desktop tools and toys
+
+Minvio is deliberately a lightweight 2D sketch library, not a game engine. For
+projects that require 3D rendering, GPU shaders, physics, audio, or mobile and
+web deployment, a larger framework such as Processing, OPENRNDR, libGDX, or
+FXGL may be a better fit.
 
 Find examples here: https://github.com/nickd3000/minvio-examples
 
 **Website with FAQ and Blog posts on the project: https://nickd3000.github.io/minvio/**
 
-Add maven dependency:
+## Installation
+
+Add the Maven dependency:
 
 ``` xml
 <dependency>
@@ -26,7 +43,7 @@ Add maven dependency:
 </dependency>
 ```
 
-**Minimal example**
+## Minimal Example
 
 ``` java
 import com.physmo.minvio.MinvioApp;
