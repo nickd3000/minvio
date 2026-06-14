@@ -24,15 +24,30 @@ import java.util.function.IntBinaryOperator;
  */
 public abstract class BasicDisplay {
 
+    /**
+     * Index of the text-width entry returned by {@link DrawingContext#getTextSize(String)}.
+     */
     public static final int TEXT_SIZE_WIDTH = 0;
+    /** Index of the font-ascent entry returned by {@link DrawingContext#getTextSize(String)}. */
     public static final int TEXT_SIZE_ASCENT = 1;
+    /** Index of the font-descent entry returned by {@link DrawingContext#getTextSize(String)}. */
     public static final int TEXT_SIZE_DESCENT = 2;
     /* TIMING ---------------------------------------------------------------*/
+    /**
+     * Start time used by {@link #getElapsedTime()} and {@link #repaint(int)}.
+     *
+     * <p>This mutable field is shared by all display instances for historical
+     * compatibility. Applications should normally leave it under display
+     * control.</p>
+     */
     public static long repaintTimerStart = 0;
     List<MouseConnector> mouseConnectors;
 
     IntBinaryOperator resizeListener;
 
+    /**
+     * Creates a display abstraction with an empty mouse-connector collection.
+     */
     public BasicDisplay() {
         mouseConnectors = new ArrayList<>();
     }
@@ -66,10 +81,28 @@ public abstract class BasicDisplay {
 
     /* COLOR ----------------------------------------------------------------*/
 
+    /**
+     * Registers a connector that receives subsequent mouse movement and button
+     * events from implementations that support connectors.
+     *
+     * <p>Connectors accumulate and this API does not provide removal. The
+     * base class does not reject {@code null}; implementations may fail later
+     * while dispatching an event if a null connector is registered.</p>
+     *
+     * @param mouseConnector connector to append
+     */
     public void addMouseConnector(MouseConnector mouseConnector) {
         mouseConnectors.add(mouseConnector);
     }
 
+    /**
+     * Returns the drawing context associated with this display.
+     *
+     * <p>The returned context is owned by the display and normally remains
+     * connected to its current draw buffer.</p>
+     *
+     * @return display drawing context
+     */
     public abstract DrawingContext getDrawingContext();
 
     /**
@@ -159,30 +192,95 @@ public abstract class BasicDisplay {
      */
     public abstract void repaint();
 
-    // Input and output.
-    // Update previous keys with current keys so we can tell what changed next time.
+    /**
+     * Advances implementation-specific input history.
+     *
+     * <p>The AWT implementation copies the current key-state array into the
+     * previous-state array. {@link MinvioApp} calls this once near the start of
+     * each frame, after handling its own system input and before application
+     * updates and drawing.</p>
+     */
     public abstract void tickInput();
 
+    /**
+     * Returns current keyboard state indexed by AWT key code.
+     *
+     * <p>Implementations may return live mutable storage rather than a copy.
+     * Callers must not modify the returned array and must check its length
+     * before indexing it.</p>
+     *
+     * @return current key-state array, where a non-zero entry means pressed
+     */
     public abstract int[] getKeyState();
 
+    /**
+     * Returns the keyboard state captured by the most recent
+     * {@link #tickInput()} call.
+     *
+     * <p>Implementations may return live mutable storage rather than a copy.
+     * Callers must not modify the returned array and must check its length
+     * before indexing it.</p>
+     *
+     * @return previous key-state array, where a non-zero entry means pressed
+     */
     public abstract int[] getKeyStatePrevious();
 
+    /**
+     * Returns the current mouse position in display pixel coordinates.
+     *
+     * @return a new mutable point containing the current mouse coordinates
+     */
     public Point getMousePoint() {
         return new Point(getMouseX(), getMouseY());
     }
 
+    /**
+     * Returns the current horizontal mouse coordinate in display pixels.
+     *
+     * @return horizontal mouse coordinate
+     */
     public abstract int getMouseX();
 
+    /**
+     * Returns the current mouse position divided by the display width and
+     * height.
+     *
+     * <p>The result is not clamped. A zero display dimension follows Java
+     * floating-point division rules and can therefore produce an infinite or
+     * {@code NaN} coordinate.</p>
+     *
+     * @return a new mutable point containing normalized mouse coordinates
+     */
     public Point getMousePointNormalised() {
         return new Point((double) getMouseX() / getDisplaySize().x, (double) getMouseY() / getDisplaySize().y);
     }
 
+    /**
+     * Returns the current vertical mouse coordinate in display pixels.
+     *
+     * @return vertical mouse coordinate
+     */
     public abstract int getMouseY();
 
+    /**
+     * Reports whether the primary mouse button is currently pressed.
+     *
+     * @return {@code true} while the left mouse button is pressed
+     */
     public abstract boolean getMouseButtonLeft();
 
+    /**
+     * Reports whether the middle mouse button is currently pressed.
+     *
+     * @return {@code true} while the middle mouse button is pressed
+     */
     public abstract boolean getMouseButtonMiddle();
 
+    /**
+     * Reports whether the secondary mouse button is currently pressed.
+     *
+     * @return {@code true} while the right mouse button is pressed
+     */
     public abstract boolean getMouseButtonRight();
 
     /**
@@ -195,6 +293,12 @@ public abstract class BasicDisplay {
         saveScreenshot(filePath);
     }
 
+    /**
+     * Returns the display title.
+     *
+     * @return current title; implementations may return a synthetic title in
+     * headless mode
+     */
     public abstract String getTitle();
 
     /**
@@ -227,10 +331,26 @@ public abstract class BasicDisplay {
      */
     public abstract Image getDrawBuffer();
 
+    /**
+     * Sets the callback invoked after an implementation applies a deferred
+     * resize.
+     *
+     * <p>Registration replaces any previous listener. The callback receives
+     * the new width and height; its integer result is ignored. Passing
+     * {@code null} clears the listener.</p>
+     *
+     * @param resizeListener replacement resize callback, or {@code null}
+     */
     public void addResizeListener(IntBinaryOperator resizeListener) {
         this.resizeListener = resizeListener;
     }
 
-    // When the main window is resized, we don't respond until outside of the draw loop.
+    /**
+     * Applies a pending native-window resize, if any.
+     *
+     * <p>Implementations may defer native resize events so buffer replacement
+     * occurs outside the event callback. Calling this method when no resize is
+     * pending has no effect.</p>
+     */
     public abstract void resizeIfRequested();
 }

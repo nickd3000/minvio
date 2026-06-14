@@ -6,6 +6,14 @@ package com.physmo.minvio.utils;
  * returns double in range -1..1
  */
 public final class PerlinNoise {
+    /**
+     * Calculates deterministic improved Perlin noise.
+     *
+     * @param x x-coordinate
+     * @param y y-coordinate
+     * @param z z-coordinate
+     * @return noise value, normally in the range {@code [-1, 1]}
+     */
     static public double noise(double x, double y, double z) {
         int X = (int) Math.floor(x) & 255,                  // FIND UNIT CUBE THAT
                 Y = (int) Math.floor(y) & 255,                  // CONTAINS POINT.

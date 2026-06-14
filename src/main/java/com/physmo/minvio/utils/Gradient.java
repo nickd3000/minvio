@@ -20,12 +20,21 @@ public class Gradient {
 
     final int preComputedListSize = 1000;
 
+    /**
+     * Creates a gradient that is black at both endpoints.
+     */
     public Gradient() {
         colorList.put(0.0, Color.BLACK);
         colorList.put(1.0, Color.BLACK);
         recalculateList();
     }
 
+    /**
+     * Creates a two-color gradient.
+     *
+     * @param startColor color at position zero
+     * @param endColor color at position one
+     */
     public Gradient(Color startColor, Color endColor) {
         colorList.put(0.0, startColor);
         colorList.put(1.0, endColor);

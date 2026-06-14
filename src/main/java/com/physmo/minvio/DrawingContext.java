@@ -10,6 +10,19 @@ import java.awt.Image;
 import java.awt.Shape;
 import java.awt.image.BufferedImage;
 
+/**
+ * Mutable immediate-mode drawing state backed by an image buffer.
+ *
+ * <p>Drawing operations affect the active buffer immediately. Coordinates use
+ * the Java2D screen convention: the origin is at the top left, x increases to
+ * the right, and y increases downward. Implementations are not required to be
+ * thread-safe.</p>
+ *
+ * <p>Methods with default implementations that throw
+ * {@link UnsupportedOperationException} are optional extension points for
+ * third-party contexts. Callers can rely on them only when supported by the
+ * concrete implementation.</p>
+ */
 public interface DrawingContext {
     /**
      * Clear the display to the supplied color.
@@ -18,9 +31,23 @@ public interface DrawingContext {
      */
     void cls(Color c);
 
+    /**
+     * Clears the complete active buffer using the current background color
+     * while preserving the current draw color.
+     */
     void cls();
 
 
+    /**
+     * Replaces the image that receives subsequent drawing.
+     *
+     * <p>The context retains and draws directly into the supplied mutable
+     * image; it does not copy or take exclusive ownership of it. Concrete
+     * implementations define which drawing state survives replacement.</p>
+     *
+     * @param image non-null image buffer to retain
+     * @throws NullPointerException if {@code image} is {@code null}
+     */
     void setImageBuffer(BufferedImage image);
 
     /**
@@ -257,6 +284,15 @@ public interface DrawingContext {
         drawFilledRect((int) x, (int) y, (int) width, (int) height);
     }
 
+    /**
+     * Draws a filled rectangle using the supplied bounds.
+     *
+     * <p>The default implementation delegates to the double-coordinate
+     * overload, which ultimately truncates coordinates and dimensions when
+     * using the standard context.</p>
+     *
+     * @param rect rectangle bounds
+     */
     default void drawFilledRect(Rect rect) {
         this.drawFilledRect(rect.x, rect.y, rect.w, rect.h);
     }
@@ -284,6 +320,15 @@ public interface DrawingContext {
         drawRect((int) x, (int) y, (int) width, (int) height);
     }
 
+    /**
+     * Draws a rectangle outline using the supplied bounds.
+     *
+     * <p>The default implementation delegates to the double-coordinate
+     * overload, which ultimately truncates coordinates and dimensions when
+     * using the standard context.</p>
+     *
+     * @param rect rectangle bounds
+     */
     default void drawRect(Rect rect) {
         drawRect(rect.x, rect.y, rect.w, rect.h);
     }
@@ -505,8 +550,18 @@ public interface DrawingContext {
     int[] getTextSize(String str);
 
 
+    /**
+     * Returns the color used by subsequent drawing operations.
+     *
+     * @return current draw color
+     */
     Color getDrawColor();
 
+    /**
+     * Returns the color used by {@link #cls()}.
+     *
+     * @return current background color
+     */
     Color getBackgroundColor();
 
     /**
@@ -616,8 +671,18 @@ public interface DrawingContext {
      */
     Image getDrawBuffer();
 
+    /**
+     * Returns the width of the active image buffer in pixels.
+     *
+     * @return active buffer width
+     */
     int getWidth();
 
+    /**
+     * Returns the height of the active image buffer in pixels.
+     *
+     * @return active buffer height
+     */
     int getHeight();
 
     /**

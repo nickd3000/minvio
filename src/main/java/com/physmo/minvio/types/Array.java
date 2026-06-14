@@ -112,6 +112,15 @@ public class Array<T> implements Iterable<T> {
         for (T t : list) add(t);
     }
 
+    /**
+     * Appends the logical contents of another array in index order.
+     *
+     * <p>Null elements are retained. Passing this array itself causes the loop
+     * to observe the growing size and therefore does not terminate.</p>
+     *
+     * @param list array whose logical elements are appended
+     * @throws NullPointerException if {@code list} is null
+     */
     public void addAll(Array<T> list) {
         Objects.requireNonNull(list, "Array cannot be null");
         for (int i = 0; i < list.size(); i++) add(list.get(i));

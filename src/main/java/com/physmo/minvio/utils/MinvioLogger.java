@@ -5,11 +5,19 @@ package com.physmo.minvio.utils;
  */
 public class MinvioLogger {
 
+    /**
+     * Log severity and global filtering threshold.
+     */
     public enum LogLevel {
+        /** Most verbose diagnostic messages. */
         DEBUG,
+        /** Informational messages. */
         INFO,
+        /** Warning messages. */
         WARN,
+        /** Error messages written to standard error. */
         ERROR,
+        /** Disables all logging. */
         NONE
     }
 

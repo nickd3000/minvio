@@ -76,6 +76,19 @@ public class BasicDisplayAwt extends BasicDisplay {
     }
 
 
+    /**
+     * Replaces the drawing buffer with a buffer of the requested size, copying
+     * the previous pixels at the top-left origin.
+     *
+     * <p>This low-level method updates the drawing context and panel buffer but
+     * does not update the display's reported width and height fields or lay out
+     * the native window. It is used as one step of deferred resize processing.
+     * Calls are not synchronized with painting or AWT input delivery.</p>
+     *
+     * @param w new buffer width; must be positive
+     * @param h new buffer height; must be positive
+     * @throws IllegalArgumentException if either dimension is not positive
+     */
     public void setDisplaySize(int w, int h) {
 
         BufferedImage newBuffer = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
@@ -118,6 +131,14 @@ public class BasicDisplayAwt extends BasicDisplay {
         mainFrame.doLayout();
     }
 
+    /**
+     * Creates and shows the Swing window unless the environment is headless,
+     * then resets drawing state to display defaults.
+     *
+     * <p>The method performs creation synchronously on the calling thread and
+     * does not marshal work to the Swing event dispatch thread. It is invoked
+     * by the constructor and is not intended to be called repeatedly.</p>
+     */
     public void createAndShowGui() {
 
         if (!headless) {

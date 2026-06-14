@@ -6,6 +6,12 @@ import com.physmo.minvio.DrawingContext;
 import java.awt.Color;
 import java.text.DecimalFormat;
 
+/**
+ * Fixed-size scrolling graph rendered into a {@link BasicDisplay}.
+ *
+ * <p>New values overwrite the oldest samples. Rendering also updates the
+ * graph's smoothed vertical scale.</p>
+ */
 public class BasicGraph {
 
     private static final double INERTIA = 0.1;
@@ -18,6 +24,12 @@ public class BasicGraph {
     private double floatingMin;
     private int headPos;
 
+    /**
+     * Creates a graph buffer.
+     *
+     * @param numPoints number of retained samples; must be positive for add and
+     *                  draw operations to work
+     */
     public BasicGraph(int numPoints) {
         this.numPoints = numPoints;
         values = new double[numPoints];
@@ -28,12 +40,29 @@ public class BasicGraph {
         floatingMin = minValue;
     }
 
+    /**
+     * Adds a sample, overwriting the oldest retained value.
+     *
+     * <p>The value is negated internally so positive values render upward.</p>
+     *
+     * @param val sample value
+     */
     public void addData(double val) {
         val = -val;
         values[headPos++] = val;
         if (headPos >= numPoints) headPos = 0;
     }
 
+    /**
+     * Draws the graph, center line, border, and scale label.
+     *
+     * @param bd target display
+     * @param x graph x-coordinate
+     * @param y graph y-coordinate
+     * @param width graph width
+     * @param height graph height
+     * @param c sample color
+     */
     public void draw(BasicDisplay bd, int x, int y, int width, int height, Color c) {
 
         floatingMax = floatingMax - ((floatingMax - maxValue) * INERTIA);

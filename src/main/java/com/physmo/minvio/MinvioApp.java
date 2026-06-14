@@ -14,6 +14,19 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
+/**
+ * Base application loop and drawing facade for a Minvio sketch.
+ *
+ * <p>Call one of the {@code start} methods to attach a display, invoke
+ * {@link #init(BasicDisplay)}, and run updates and drawing on the calling
+ * thread until the application is stopped or the display closes. Input events
+ * for the standard display are delivered by AWT and are not synchronized with
+ * the application loop.</p>
+ *
+ * <p>The drawing methods delegate to the active display's
+ * {@link DrawingContext}. Methods that require a display or drawing context
+ * must not be called before startup attaches one.</p>
+ */
 public class MinvioApp implements DrawingContext {
 
     final RollingAverage tickRollingAverage = new RollingAverage(30);
@@ -28,6 +41,11 @@ public class MinvioApp implements DrawingContext {
     private boolean screenshotEnabled = true;
     private DrawingContext drawingContext;
 
+    /**
+     * Returns the display currently attached to this application.
+     *
+     * @return active display, or {@code null} before {@link #start(BasicDisplay)}
+     */
     public BasicDisplay getBasicDisplay() {
         return bd;
     }
@@ -310,14 +328,31 @@ public class MinvioApp implements DrawingContext {
         this.debugEntitySystem = entitySystem;
     }
 
+    /**
+     * Returns the drawing context used by this application.
+     *
+     * @return active drawing context, or {@code null} before startup
+     */
     public DrawingContext getDrawingContext() {
         return drawingContext;
     }
 
+    /**
+     * Returns the current horizontal mouse coordinate from the active display.
+     *
+     * @return horizontal mouse coordinate in display pixels
+     * @throws NullPointerException if no display has been attached
+     */
     public int getMouseX() {
         return bd.getMouseX();
     }
 
+    /**
+     * Returns the current vertical mouse coordinate from the active display.
+     *
+     * @return vertical mouse coordinate in display pixels
+     * @throws NullPointerException if no display has been attached
+     */
     public int getMouseY() {
         return bd.getMouseY();
     }
@@ -704,10 +739,25 @@ public class MinvioApp implements DrawingContext {
         drawingContext.scale(x, y);
     }
 
+    /**
+     * Returns the title of the active display.
+     *
+     * @return current display title
+     * @throws NullPointerException if no display has been attached
+     */
     public String getTitle() {
         return bd.getTitle();
     }
 
+    /**
+     * Requests a PNG screenshot of the active display at the supplied path.
+     *
+     * <p>The current display API logs write failures rather than reporting them
+     * to the caller.</p>
+     *
+     * @param path destination file path
+     * @throws NullPointerException if no display has been attached
+     */
     public void saveScreenshot(String path) {
         bd.saveScreenshot(path);
     }

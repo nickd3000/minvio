@@ -18,12 +18,25 @@ public class MatrixDrawer {
     double[] angles;
     double[] distances;
 
+    /**
+     * Creates a matrix and precomputes per-cell angle and distance values.
+     *
+     * @param width  matrix width in cells
+     * @param height matrix height in cells
+     */
     public MatrixDrawer(int width, int height) {
         this.width = width;
         this.height = height;
         preCalc();
     }
 
+    /**
+     * Recalculates angle and normalized center-distance arrays.
+     *
+     * <p>Zero widths can produce non-finite distance values, and the exact
+     * center cell can produce a non-finite angle because the zero-distance
+     * vector is normalized.</p>
+     */
     public void preCalc() {
         int w = width;
         int h = height;
@@ -55,6 +68,17 @@ public class MatrixDrawer {
 
     }
 
+    /**
+     * Calculates and draws every matrix cell.
+     *
+     * @param dc target drawing context
+     * @param xPos destination x-coordinate
+     * @param yPos destination y-coordinate
+     * @param scale square cell size in pixels
+     * @param time caller-supplied time value
+     * @param worker callback producing each scalar value
+     * @param gradient optional gradient; {@code null} draws grayscale values
+     */
     public void draw(DrawingContext dc, int xPos, int yPos, int scale, double time, MonoPixelWorker worker, Gradient gradient) {
 
         for (int y = 0; y < height; y++) {

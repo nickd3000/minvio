@@ -2,8 +2,17 @@ package com.physmo.minvio.types;
 
 import java.util.Objects;
 
+/**
+ * Mutable three-dimensional vector with exact value equality.
+ *
+ * <p>Use {@link #approximatelyEquals(Vec3, double)} for tolerance-based
+ * comparisons. Do not mutate an instance while it is used as a hash key.</p>
+ */
 public class Vec3 {
 
+    /**
+     * Mutable x, y, and z components.
+     */
     public double x, y, z;
 
     /**
@@ -20,7 +29,10 @@ public class Vec3 {
     }
 
     /**
-     * Represents a 3-dimensional vector.
+     * Creates a coordinate copy of another vector.
+     *
+     * @param other vector to copy
+     * @throws IllegalArgumentException if {@code other} is null
      */
     public Vec3(Vec3 other) {
         if (other == null) {

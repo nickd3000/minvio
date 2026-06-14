@@ -43,6 +43,15 @@ public class LookupTable {
         }
     }
 
+    /**
+     * Returns the nearest lower sampled value for an input.
+     *
+     * <p>Inputs outside the configured range are clamped to the first or last
+     * table entry.</p>
+     *
+     * @param x input value
+     * @return sampled function value
+     */
     public double getValue(double x) {
         int index = (int) ((x - min) * (numItems_range));
         if (index < 0) index = 0;
@@ -50,6 +59,15 @@ public class LookupTable {
         return values[index];
     }
 
+    /**
+     * Returns a linearly interpolated value between adjacent samples.
+     *
+     * <p>Inputs outside the sampled range are clamped to the first or last
+     * table entry.</p>
+     *
+     * @param x input value
+     * @return interpolated function value
+     */
     public double getInterpolatedValue(double x) {
         double scaledIndex = (x - min) * numItems_range;
         if (scaledIndex <= 0) {

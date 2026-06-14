@@ -44,6 +44,16 @@ public class DrawingContextAwt implements DrawingContext {
     private final Deque<AffineTransform> transformStack = new ArrayDeque<>();
     private final Deque<StyleState> styleStack = new ArrayDeque<>();
 
+    /**
+     * Creates a Java2D context that draws directly into the supplied image.
+     *
+     * <p>The image remains caller-accessible and is not copied. This context
+     * owns and manages the {@link Graphics2D} instances it creates for the
+     * image, but it does not dispose of or otherwise own the image itself.</p>
+     *
+     * @param buffer non-null image that receives drawing
+     * @throws NullPointerException if {@code buffer} is {@code null}
+     */
     public DrawingContextAwt(BufferedImage buffer) {
         setImageBuffer(buffer);
     }
