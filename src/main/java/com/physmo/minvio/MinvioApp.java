@@ -6,8 +6,10 @@ import com.physmo.minvio.utils.ecs.Entity;
 import com.physmo.minvio.utils.ecs.EntitySystem;
 
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Shape;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -56,7 +58,7 @@ public class MinvioApp implements DrawingContext {
     /**
      * Starts the MinvioApp by creating the application window and starting the main draw loop running.
      *
-     * @param width The width of the application window.
+     * @param width  The width of the application window.
      * @param height The height of the application window.
      * @return The MinvioApp instance.
      */
@@ -474,6 +476,51 @@ public class MinvioApp implements DrawingContext {
     }
 
     @Override
+    public void drawPolygon(int[] xPoints, int[] yPoints, int numPoints) {
+        drawingContext.drawPolygon(xPoints, yPoints, numPoints);
+    }
+
+    @Override
+    public void drawPolyline(int[] xPoints, int[] yPoints, int numPoints) {
+        drawingContext.drawPolyline(xPoints, yPoints, numPoints);
+    }
+
+    @Override
+    public void drawEllipse(double x, double y, double width, double height) {
+        drawingContext.drawEllipse(x, y, width, height);
+    }
+
+    @Override
+    public void drawFilledEllipse(double x, double y, double width, double height) {
+        drawingContext.drawFilledEllipse(x, y, width, height);
+    }
+
+    @Override
+    public void drawTriangle(double x1, double y1, double x2, double y2, double x3, double y3) {
+        drawingContext.drawTriangle(x1, y1, x2, y2, x3, y3);
+    }
+
+    @Override
+    public void drawFilledTriangle(double x1, double y1, double x2, double y2, double x3, double y3) {
+        drawingContext.drawFilledTriangle(x1, y1, x2, y2, x3, y3);
+    }
+
+    @Override
+    public void drawArc(double x, double y, double width, double height, double startAngle, double arcAngle) {
+        drawingContext.drawArc(x, y, width, height, startAngle, arcAngle);
+    }
+
+    @Override
+    public void drawShape(Shape shape) {
+        drawingContext.drawShape(shape);
+    }
+
+    @Override
+    public void drawFilledShape(Shape shape) {
+        drawingContext.drawFilledShape(shape);
+    }
+
+    @Override
     public void drawCircle(double x, double y, double r) {
         drawingContext.drawCircle(x, y, r);
     }
@@ -529,6 +576,61 @@ public class MinvioApp implements DrawingContext {
     @Override
     public Color getBackgroundColor() {
         return drawingContext.getBackgroundColor();
+    }
+
+    @Override
+    public double setStrokeWidth(double width) {
+        return drawingContext.setStrokeWidth(width);
+    }
+
+    @Override
+    public double getStrokeWidth() {
+        return drawingContext.getStrokeWidth();
+    }
+
+    @Override
+    public void setAlpha(double alpha) {
+        drawingContext.setAlpha(alpha);
+    }
+
+    @Override
+    public double getAlpha() {
+        return drawingContext.getAlpha();
+    }
+
+    @Override
+    public Composite setComposite(Composite composite) {
+        return drawingContext.setComposite(composite);
+    }
+
+    @Override
+    public Composite getComposite() {
+        return drawingContext.getComposite();
+    }
+
+    @Override
+    public void setClip(double x, double y, double width, double height) {
+        drawingContext.setClip(x, y, width, height);
+    }
+
+    @Override
+    public void clearClip() {
+        drawingContext.clearClip();
+    }
+
+    @Override
+    public Shape getClip() {
+        return drawingContext.getClip();
+    }
+
+    @Override
+    public void pushStyle() {
+        drawingContext.pushStyle();
+    }
+
+    @Override
+    public void popStyle() {
+        drawingContext.popStyle();
     }
 
     @Override

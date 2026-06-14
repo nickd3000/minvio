@@ -3,6 +3,8 @@ package com.physmo.minvio;
 import com.physmo.minvio.types.Point;
 import com.physmo.minvio.types.Rect;
 
+import java.awt.geom.Rectangle2D;
+
 final class DrawingContextTestSupport {
 
     private DrawingContextTestSupport() {
@@ -34,5 +36,31 @@ final class DrawingContextTestSupport {
         drawingContext.drawRect(1, 1, 10, 10);
         drawingContext.drawFilledRect(new Rect(1, 1, 10, 10));
         drawingContext.drawFilledRect(1, 1, 10, 10);
+
+        int[] xPoints = {1, 10, 5};
+        int[] yPoints = {1, 1, 10};
+        drawingContext.drawPolygon(xPoints, yPoints, 3);
+        drawingContext.drawFilledPolygon(xPoints, yPoints, 3);
+        drawingContext.drawPolyline(xPoints, yPoints, 3);
+
+        drawingContext.drawEllipse(1, 1, 10, 5);
+        drawingContext.drawFilledEllipse(1, 1, 10, 5);
+        drawingContext.drawTriangle(1, 1, 10, 1, 5, 10);
+        drawingContext.drawFilledTriangle(1, 1, 10, 1, 5, 10);
+        drawingContext.drawArc(1, 1, 10, 10, 0, Math.PI);
+        drawingContext.drawShape(new Rectangle2D.Double(1, 1, 10, 10));
+        drawingContext.drawFilledShape(new Rectangle2D.Double(1, 1, 10, 10));
+
+        drawingContext.setStrokeWidth(2);
+        drawingContext.getStrokeWidth();
+        drawingContext.setAlpha(0.5);
+        drawingContext.getAlpha();
+        drawingContext.getComposite();
+        drawingContext.setComposite(drawingContext.getComposite());
+        drawingContext.setClip(0, 0, 10, 10);
+        drawingContext.getClip();
+        drawingContext.clearClip();
+        drawingContext.pushStyle();
+        drawingContext.popStyle();
     }
 }

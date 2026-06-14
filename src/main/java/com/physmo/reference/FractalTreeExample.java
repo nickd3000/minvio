@@ -57,18 +57,22 @@ public class FractalTreeExample extends MinvioApp {
 
         // Right branch
         pushMatrix();
+        pushStyle();
         rotate(0.5 + angleMod);
         scale(0.8);
         if (depth < 4) setDrawColor(Palette.GREEN); // Leaves
         drawBranch(length, angleMod, depth - 1);
+        popStyle();
         popMatrix();
 
         // Left branch
         pushMatrix();
+        pushStyle();
         rotate(-0.4 + angleMod * 0.5);
         scale(0.75);
         if (depth < 4) setDrawColor(Palette.MINT); // Slightly different leaf color
         drawBranch(length, angleMod, depth - 1);
+        popStyle();
         popMatrix();
 
         popMatrix();

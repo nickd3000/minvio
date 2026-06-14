@@ -75,6 +75,30 @@ class SimpleExample extends MinvioApp {
 
 ![Image Simple Example](docs/wiki/simpleExample.png)
 
+## 2D Drawing API
+
+Minvio includes common outline and filled primitives for circles, ellipses,
+rectangles, triangles, polygons, polylines, and Java2D `Shape` objects. Arcs use
+radians, matching the transform API.
+
+Drawing state includes color, font, stroke width, alpha, composite, and
+rectangular clipping. Use `pushStyle()` and `popStyle()` to make temporary style
+changes without manually restoring each value:
+
+```java
+void drawStyledShape() {
+    pushStyle();
+    setDrawColor(new Color(70, 170, 255));
+    setStrokeWidth(4);
+    setAlpha(0.65);
+    setClip(20, 20, 160, 100);
+    drawFilledEllipse(0, 0, 220, 140);
+    popStyle();
+}
+```
+
+Transforms use their own independent `pushMatrix()` and `popMatrix()` stack.
+
 ## More Example Images
 
 ![Image Palette Example](docs/IQPalette.png)
@@ -84,12 +108,14 @@ class SimpleExample extends MinvioApp {
 ###### Version PENDING
 
 * Added Screenshot Functionality
-  * Implemented automatic screenshot saving using the F12 key in MinvioApp.
-  * Added takeScreenshot() and saveScreenshot() methods with automatic file naming (e.g., AppName_1.png).
+    * Implemented automatic screenshot saving using the F12 key in MinvioApp.
+    * Added takeScreenshot() and saveScreenshot() methods with automatic file naming (e.g., AppName_1.png).
 * Enhanced Drawing Precision
-  * Added overloaded drawing methods across MinvioApp and DrawingContext that accept double coordinates (e.g.,
-    drawPoint, drawRect, drawText, drawImage) for more sub-pixel precision.
+    * Added overloaded drawing methods across MinvioApp and DrawingContext that accept double coordinates (e.g.,
+      drawPoint, drawRect, drawText, drawImage) for more sub-pixel precision.
 * Added Transformation and State Management (pushMatrix, popMatrix, translate, rotate, scale)
+* Added ellipses, triangles, polygon outlines, polylines, arcs, and Java2D Shape drawing.
+* Added stroke width, alpha/composite, clipping, and pushStyle/popStyle state management.
 * Added Rotations1 gallery example (concentric animated rings)
 * Added TransformationExample, FractalTreeExample, and KaleidoscopeExample gallery examples
 * Added Fractal Tile example

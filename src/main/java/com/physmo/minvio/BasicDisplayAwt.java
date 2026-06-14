@@ -151,6 +151,9 @@ public class BasicDisplayAwt extends BasicDisplay {
         drawingContext.setDrawColor(Palette.GRAY_900);
         drawingContext.setBackgroundColor(Palette.GRAY_300);
         drawingContext.setFont(16);
+        drawingContext.setStrokeWidth(1);
+        drawingContext.setAlpha(1);
+        drawingContext.clearClip();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.physmo.minvio;
 
 import java.awt.BasicStroke;
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Font;
@@ -13,7 +14,10 @@ import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Arc2D;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Path2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -38,6 +42,7 @@ public class DrawingContextAwt implements DrawingContext {
     private Color backgroundColor;
     final Map<Integer, Font> builtInFonts = new HashMap<>();
     private final Deque<AffineTransform> transformStack = new ArrayDeque<>();
+    private final Deque<StyleState> styleStack = new ArrayDeque<>();
 
     public DrawingContextAwt(BufferedImage buffer) {
         setImageBuffer(buffer);
@@ -203,10 +208,11 @@ public class DrawingContextAwt implements DrawingContext {
 
     @Override
     public void drawLine(double x1, double y1, double x2, double y2, double thickness) {
+        validatePositiveFinite(thickness, "Line thickness");
         Stroke previousStroke = g2d.getStroke();
         try {
             g2d.setStroke(new BasicStroke((float) thickness));
-            g2d.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
+            g2d.draw(new java.awt.geom.Line2D.Double(x1, y1, x2, y2));
         } finally {
             g2d.setStroke(previousStroke);
         }
@@ -250,7 +256,67 @@ public class DrawingContextAwt implements DrawingContext {
 
     @Override
     public void drawFilledPolygon(int[] xPoints, int[] yPoints, int numPoints) {
+        validatePolygon(xPoints, yPoints, numPoints);
         g2d.fillPolygon(xPoints, yPoints, numPoints);
+    }
+
+    @Override
+    public void drawPolygon(int[] xPoints, int[] yPoints, int numPoints) {
+        validatePolygon(xPoints, yPoints, numPoints);
+        g2d.drawPolygon(xPoints, yPoints, numPoints);
+    }
+
+    @Override
+    public void drawPolyline(int[] xPoints, int[] yPoints, int numPoints) {
+        validatePolygon(xPoints, yPoints, numPoints);
+        g2d.drawPolyline(xPoints, yPoints, numPoints);
+    }
+
+    @Override
+    public void drawEllipse(double x, double y, double width, double height) {
+        validateBounds(width, height);
+        g2d.draw(new Ellipse2D.Double(x, y, width, height));
+    }
+
+    @Override
+    public void drawFilledEllipse(double x, double y, double width, double height) {
+        validateBounds(width, height);
+        g2d.fill(new Ellipse2D.Double(x, y, width, height));
+    }
+
+    @Override
+    public void drawTriangle(double x1, double y1, double x2, double y2, double x3, double y3) {
+        g2d.draw(createTriangle(x1, y1, x2, y2, x3, y3));
+    }
+
+    @Override
+    public void drawFilledTriangle(double x1, double y1, double x2, double y2, double x3, double y3) {
+        g2d.fill(createTriangle(x1, y1, x2, y2, x3, y3));
+    }
+
+    @Override
+    public void drawArc(double x, double y, double width, double height, double startAngle, double arcAngle) {
+        validateBounds(width, height);
+        validateFinite(startAngle, "Start angle");
+        validateFinite(arcAngle, "Arc angle");
+        g2d.draw(new Arc2D.Double(
+                x,
+                y,
+                width,
+                height,
+                -Math.toDegrees(startAngle),
+                -Math.toDegrees(arcAngle),
+                Arc2D.OPEN));
+    }
+
+    @Override
+    public void drawShape(Shape shape) {
+        g2d.draw(Objects.requireNonNull(shape, "Shape cannot be null"));
+    }
+
+    @Override
+    public void drawFilledShape(Shape shape) {
+        g2d.fill(Objects.requireNonNull(shape, "Shape cannot be null"));
     }
 
     @Override
@@ -294,6 +360,93 @@ public class DrawingContextAwt implements DrawingContext {
     }
 
     @Override
+    public double setStrokeWidth(double width) {
+        validatePositiveFinite(width, "Stroke width");
+        double previousWidth = getStrokeWidth();
+        g2d.setStroke(new BasicStroke((float) width));
+        return previousWidth;
+    }
+
+    @Override
+    public double getStrokeWidth() {
+        if (g2d.getStroke() instanceof BasicStroke basicStroke) {
+            return basicStroke.getLineWidth();
+        }
+        throw new IllegalStateException("Current stroke does not expose a BasicStroke width");
+    }
+
+    @Override
+    public void setAlpha(double alpha) {
+        if (!Double.isFinite(alpha) || alpha < 0.0 || alpha > 1.0) {
+            throw new IllegalArgumentException("Alpha must be finite and between 0.0 and 1.0");
+        }
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) alpha));
+    }
+
+    @Override
+    public double getAlpha() {
+        if (g2d.getComposite() instanceof AlphaComposite alphaComposite) {
+            return alphaComposite.getAlpha();
+        }
+        throw new IllegalStateException("Current composite does not expose an alpha value");
+    }
+
+    @Override
+    public Composite setComposite(Composite composite) {
+        Objects.requireNonNull(composite, "Composite cannot be null");
+        Composite previousComposite = g2d.getComposite();
+        g2d.setComposite(composite);
+        return previousComposite;
+    }
+
+    @Override
+    public Composite getComposite() {
+        return g2d.getComposite();
+    }
+
+    @Override
+    public void setClip(double x, double y, double width, double height) {
+        validateBounds(width, height);
+        g2d.setClip(new Rectangle2D.Double(x, y, width, height));
+    }
+
+    @Override
+    public void clearClip() {
+        g2d.setClip(null);
+    }
+
+    @Override
+    public Shape getClip() {
+        return copyShape(g2d.getClip());
+    }
+
+    @Override
+    public void pushStyle() {
+        styleStack.push(new StyleState(
+                getDrawColor(),
+                backgroundColor,
+                getFont(),
+                g2d.getStroke(),
+                g2d.getComposite(),
+                copyShape(g2d.getClip())));
+    }
+
+    @Override
+    public void popStyle() {
+        if (styleStack.isEmpty()) {
+            throw new IllegalStateException("Style stack is empty");
+        }
+
+        StyleState style = styleStack.pop();
+        setDrawColor(style.drawColor());
+        setBackgroundColor(style.backgroundColor());
+        setFont(style.font());
+        g2d.setStroke(style.stroke());
+        g2d.setComposite(style.composite());
+        g2d.setClip(copyShape(style.clip()));
+    }
+
+    @Override
     public void pushMatrix() {
         transformStack.push(g2d.getTransform());
     }
@@ -323,5 +476,54 @@ public class DrawingContextAwt implements DrawingContext {
     @Override
     public void scale(double x, double y) {
         g2d.scale(x, y);
+    }
+
+    private static Path2D createTriangle(
+            double x1, double y1, double x2, double y2, double x3, double y3) {
+        Path2D path = new Path2D.Double();
+        path.moveTo(x1, y1);
+        path.lineTo(x2, y2);
+        path.lineTo(x3, y3);
+        path.closePath();
+        return path;
+    }
+
+    private static void validatePolygon(int[] xPoints, int[] yPoints, int numPoints) {
+        Objects.requireNonNull(xPoints, "X-points cannot be null");
+        Objects.requireNonNull(yPoints, "Y-points cannot be null");
+        if (numPoints < 0 || numPoints > xPoints.length || numPoints > yPoints.length) {
+            throw new IllegalArgumentException("Point count must fit both coordinate arrays");
+        }
+    }
+
+    private static void validateBounds(double width, double height) {
+        if (!Double.isFinite(width) || !Double.isFinite(height) || width < 0.0 || height < 0.0) {
+            throw new IllegalArgumentException("Width and height must be finite and non-negative");
+        }
+    }
+
+    private static void validatePositiveFinite(double value, String name) {
+        if (!Double.isFinite(value) || value <= 0.0) {
+            throw new IllegalArgumentException(name + " must be finite and greater than zero");
+        }
+    }
+
+    private static void validateFinite(double value, String name) {
+        if (!Double.isFinite(value)) {
+            throw new IllegalArgumentException(name + " must be finite");
+        }
+    }
+
+    private static Shape copyShape(Shape shape) {
+        return shape == null ? null : new Path2D.Double(shape);
+    }
+
+    private record StyleState(
+            Color drawColor,
+            Color backgroundColor,
+            Font font,
+            Stroke stroke,
+            Composite composite,
+            Shape clip) {
     }
 }

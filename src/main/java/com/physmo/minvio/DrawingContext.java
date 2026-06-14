@@ -4,8 +4,10 @@ import com.physmo.minvio.types.Point;
 import com.physmo.minvio.types.Rect;
 
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Shape;
 import java.awt.image.BufferedImage;
 
 public interface DrawingContext {
@@ -295,6 +297,115 @@ public interface DrawingContext {
      */
     void drawFilledPolygon(int[] xPoints, int[] yPoints, int numPoints);
 
+    /**
+     * Draw a polygon outline.
+     *
+     * @param xPoints   array of x-coordinates
+     * @param yPoints   array of y-coordinates
+     * @param numPoints number of points to use
+     */
+    default void drawPolygon(int[] xPoints, int[] yPoints, int numPoints) {
+        throw unsupported("Polygon outlines");
+    }
+
+    /**
+     * Draw connected line segments without closing the final segment.
+     *
+     * @param xPoints   array of x-coordinates
+     * @param yPoints   array of y-coordinates
+     * @param numPoints number of points to use
+     */
+    default void drawPolyline(int[] xPoints, int[] yPoints, int numPoints) {
+        throw unsupported("Polylines");
+    }
+
+    /**
+     * Draw an ellipse inside the supplied bounding box.
+     *
+     * @param x      bounding-box x-coordinate
+     * @param y      bounding-box y-coordinate
+     * @param width  bounding-box width
+     * @param height bounding-box height
+     */
+    default void drawEllipse(double x, double y, double width, double height) {
+        throw unsupported("Ellipses");
+    }
+
+    /**
+     * Draw a filled ellipse inside the supplied bounding box.
+     *
+     * @param x      bounding-box x-coordinate
+     * @param y      bounding-box y-coordinate
+     * @param width  bounding-box width
+     * @param height bounding-box height
+     */
+    default void drawFilledEllipse(double x, double y, double width, double height) {
+        throw unsupported("Filled ellipses");
+    }
+
+    /**
+     * Draw a triangle outline.
+     *
+     * @param x1 first vertex x-coordinate
+     * @param y1 first vertex y-coordinate
+     * @param x2 second vertex x-coordinate
+     * @param y2 second vertex y-coordinate
+     * @param x3 third vertex x-coordinate
+     * @param y3 third vertex y-coordinate
+     */
+    default void drawTriangle(double x1, double y1, double x2, double y2, double x3, double y3) {
+        throw unsupported("Triangles");
+    }
+
+    /**
+     * Draw a filled triangle.
+     *
+     * @param x1 first vertex x-coordinate
+     * @param y1 first vertex y-coordinate
+     * @param x2 second vertex x-coordinate
+     * @param y2 second vertex y-coordinate
+     * @param x3 third vertex x-coordinate
+     * @param y3 third vertex y-coordinate
+     */
+    default void drawFilledTriangle(double x1, double y1, double x2, double y2, double x3, double y3) {
+        throw unsupported("Filled triangles");
+    }
+
+    /**
+     * Draw an open arc inside the supplied bounding box. Angles are measured in
+     * radians from the positive x-axis, with positive angles following the same
+     * screen-coordinate rotation direction as {@link #rotate(double)}.
+     *
+     * @param x          bounding-box x-coordinate
+     * @param y          bounding-box y-coordinate
+     * @param width      bounding-box width
+     * @param height     bounding-box height
+     * @param startAngle start angle in radians
+     * @param arcAngle   angular extent in radians
+     */
+    default void drawArc(
+            double x, double y, double width, double height, double startAngle, double arcAngle) {
+        throw unsupported("Arcs");
+    }
+
+    /**
+     * Draw an arbitrary Java2D shape.
+     *
+     * @param shape shape to draw
+     */
+    default void drawShape(Shape shape) {
+        throw unsupported("Java2D shapes");
+    }
+
+    /**
+     * Fill an arbitrary Java2D shape.
+     *
+     * @param shape shape to fill
+     */
+    default void drawFilledShape(Shape shape) {
+        throw unsupported("Filled Java2D shapes");
+    }
+
 
     /**
      * Drawing function - draw an unfilled circle
@@ -399,6 +510,106 @@ public interface DrawingContext {
     Color getBackgroundColor();
 
     /**
+     * Set the width used for subsequent outline drawing operations.
+     *
+     * @param width positive finite stroke width
+     * @return the previous stroke width
+     */
+    default double setStrokeWidth(double width) {
+        throw unsupported("Stroke width");
+    }
+
+    /**
+     * Return the width of the current stroke.
+     *
+     * @return current stroke width
+     */
+    default double getStrokeWidth() {
+        throw unsupported("Stroke width");
+    }
+
+    /**
+     * Set the alpha used for subsequent drawing operations.
+     *
+     * @param alpha alpha value from 0.0 (transparent) to 1.0 (opaque)
+     */
+    default void setAlpha(double alpha) {
+        throw unsupported("Alpha");
+    }
+
+    /**
+     * Return the alpha of the current composite.
+     *
+     * @return current alpha value
+     */
+    default double getAlpha() {
+        throw unsupported("Alpha");
+    }
+
+    /**
+     * Set the Java2D composite used for subsequent drawing operations.
+     *
+     * @param composite composite to use
+     * @return the previous composite
+     */
+    default Composite setComposite(Composite composite) {
+        throw unsupported("Composites");
+    }
+
+    /**
+     * Return the current Java2D composite.
+     *
+     * @return current composite
+     */
+    default Composite getComposite() {
+        throw unsupported("Composites");
+    }
+
+    /**
+     * Replace the current clip with the supplied rectangular clip.
+     *
+     * @param x      clip x-coordinate
+     * @param y      clip y-coordinate
+     * @param width  clip width
+     * @param height clip height
+     */
+    default void setClip(double x, double y, double width, double height) {
+        throw unsupported("Clipping");
+    }
+
+    /**
+     * Clear the current clip.
+     */
+    default void clearClip() {
+        throw unsupported("Clipping");
+    }
+
+    /**
+     * Return a copy of the current clip, or {@code null} when clipping is disabled.
+     *
+     * @return current clip, or {@code null}
+     */
+    default Shape getClip() {
+        throw unsupported("Clipping");
+    }
+
+    /**
+     * Save color, background color, font, stroke, composite, and clip state.
+     */
+    default void pushStyle() {
+        throw unsupported("Style stack");
+    }
+
+    /**
+     * Restore the most recently saved style state.
+     *
+     * @throws IllegalStateException when no style state has been saved
+     */
+    default void popStyle() {
+        throw unsupported("Style stack");
+    }
+
+    /**
      * Get the draw buffer for the display as an Image object.
      *
      * @return Image representing the draw buffer.
@@ -448,4 +659,8 @@ public interface DrawingContext {
      * @param y The scale factor along the y-axis.
      */
     void scale(double x, double y);
+
+    private static UnsupportedOperationException unsupported(String feature) {
+        return new UnsupportedOperationException(feature + " are not supported by this drawing context");
+    }
 }
