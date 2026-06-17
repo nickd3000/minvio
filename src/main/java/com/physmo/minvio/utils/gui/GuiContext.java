@@ -14,6 +14,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Root object for the retained GUI system.
+ *
+ * <p>A context owns top-level containers, installs a mouse connector on the
+ * supplied display, routes mouse messages to containers, and coordinates style,
+ * dirty redraws, layout location, and final drawing. There is currently no API
+ * to remove the installed mouse connector from the display.</p>
+ */
 public class GuiContext {
     List<GuiContainer> containers;
     MouseConnector mouseConnector;
@@ -23,6 +31,11 @@ public class GuiContext {
     List<GuiContainer> buttonDownList = new ArrayList<>();
     private GuiStyle guiStyle;
 
+    /**
+     * Creates a GUI context and registers its mouse connector with a display.
+     *
+     * @param basicDisplay display used for mouse events and top-level drawing
+     */
     public GuiContext(BasicDisplay basicDisplay) {
         this.basicDisplay = basicDisplay;
         containers = new ArrayList<>();
@@ -64,14 +77,26 @@ public class GuiContext {
         };
     }
 
+    /**
+     * @return active GUI style
+     */
     public GuiStyle getGuiStyle() {
         return guiStyle;
     }
 
+    /**
+     * Replaces the GUI style used by controls.
+     *
+     * @param guiStyle replacement style; not validated
+     */
     public void setGuiStyle(GuiStyle guiStyle) {
         this.guiStyle = guiStyle;
     }
 
+    /**
+     * Rebuilds the container-location list and redraws dirty containers into
+     * their retained buffers.
+     */
     public void tick() {
         locateAll();
         for (GuiContainer guiContainer : allChildren) {
@@ -79,10 +104,22 @@ public class GuiContext {
         }
     }
 
+    /**
+     * Adds a top-level container.
+     *
+     * @param container container to append; not validated
+     */
     public void add(GuiContainer container) {
         containers.add(container);
     }
 
+    /**
+     * Creates the mouse connector used to route display mouse events.
+     *
+     * <p>Mouse move events are sent to every located container. Button-down
+     * events are sent only to containers under the press point, and button-up
+     * events are sent back to those original button-down targets.</p>
+     */
     public void initMouseConnector() {
         mouseConnector = new MouseConnector() {
             @Override
@@ -122,6 +159,11 @@ public class GuiContext {
     }
 
 
+    /**
+     * Draws all top-level containers and their children.
+     *
+     * @param topLevelContext target drawing context
+     */
     public void drawAll(DrawingContext topLevelContext) {
         locateAll();
         for (GuiContainer container : containers) {
@@ -130,6 +172,10 @@ public class GuiContext {
 
     }
 
+    /**
+     * Rebuilds the flattened pre-order collection of all top-level containers
+     * and descendants.
+     */
     public void locateAll() {
         allChildren.clear();
         for (GuiContainer container : containers) {
@@ -137,6 +183,16 @@ public class GuiContext {
         }
     }
 
+    /**
+     * Returns all located containers containing a display-space point.
+     *
+     * <p>Hit testing uses inclusive right and bottom edges and relies on the
+     * last {@link #locateAll()} result.</p>
+     *
+     * @param x display-space x-coordinate
+     * @param y display-space y-coordinate
+     * @return new mutable list of matching containers in location order
+     */
     public List<GuiContainer> getListOfContainersAtPoint(int x, int y) {
         List<GuiContainer> list = new ArrayList<>();
         for (GuiContainer guiContainer : allChildren) {

@@ -13,9 +13,19 @@ import static com.physmo.minvio.utils.gui.support.GuiMessage.MOUSE_BUTTON_DOWN;
 import static com.physmo.minvio.utils.gui.support.GuiMessage.MOUSE_BUTTON_UP;
 import static com.physmo.minvio.utils.gui.support.GuiMessage.MOUSE_MOVE;
 
+/**
+ * Horizontal normalized-value slider.
+ *
+ * <p>The current implementation supports horizontal drawing and hit testing
+ * only. Values are clamped to the inclusive range zero through one.</p>
+ */
 public class GuiSlider extends GuiContainer {
 
+    /**
+     * Horizontal orientation value; the only fully implemented orientation.
+     */
     public static int SLIDER_HORIZONTAL = 1;
+    /** Vertical orientation value reserved for future support and not implemented. */
     public static int SLIDER_VERTICAL = 2; // TODO
 
 
@@ -33,17 +43,30 @@ public class GuiSlider extends GuiContainer {
     int grabOffsetY;
     int grabOffsetX;
 
+    /**
+     * Creates a horizontal slider.
+     *
+     * @param rect slider bounds
+     */
     public GuiSlider(Rect rect) {
         super(rect);
         setHandleSize(14);
         recalculateMetrics();
     }
 
+    /**
+     * Sets the handle diameter in pixels and recalculates track metrics.
+     *
+     * @param val handle size; not validated
+     */
     public void setHandleSize(int val) {
         handleSize = val;
         recalculateMetrics();
     }
 
+    /**
+     * Recalculates derived track length and padding from current size.
+     */
     public void recalculateMetrics() {
         endPadding = handleSize;
         trackLength = rect.w - (endPadding * 2);
@@ -92,10 +115,22 @@ public class GuiSlider extends GuiContainer {
         return endPadding + (int) Math.round(value * trackLength);
     }
 
+    /**
+     * Adds a listener invoked when the value changes through notifying paths.
+     *
+     * @param onChanged listener receiving the new normalized value
+     */
     public void addChangeListener(DoubleConsumer onChanged) {
         this.changeListeners.add(onChanged);
     }
 
+    /**
+     * Tests whether a local mouse point is inside the horizontal handle.
+     *
+     * @param mouseX local x-coordinate
+     * @param mouseY local y-coordinate
+     * @return {@code true} when over the handle
+     */
     public boolean isMouseOverHandle(int mouseX, int mouseY) {
         if (orientation == SLIDER_HORIZONTAL) {
             int dy = Math.abs(mouseY - rect.h / 2);
@@ -106,6 +141,12 @@ public class GuiSlider extends GuiContainer {
         return false;
     }
 
+    /**
+     * Stores the offset between a press point and the current handle center.
+     *
+     * @param mouseX local press x-coordinate
+     * @param mouseY local press y-coordinate
+     */
     public void storeGrabOffset(int mouseX, int mouseY) {
         grabOffsetY = mouseY - rect.h / 2;
         grabOffsetX = mouseX - getHandleCenterX();
@@ -174,16 +215,27 @@ public class GuiSlider extends GuiContainer {
         }
     }
 
+    /** @return current normalized slider value */
     public double getValue() {
         return value;
     }
 
+    /**
+     * Sets the value without notifying listeners and marks the slider dirty.
+     *
+     * @param value replacement value, clamped to {@code [0, 1]}
+     */
     public void setValue(double value) {
         setValueInternal(value, false);
         setDirty(true);
     }
 
-    // External setter that updates the value and notifies listeners
+    /**
+     * Sets the value, notifies listeners only if the clamped value changes, and
+     * marks the slider dirty.
+     *
+     * @param value replacement value, clamped to {@code [0, 1]}
+     */
     public void setValueAndNotify(double value) {
         setValueInternal(value, true);
         setDirty(true);

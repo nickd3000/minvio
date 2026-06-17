@@ -5,6 +5,13 @@ import com.physmo.minvio.utils.gui.GuiContainer;
 
 import java.util.List;
 
+/**
+ * Grid layout with fixed padding and automatic expansion to fit all children.
+ *
+ * <p>The initial row and column count are minimums. If more children are
+ * present than fit, rows or columns are increased before calculating cell
+ * sizes.</p>
+ */
 public class GridLayout implements Layout {
 
     int rows = 2;
@@ -12,9 +19,19 @@ public class GridLayout implements Layout {
     int hPad = 5;
     int vPad = 5;
 
+    /**
+     * Creates a two-by-two grid layout.
+     */
     public GridLayout() {
     }
 
+    /**
+     * Creates a grid layout.
+     *
+     * @param rows minimum row count
+     * @param cols minimum column count
+     * @throws IllegalArgumentException if either value is not positive
+     */
     public GridLayout(int rows, int cols) {
         if (rows <= 0 || cols <= 0) {
             throw new IllegalArgumentException("Rows and columns must be positive");
@@ -23,6 +40,17 @@ public class GridLayout implements Layout {
         this.cols = cols;
     }
 
+    /**
+     * Sizes and positions children inside the parent rectangle.
+     *
+     * <p>Each cell applies five pixels of horizontal and vertical padding on
+     * both sides. Child dimensions are clamped to at least one pixel. Each
+     * child then receives {@link GuiContainer#calculateLayout()} so nested
+     * layouts can update.</p>
+     *
+     * @param parent parent container
+     * @param children live mutable child list
+     */
     @Override
     public void handleLayout(GuiContainer parent, List<GuiContainer> children) {
 

@@ -6,21 +6,36 @@ import com.physmo.minvio.utils.gui.support.GuiUtils;
 
 import java.awt.Font;
 
+/**
+ * Static text label with optional beveled border.
+ */
 public class GuiLabel extends GuiContainer {
 
     private final Font font = new Font("Verdana", Font.PLAIN, 15);
     private String text = "blank";
     private boolean showBorder = false;
 
+    /**
+     * Creates a label.
+     *
+     * @param rect label bounds
+     * @param text initial label text
+     */
     public GuiLabel(Rect rect, String text) {
         super(rect);
         this.text = text;
     }
 
+    /** @return whether the label draws a beveled border */
     public boolean isShowBorder() {
         return showBorder;
     }
 
+    /**
+     * Sets border visibility and marks the label dirty.
+     *
+     * @param showBorder true to draw a border
+     */
     public void setShowBorder(boolean showBorder) {
         this.showBorder = showBorder;
         setDirty(true);
@@ -47,6 +62,11 @@ public class GuiLabel extends GuiContainer {
 
     }
 
+    /**
+     * Sets label text and marks the label dirty.
+     *
+     * @param text replacement text
+     */
     public void setText(String text) {
         this.text = text;
         this.setDirty(true);

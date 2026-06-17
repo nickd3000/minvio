@@ -30,10 +30,21 @@ public class GuiButton extends GuiContainer {
     private final List<Runnable> actionListeners = new ArrayList<>();
     private String text = null;
 
+    /**
+     * Creates a button with no label.
+     *
+     * @param rect button bounds
+     */
     public GuiButton(Rect rect) {
         super(rect);
     }
 
+    /**
+     * Creates a button with a label.
+     *
+     * @param rect button bounds
+     * @param text label text
+     */
     public GuiButton(Rect rect, String text) {
         super(rect);
         this.text = text;
@@ -67,6 +78,13 @@ public class GuiButton extends GuiContainer {
         }
     }
 
+    /**
+     * Tests a local point against inclusive button bounds.
+     *
+     * @param x local x-coordinate
+     * @param y local y-coordinate
+     * @return {@code true} when inside or on the right/bottom edge
+     */
     public boolean isPointInside(int x, int y) {
         if (x < 0 || y < 0) return false;
         return x <= rect.w && y <= rect.h;
