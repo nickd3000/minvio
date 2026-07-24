@@ -27,7 +27,7 @@ projects that require 3D rendering, GPU shaders, physics, audio, or mobile and
 web deployment, a larger framework such as Processing, OPENRNDR, libGDX, or
 FXGL may be a better fit.
 
-Find examples here: https://github.com/nickd3000/minvio-examples
+Additional examples are available here: https://github.com/nickd3000/minvio-examples
 
 **Website with FAQ and Blog posts on the project: https://nickd3000.github.io/minvio/**
 
@@ -47,8 +47,7 @@ Add the Maven dependency:
 
 ``` java
 import com.physmo.minvio.MinvioApp;
-
-import java.awt.Color;
+import com.physmo.minvio.utils.Palette;
 
 class SimpleExample extends MinvioApp {
 
@@ -98,6 +97,41 @@ void drawStyledShape() {
 ```
 
 Transforms use their own independent `pushMatrix()` and `popMatrix()` stack.
+
+## Examples
+
+Most examples use the high-level `MinvioApp` style: extend `MinvioApp`, override
+`init`, `update`, and/or `draw`, then call `start(...)`. This is the recommended
+way to write Minvio sketches and small applications.
+
+Examples in this repository live under `src/main/java/com/physmo/reference/` and
+are organized by topic:
+
+- `beginner`: Java language basics taught with simple visual examples.
+- `basics`: core Minvio app, image, text, resize, timing, and screenshot examples.
+- `input`: keyboard, mouse, and interaction examples.
+- `drawing`: drawing API, style, shape, helper, and pixel-sampling examples.
+- `concepts`: common creative-coding ideas such as particles, forces, collision,
+  color interpolation, transforms, and noise.
+- `lowlevel`: a small set of direct `BasicDisplay` examples for advanced/manual
+  display-loop control.
+- `gallery`, `gui`, `ecs`, `experiments`, `wiki`, and `rigs`: larger sketches,
+  GUI/ECS demos, exploratory tools, and docs-linked examples.
+
+See `src/main/java/com/physmo/reference/README.md` for a fuller guide to the
+example packages.
+
+The separate examples repository is here:
+https://github.com/nickd3000/minvio-examples
+
+## Development
+
+Minvio targets Java 17. When running Maven locally, use JDK 17 to avoid JaCoCo
+trying to instrument newer JDK runtime classes:
+
+```sh
+JAVA_HOME=$(/usr/libexec/java_home -v 17) PATH="$JAVA_HOME/bin:$PATH" mvn test
+```
 
 ## More Example Images
 

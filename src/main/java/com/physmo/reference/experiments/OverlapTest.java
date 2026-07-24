@@ -1,6 +1,5 @@
 package com.physmo.reference.experiments;
 
-import com.physmo.minvio.BasicDisplayAwt;
 import com.physmo.minvio.MinvioApp;
 
 import java.awt.Color;
@@ -16,7 +15,7 @@ class OverlapTest extends MinvioApp {
 
     public static void main(String... args) {
         MinvioApp app = new OverlapTest();
-        app.start(new BasicDisplayAwt(400, 400), "Overlap Test", 30);
+        app.start(400, 400, "Overlap Test", 30);
     }
 
     @Override

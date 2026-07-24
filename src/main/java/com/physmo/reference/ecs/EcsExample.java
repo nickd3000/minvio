@@ -1,7 +1,6 @@
 package com.physmo.reference.ecs;
 
 import com.physmo.minvio.BasicDisplay;
-import com.physmo.minvio.BasicDisplayAwt;
 import com.physmo.minvio.MinvioApp;
 import com.physmo.minvio.utils.Palette;
 import com.physmo.minvio.utils.ecs.Entity;
@@ -23,7 +22,7 @@ public class EcsExample extends MinvioApp {
 
     public static void main(String[] args) {
         MinvioApp app = new EcsExample();
-        app.start(new BasicDisplayAwt(400, 400), "Entity Component System", 60);
+        app.start(400, 400, "Entity Component System", 60);
     }
 
     @Override
