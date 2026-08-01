@@ -24,6 +24,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,10 +41,12 @@ public class BasicDisplayAwt extends BasicDisplay {
     private int height;
     private JFrame mainFrame;
     private BPanel panel;
-    private BufferedImage drawBuffer;
+    private volatile BufferedImage drawBuffer;
     private DrawingContext drawingContext;
     private boolean headless = false;
     private volatile boolean closed = false;
+    private final Object resizeLock = new Object();
+    private Rect resizeRequest = null;
 
     /**
      * Default constructor - creates display with default size
@@ -110,23 +113,28 @@ public class BasicDisplayAwt extends BasicDisplay {
         }
 
         if (panel != null) {
-            panel.setDrawBuffer(drawBuffer);
-            panel.setSize(w, h);
-            panel.doLayout();
+            BufferedImage bufferForPanel = drawBuffer;
+            runOnEventDispatchThread(() -> {
+                panel.setDrawBuffer(bufferForPanel);
+                panel.setSize(w, h);
+                panel.setPreferredSize(new Dimension(w, h));
+                panel.doLayout();
+                if (mainFrame != null) mainFrame.doLayout();
+            });
         }
-        if (mainFrame != null) mainFrame.doLayout();
     }
 
-
-    Rect resizeRequest = null;
-
     public void resizeIfRequested() {
+        Rect request;
+        synchronized (resizeLock) {
+            request = resizeRequest;
+            resizeRequest = null;
+        }
 
-        if (resizeRequest == null) return;
+        if (request == null) return;
 
-        int newWidth = resizeRequest.w;
-        int newHeight = resizeRequest.h;
-        resizeRequest = null; // Clear resize object once we have the size.
+        int newWidth = request.w;
+        int newHeight = request.h;
 
         setDisplaySize(newWidth, newHeight);
         if (resizeListener != null) {
@@ -145,24 +153,26 @@ public class BasicDisplayAwt extends BasicDisplay {
     public void createAndShowGui() {
 
         if (!headless) {
-            panel = new BPanel(width, height, drawBuffer);
+            runOnEventDispatchThread(() -> {
+                panel = new BPanel(width, height, drawBuffer);
 
-            panel.addMouseConnectors(this.mouseConnectors);
+                panel.addMouseConnectors(this.mouseConnectors);
 
-            mainFrame = new JFrame("...");
-            mainFrame.getContentPane().add(panel);
-            mainFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                mainFrame = new JFrame("...");
+                mainFrame.getContentPane().add(panel);
+                mainFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-            mainFrame.pack();
-            mainFrame.setLocationRelativeTo(null);
-            mainFrame.setResizable(true);
-            mainFrame.setVisible(true);
+                mainFrame.pack();
+                mainFrame.setLocationRelativeTo(null);
+                mainFrame.setResizable(true);
+                mainFrame.setVisible(true);
 
-            mainFrame.addComponentListener(new ComponentAdapter() {
-                @Override
-                public void componentResized(ComponentEvent e) {
-                    resizeRequest = new Rect(0, 0, panel.getWidth(), panel.getHeight());
-                }
+                mainFrame.addComponentListener(new ComponentAdapter() {
+                    @Override
+                    public void componentResized(ComponentEvent e) {
+                        requestResize(panel.getWidth(), panel.getHeight());
+                    }
+                });
             });
         }
 
@@ -210,7 +220,7 @@ public class BasicDisplayAwt extends BasicDisplay {
     @Override
     public void repaint() {
         if (!headless) {
-            panel.paintImmediately(0, 0, width, height);
+            runOnEventDispatchThread(() -> panel.paintImmediately(0, 0, width, height));
         }
     }
 
@@ -235,20 +245,20 @@ public class BasicDisplayAwt extends BasicDisplay {
     @Override
     public int[] getKeyState() {
         if (panel == null) return new int[1000];
-        return panel.keyDown;
+        return panel.getKeyDownSnapshot();
     }
 
     @Override
     public int[] getKeyStatePrevious() {
         if (panel == null) return new int[1000];
-        return panel.keyDownPrevious;
+        return panel.getKeyDownPreviousSnapshot();
     }
 
     // Update previous keys with current keys so we can tell what changed next time.
     @Override
     public void tickInput() {
         if (panel == null) return;
-        System.arraycopy(panel.keyDown, 0, panel.keyDownPrevious, 0, panel.keyDown.length);
+        panel.tickInput();
     }
 
     @Override
@@ -272,23 +282,44 @@ public class BasicDisplayAwt extends BasicDisplay {
     public boolean getMouseButtonLeft() {
         if (panel == null) return false;
         int MOUSE_BUTTON_ID_LEFT = 1;
-        return panel.mouseButtonStates[MOUSE_BUTTON_ID_LEFT];
+        return panel.isMouseButtonPressed(MOUSE_BUTTON_ID_LEFT);
     }
 
     @Override
     public boolean getMouseButtonMiddle() {
         if (panel == null) return false;
         int MOUSE_BUTTON_ID_MIDDLE = 2;
-        return panel.mouseButtonStates[MOUSE_BUTTON_ID_MIDDLE];
+        return panel.isMouseButtonPressed(MOUSE_BUTTON_ID_MIDDLE);
     }
 
     @Override
     public boolean getMouseButtonRight() {
         if (panel == null) return false;
         int MOUSE_BUTTON_ID_RIGHT = 3;
-        return panel.mouseButtonStates[MOUSE_BUTTON_ID_RIGHT];
+        return panel.isMouseButtonPressed(MOUSE_BUTTON_ID_RIGHT);
     }
 
+    private void requestResize(int newWidth, int newHeight) {
+        synchronized (resizeLock) {
+            resizeRequest = new Rect(0, 0, newWidth, newHeight);
+        }
+    }
+
+    private static void runOnEventDispatchThread(Runnable task) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            task.run();
+            return;
+        }
+
+        try {
+            SwingUtilities.invokeAndWait(task);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("Interrupted while waiting for Swing event dispatch", e);
+        } catch (InvocationTargetException e) {
+            throw new IllegalStateException("Swing event dispatch failed", e.getCause());
+        }
+    }
 
     @Override
     public int getWidth() {
@@ -305,10 +336,11 @@ public class BasicDisplayAwt extends BasicDisplay {
         final int numKeys = 1000;
         final int[] keyDown = new int[numKeys];
         final int[] keyDownPrevious = new int[numKeys];
-        final boolean[] mouseButtonStates = new boolean[MAX_BUTTONS];
-        BufferedImage drawBuffer;
-        int mouseX = 0;
-        int mouseY = 0;
+        private final Object inputLock = new Object();
+        private int mouseButtonStateBits = 0;
+        volatile BufferedImage drawBuffer;
+        volatile int mouseX = 0;
+        volatile int mouseY = 0;
         List<MouseConnector> mouseConnectors;
 
         BPanel(int width, int height, BufferedImage drawBuffer) {
@@ -329,6 +361,41 @@ public class BasicDisplayAwt extends BasicDisplay {
 
         public void setDrawBuffer(BufferedImage drawBuffer) {
             this.drawBuffer = drawBuffer;
+        }
+
+        int[] getKeyDownSnapshot() {
+            synchronized (inputLock) {
+                return Arrays.copyOf(keyDown, keyDown.length);
+            }
+        }
+
+        int[] getKeyDownPreviousSnapshot() {
+            synchronized (inputLock) {
+                return Arrays.copyOf(keyDownPrevious, keyDownPrevious.length);
+            }
+        }
+
+        void tickInput() {
+            synchronized (inputLock) {
+                System.arraycopy(keyDown, 0, keyDownPrevious, 0, keyDown.length);
+            }
+        }
+
+        boolean isMouseButtonPressed(int buttonId) {
+            synchronized (inputLock) {
+                return (mouseButtonStateBits & (1 << buttonId)) != 0;
+            }
+        }
+
+        private void setMouseButtonPressed(int buttonId, boolean pressed) {
+            if (buttonId < 0 || buttonId >= MAX_BUTTONS) return;
+            synchronized (inputLock) {
+                if (pressed) {
+                    mouseButtonStateBits |= 1 << buttonId;
+                } else {
+                    mouseButtonStateBits &= ~(1 << buttonId);
+                }
+            }
         }
 
         @Override
@@ -364,7 +431,9 @@ public class BasicDisplayAwt extends BasicDisplay {
             int keyCode = e.getKeyCode();
             // System.out.println("[DEBUG_LOG] keyPressed: " + keyCode);
             if (keyCode >= 0 && keyCode < numKeys) {
-                keyDown[keyCode] = 1;
+                synchronized (inputLock) {
+                    keyDown[keyCode] = 1;
+                }
             }
         }
 
@@ -372,7 +441,9 @@ public class BasicDisplayAwt extends BasicDisplay {
         public void keyReleased(KeyEvent e) {
             int keyCode = e.getKeyCode();
             if (keyCode >= 0 && keyCode < numKeys) {
-                keyDown[keyCode] = 0;
+                synchronized (inputLock) {
+                    keyDown[keyCode] = 0;
+                }
             }
         }
 
@@ -387,9 +458,7 @@ public class BasicDisplayAwt extends BasicDisplay {
         @Override
         public void mousePressed(MouseEvent e) {
             int bid = e.getButton();
-            if (bid < MAX_BUTTONS) {
-                mouseButtonStates[bid] = true;
-            }
+            setMouseButtonPressed(bid, true);
 
             for (MouseConnector mouseConnector : mouseConnectors) {
                 mouseConnector.onButtonDown(e.getX(), e.getY(), bid);
@@ -401,9 +470,7 @@ public class BasicDisplayAwt extends BasicDisplay {
         @Override
         public void mouseReleased(MouseEvent e) {
             int bid = e.getButton();
-            if (bid < MAX_BUTTONS) {
-                mouseButtonStates[bid] = false;
-            }
+            setMouseButtonPressed(bid, false);
             for (MouseConnector mouseConnector : mouseConnectors) {
                 mouseConnector.onButtonUp(e.getX(), e.getY(), bid);
             }

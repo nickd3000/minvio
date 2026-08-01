@@ -66,6 +66,32 @@ class MinvioAppTest {
     }
 
     @Test
+    @Timeout(2)
+    void updateRunsOncePerRenderedFrame() {
+        TestBasicDisplay display = new TestBasicDisplay(20, 20);
+        AtomicInteger updateCalls = new AtomicInteger();
+        AtomicInteger drawCalls = new AtomicInteger();
+        MinvioApp app = new MinvioApp() {
+            @Override
+            public void update(BasicDisplay bd, double delta) {
+                updateCalls.incrementAndGet();
+            }
+
+            @Override
+            public void draw(double delta) {
+                if (drawCalls.incrementAndGet() == 3) {
+                    stop();
+                }
+            }
+        };
+
+        app.start(display, "Frame Cadence", 60);
+
+        assertEquals(3, drawCalls.get());
+        assertEquals(3, updateCalls.get());
+    }
+
+    @Test
     void rejectsInvalidFpsTargets() {
         MinvioApp app = new MinvioApp();
         TestBasicDisplay display = new TestBasicDisplay(20, 20);

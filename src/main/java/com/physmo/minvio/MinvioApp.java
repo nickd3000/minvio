@@ -13,6 +13,8 @@ import java.awt.Shape;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Objects;
 
 /**
@@ -163,24 +165,21 @@ public class MinvioApp implements DrawingContext {
                 // Synchronize keyboard/mouse state for the current frame
                 bd.tickInput();
 
-                while (running && bd.isVisible() && bd.getElapsedTime() < msPerFrame) {
-                    int remainingTime = (int) (msPerFrame - bd.getElapsedTime());
+                long currentUpdateTime = System.nanoTime();
+                delta = (double) (currentUpdateTime - lastUpdateTime);
+                lastUpdateTime = currentUpdateTime;
+                update(bd, (delta) / 1_000_000_000.0);
+
+                double remainingTime = msPerFrame - bd.getElapsedTime();
+                while (running && bd.isVisible() && remainingTime > 0) {
 
                     try {
-                        if (remainingTime < 10) {
-                            if (remainingTime > 0) Thread.sleep(remainingTime);
-                            continue;
-                        }
-
-                        Thread.sleep(5);
-                        long currentTime = System.nanoTime();
-                        delta = (double) (currentTime - lastUpdateTime);
-                        lastUpdateTime = currentTime;
-                        update(bd, (delta) / 1_000_000_000.0);
+                        BasicDisplay.sleepForFrameRemainder(remainingTime);
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                         running = false;
                     }
+                    remainingTime = msPerFrame - bd.getElapsedTime();
                 }
 
                 if (!running || !bd.isVisible()) break;
@@ -785,14 +784,34 @@ public class MinvioApp implements DrawingContext {
     /**
      * Requests a PNG screenshot of the active display at the supplied path.
      *
-     * <p>The current display API logs write failures rather than reporting them
-     * to the caller.</p>
-     *
      * @param path destination file path
      * @throws NullPointerException if no display has been attached
      */
     public void saveScreenshot(String path) {
         bd.saveScreenshot(path);
+    }
+
+    /**
+     * Attempts to write a PNG screenshot of the active display at the supplied path.
+     *
+     * @param path destination file path
+     * @return {@code true} if the image was written successfully
+     * @throws NullPointerException if no display has been attached
+     */
+    public boolean trySaveScreenshot(String path) {
+        return bd.trySaveScreenshot(path);
+    }
+
+    /**
+     * Writes a PNG screenshot of the active display at the supplied path.
+     *
+     * @param path destination file path
+     * @return the supplied destination path
+     * @throws IOException          if the image cannot be written
+     * @throws NullPointerException if no display has been attached
+     */
+    public Path saveScreenshot(Path path) throws IOException {
+        return bd.saveScreenshot(path);
     }
 
     private void handleSystemInputs() {
@@ -828,15 +847,17 @@ public class MinvioApp implements DrawingContext {
             count++;
         }
 
-        saveScreenshot(file.getAbsolutePath());
-        MinvioLogger.info("Screenshot saved: " + file.getAbsolutePath());
+        if (trySaveScreenshot(file.getAbsolutePath())) {
+            MinvioLogger.info("Screenshot saved: " + file.getAbsolutePath());
+        }
     }
 
     private boolean handleScreenshotAndQuit() {
         if (screenshotAndQuitFrame != frameCount) return false;
 
-        saveScreenshot(screenshotAndQuitPath);
-        MinvioLogger.info("Screenshot saved: " + new File(screenshotAndQuitPath).getAbsolutePath());
+        if (trySaveScreenshot(screenshotAndQuitPath)) {
+            MinvioLogger.info("Screenshot saved: " + new File(screenshotAndQuitPath).getAbsolutePath());
+        }
         running = false;
         return true;
     }

@@ -31,12 +31,24 @@ class EntitySystemTest {
         system.addEntity(entityWithComponents("first", calls));
         system.addEntity(entityWithComponents("second", calls));
 
-        system.tickAll(null, 0.5);
+        system.tickAll(0.5);
         system.drawAll(null, 0.75);
 
         assertEquals(List.of(
                 "tick-first-0.5", "tick-second-0.5",
                 "draw-first-0.75", "draw-second-0.75"), calls);
+    }
+
+    @SuppressWarnings("deprecation")
+    @Test
+    void deprecatedTickAllWithDrawingContextDelegatesToContextFreeUpdate() {
+        EntitySystem system = new EntitySystem();
+        List<String> calls = new ArrayList<>();
+        system.addEntity(entityWithComponents("first", calls));
+
+        system.tickAll(null, 0.5);
+
+        assertEquals(List.of("tick-first-0.5"), calls);
     }
 
     @Test

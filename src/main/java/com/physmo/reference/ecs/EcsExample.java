@@ -65,7 +65,7 @@ public class EcsExample extends MinvioApp {
     @Override
     public void update(BasicDisplay bd, double delta) {
         // 'tickAll' updates the logic for every component in every entity.
-        entitySystem.tickAll(bd.getDrawingContext(), delta);
+        entitySystem.tickAll(delta);
     }
 
     @Override

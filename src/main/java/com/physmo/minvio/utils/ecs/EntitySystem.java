@@ -20,14 +20,28 @@ public class EntitySystem {
     /**
      * Updates all entities in insertion order.
      *
-     * <p>The arguments are forwarded unchanged to each entity. Structural
-     * modification of the entity list during iteration is unsupported.</p>
+     * <p>Structural modification of the entity list during iteration is unsupported.</p>
      *
-     * @param dc    drawing context to forward; may be {@code null}
      * @param delta caller-defined time or delta value
      */
+    public void tickAll(double delta) {
+        entities.forEach(entity -> entity.tick(delta));
+    }
+
+    /**
+     * Updates all entities in insertion order.
+     *
+     * <p>The drawing context parameter is retained for source and binary
+     * compatibility. It is ignored because {@link UpdateComponent} receives only
+     * the owning entity and delta value. Use {@link #tickAll(double)} for new code.</p>
+     *
+     * @param dc    drawing context retained for compatibility; ignored
+     * @param delta caller-defined time or delta value
+     * @deprecated use {@link #tickAll(double)}
+     */
+    @Deprecated(since = "1.22")
     public void tickAll(DrawingContext dc, double delta) {
-        entities.forEach(entity -> entity.tick(dc, delta));
+        tickAll(delta);
     }
 
     /**

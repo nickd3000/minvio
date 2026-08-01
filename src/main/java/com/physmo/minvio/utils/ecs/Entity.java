@@ -67,14 +67,28 @@ public class Entity {
     /**
      * Invokes every update component in insertion order.
      *
-     * <p>The drawing context and time value are forwarded unchanged. Structural
-     * modification of the component list during iteration is unsupported.</p>
+     * <p>Structural modification of the component list during iteration is unsupported.</p>
      *
-     * @param dc drawing context to forward; may be {@code null}
      * @param t caller-defined time or delta value
      */
-    public void tick(DrawingContext dc, double t) {
+    public void tick(double t) {
         components.forEach(c -> c.update(this, t));
+    }
+
+    /**
+     * Invokes every update component in insertion order.
+     *
+     * <p>The drawing context parameter is retained for source and binary
+     * compatibility. It is ignored because {@link UpdateComponent} receives only
+     * the owning entity and delta value. Use {@link #tick(double)} for new code.</p>
+     *
+     * @param dc drawing context retained for compatibility; ignored
+     * @param t  caller-defined time or delta value
+     * @deprecated use {@link #tick(double)}
+     */
+    @Deprecated(since = "1.22")
+    public void tick(DrawingContext dc, double t) {
+        tick(t);
     }
 
     /**

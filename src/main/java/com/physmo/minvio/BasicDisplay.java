@@ -8,9 +8,10 @@ import javax.imageio.ImageIO;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -42,6 +43,7 @@ public abstract class BasicDisplay {
      * control.</p>
      */
     public static long repaintTimerStart = 0;
+    static final int FRAME_SLEEP_CHUNK_MS = 5;
     List<MouseConnector> mouseConnectors;
 
     IntBinaryOperator resizeListener;
@@ -163,24 +165,27 @@ public abstract class BasicDisplay {
         }
 
         double msPerFrame = 1000.0 / fps;
-        while (getElapsedTime() < msPerFrame) {
-
-            int remainingTime = (int) (msPerFrame - getElapsedTime());
-
-            if (remainingTime < 5) continue;
+        double remainingTime = msPerFrame - getElapsedTime();
+        while (remainingTime > 0) {
             try {
-                Thread.sleep(5);
-
+                sleepForFrameRemainder(remainingTime);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 return;
             }
+            remainingTime = msPerFrame - getElapsedTime();
 
         }
 
         repaint();
 
         repaintTimerStart = System.nanoTime();
+    }
+
+    static void sleepForFrameRemainder(double remainingTimeMs) throws InterruptedException {
+        if (remainingTimeMs <= 0) return;
+        long sleepMs = Math.min(FRAME_SLEEP_CHUNK_MS, Math.max(1L, (long) remainingTimeMs));
+        Thread.sleep(sleepMs);
     }
 
     /**
@@ -292,10 +297,19 @@ public abstract class BasicDisplay {
      * Write an image file of the current BasicDisplay window to the users home folder.
      */
     public void saveScreenshot() {
-        String filePath = System.getProperty("user.home");
-        filePath += File.separator + getTitle().replaceAll("\\s+", "") + ".png";
-        MinvioLogger.info("Saving screenshot to: " + filePath);
-        saveScreenshot(filePath);
+        Path outputPath = getDefaultScreenshotPath();
+        MinvioLogger.info("Saving screenshot to: " + outputPath);
+        trySaveScreenshot(outputPath);
+    }
+
+    /**
+     * Attempts to write an image file of the current BasicDisplay window to the
+     * user's home folder.
+     *
+     * @return {@code true} if the image was written successfully
+     */
+    public boolean trySaveScreenshot() {
+        return trySaveScreenshot(getDefaultScreenshotPath());
     }
 
     /**
@@ -319,13 +333,60 @@ public abstract class BasicDisplay {
      * @param fullPath Path to new image file.
      */
     public void saveScreenshot(String fullPath) {
+        trySaveScreenshot(fullPath);
+    }
+
+    /**
+     * Attempts to write an image file of the current BasicDisplay window to the
+     * supplied path.
+     *
+     * @param fullPath path to new image file
+     * @return {@code true} if the image was written successfully
+     */
+    public boolean trySaveScreenshot(String fullPath) {
+        Objects.requireNonNull(fullPath, "Screenshot path cannot be null");
+        return trySaveScreenshot(Path.of(fullPath));
+    }
+
+    /**
+     * Attempts to write an image file of the current BasicDisplay window to the
+     * supplied path.
+     *
+     * @param outputPath path to new image file
+     * @return {@code true} if the image was written successfully
+     */
+    public boolean trySaveScreenshot(Path outputPath) {
         try {
-            BufferedImage bi = (BufferedImage) getDrawBuffer();
-            File outputFile = new File(fullPath);
-            ImageIO.write(bi, "png", outputFile);
+            saveScreenshot(outputPath);
+            return true;
         } catch (IOException e) {
-            MinvioLogger.error("Error writing to file: " + fullPath + " - " + e.getMessage());
+            MinvioLogger.error("Error writing to file: " + outputPath + " - " + e.getMessage());
+            return false;
         }
+    }
+
+    /**
+     * Writes an image file of the current BasicDisplay window to the supplied path.
+     *
+     * @param outputPath path to new image file
+     * @return the supplied output path
+     * @throws IOException if the image cannot be written
+     */
+    public Path saveScreenshot(Path outputPath) throws IOException {
+        Objects.requireNonNull(outputPath, "Screenshot path cannot be null");
+        Path parent = outputPath.toAbsolutePath().getParent();
+        if (parent != null && !Files.isDirectory(parent)) {
+            throw new IOException("Screenshot directory does not exist: " + parent);
+        }
+        BufferedImage bi = (BufferedImage) getDrawBuffer();
+        if (!ImageIO.write(bi, "png", outputPath.toFile())) {
+            throw new IOException("No PNG ImageIO writer is available");
+        }
+        return outputPath;
+    }
+
+    private Path getDefaultScreenshotPath() {
+        return Path.of(System.getProperty("user.home"), getTitle().replaceAll("\\s+", "") + ".png");
     }
 
     /**

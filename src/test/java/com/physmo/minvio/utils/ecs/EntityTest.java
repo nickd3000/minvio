@@ -36,7 +36,7 @@ class EntityTest {
 
         assertSame(entity, entity.addComponent(first));
         entity.addComponent(second).addComponent(derived);
-        entity.tick(null, 0.25);
+        entity.tick(0.25);
 
         assertEquals(List.of("first", "second", "derived"), calls);
         assertSame(first, entity.getComponentOfType(RecordingUpdateComponent.class));
@@ -44,6 +44,21 @@ class EntityTest {
         assertSame(derived, entity.getComponentOfType(DerivedUpdateComponent.class));
         assertSame(entity, first.entity);
         assertEquals(0.25, first.delta);
+    }
+
+    @SuppressWarnings("deprecation")
+    @Test
+    void deprecatedTickWithDrawingContextDelegatesToContextFreeUpdate() {
+        Entity entity = new Entity();
+        List<String> calls = new ArrayList<>();
+        RecordingUpdateComponent component = new RecordingUpdateComponent("legacy", calls);
+        entity.addComponent(component);
+
+        entity.tick(null, 0.5);
+
+        assertEquals(List.of("legacy"), calls);
+        assertSame(entity, component.entity);
+        assertEquals(0.5, component.delta);
     }
 
     @Test
