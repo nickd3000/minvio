@@ -13,9 +13,9 @@ import static com.physmo.minvio.BasicDisplay.TEXT_SIZE_WIDTH;
  * Drawing helpers for retained GUI controls.
  */
 public class GuiUtils {
-    static Color colBG = new Color(201, 201, 201, 255);
-    static Color colLight = new Color(255, 255, 255, 210);
-    static Color colShade = new Color(0, 0, 0, 210);
+    private static final Color COL_BG = new Color(201, 201, 201, 255);
+    private static final Color COL_LIGHT = new Color(255, 255, 255, 210);
+    private static final Color COL_SHADE = new Color(0, 0, 0, 210);
 
     /**
      * Draws an outward bevel border.

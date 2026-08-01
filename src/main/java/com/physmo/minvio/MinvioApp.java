@@ -190,7 +190,7 @@ public class MinvioApp implements DrawingContext {
 
                 tickRollingAverage.add(lDelta / (double) 1000_000);
                 lastDrawTime = currentTime;
-                BasicDisplay.repaintTimerStart = System.nanoTime();
+                BasicDisplay.resetRepaintTimer();
                 draw((delta) / 1_000_000_000.0);
 
                 if (displayFps) drawFps();

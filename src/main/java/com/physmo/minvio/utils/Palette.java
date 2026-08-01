@@ -1,20 +1,17 @@
 package com.physmo.minvio.utils;
 
 import java.awt.Color;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Shared mutable color presets and deterministic distinct-color generation.
- *
- * <p>The preset fields are not final for historical compatibility; replacing a
- * field changes the value observed by later callers.</p>
+ * Shared color presets and deterministic distinct-color generation.
  */
 public class Palette {
     /**
      * Rainbow color presets.
      */
-    public static Color RED = new Color(186, 36, 36),
+    public static final Color RED = new Color(186, 36, 36),
             ORANGE = new Color(202, 96, 21),
             YELLOW = new Color(187, 174, 16),
             GREEN = new Color(88, 196, 33),
@@ -25,13 +22,13 @@ public class Palette {
     /**
      * Natural color presets.
      */
-    public static Color BROWN = new Color(112, 57, 24),
+    public static final Color BROWN = new Color(112, 57, 24),
             MINT = new Color(30, 185, 131);
 
     /**
      * Grayscale and neutral color presets.
      */
-    public static Color BLACK = new Color(0, 0, 0),
+    public static final Color BLACK = new Color(0, 0, 0),
             WHITE = new Color(255, 255, 255),
             GRAY_900 = new Color(25, 25, 25),
             GRAY_700 = new Color(55, 59, 65),
@@ -42,7 +39,7 @@ public class Palette {
     /**
      * Warm color presets.
      */
-    public static Color CRIMSON = new Color(220, 20, 60),
+    public static final Color CRIMSON = new Color(220, 20, 60),
             BRICK = new Color(178, 34, 34),
             SALMON = new Color(250, 128, 114),
             CORAL = new Color(255, 127, 80),
@@ -51,7 +48,7 @@ public class Palette {
     /**
      * Cool color presets.
      */
-    public static Color TEAL = new Color(0, 150, 136),
+    public static final Color TEAL = new Color(0, 150, 136),
             CYAN = new Color(0, 188, 212),
             COBALT = new Color(0, 71, 171),
             NAVY = new Color(10, 28, 58),
@@ -60,7 +57,7 @@ public class Palette {
     /**
      * Pastel color presets.
      */
-    public static Color PASTEL_PINK = new Color(255, 183, 197),
+    public static final Color PASTEL_PINK = new Color(255, 183, 197),
             PASTEL_PEACH = new Color(255, 205, 178),
             PASTEL_YELLOW = new Color(255, 249, 177),
             PASTEL_GREEN = new Color(186, 255, 201),
@@ -70,7 +67,7 @@ public class Palette {
     /**
      * Neon and accent color presets.
      */
-    public static Color NEON_PINK = new Color(255, 20, 147),
+    public static final Color NEON_PINK = new Color(255, 20, 147),
             NEON_GREEN = new Color(57, 255, 20),
             NEON_BLUE = new Color(0, 255, 255),
             NEON_YELLOW = new Color(255, 255, 0),
@@ -79,7 +76,7 @@ public class Palette {
     /**
      * Earth-tone color presets.
      */
-    public static Color SAND = new Color(237, 201, 175),
+    public static final Color SAND = new Color(237, 201, 175),
             TAN = new Color(210, 180, 140),
             OLIVE = new Color(128, 128, 0),
             FOREST = new Color(34, 139, 34),
@@ -89,7 +86,7 @@ public class Palette {
     /**
      * UI-oriented semantic color presets.
      */
-    public static Color PRIMARY = new Color(51, 102, 255),
+    public static final Color PRIMARY = new Color(51, 102, 255),
             SUCCESS = new Color(40, 167, 69),
             WARNING = new Color(255, 193, 7),
             DANGER = new Color(220, 53, 69),
@@ -98,7 +95,7 @@ public class Palette {
     /**
      * Playful color presets.
      */
-    public static Color BUBBLEGUM = new Color(255, 105, 180),
+    public static final Color BUBBLEGUM = new Color(255, 105, 180),
             COTTON_CANDY = new Color(255, 182, 222),
             WATERMELON = new Color(242, 71, 84),
             SLIME = new Color(132, 255, 90),
@@ -123,10 +120,108 @@ public class Palette {
             LEMON_SORBET = new Color(255, 246, 150),
             BERRY = new Color(171, 37, 107);
 
+    /**
+     * Commodore 64-inspired 16-color palette.
+     */
+    public static final Color C64_BLACK = new Color(0, 0, 0),
+            C64_WHITE = new Color(255, 255, 255),
+            C64_RED = new Color(129, 51, 56),
+            C64_CYAN = new Color(117, 206, 200),
+            C64_PURPLE = new Color(142, 60, 151),
+            C64_GREEN = new Color(86, 172, 77),
+            C64_BLUE = new Color(46, 44, 155),
+            C64_YELLOW = new Color(237, 241, 113),
+            C64_ORANGE = new Color(142, 80, 41),
+            C64_BROWN = new Color(85, 56, 0),
+            C64_LIGHT_RED = new Color(196, 108, 113),
+            C64_DARK_GRAY = new Color(74, 74, 74),
+            C64_GRAY = new Color(123, 123, 123),
+            C64_LIGHT_GREEN = new Color(169, 255, 159),
+            C64_LIGHT_BLUE = new Color(112, 109, 235),
+            C64_LIGHT_GRAY = new Color(178, 178, 178);
+
+    /**
+     * ZX Spectrum 15-color palette, including bright variants.
+     */
+    public static final Color ZX_BLACK = new Color(0, 0, 0),
+            ZX_BLUE = new Color(0, 0, 205),
+            ZX_RED = new Color(205, 0, 0),
+            ZX_MAGENTA = new Color(205, 0, 205),
+            ZX_GREEN = new Color(0, 205, 0),
+            ZX_CYAN = new Color(0, 205, 205),
+            ZX_YELLOW = new Color(205, 205, 0),
+            ZX_WHITE = new Color(205, 205, 205),
+            ZX_BRIGHT_BLUE = new Color(0, 0, 255),
+            ZX_BRIGHT_RED = new Color(255, 0, 0),
+            ZX_BRIGHT_MAGENTA = new Color(255, 0, 255),
+            ZX_BRIGHT_GREEN = new Color(0, 255, 0),
+            ZX_BRIGHT_CYAN = new Color(0, 255, 255),
+            ZX_BRIGHT_YELLOW = new Color(255, 255, 0),
+            ZX_BRIGHT_WHITE = new Color(255, 255, 255);
+
+    /**
+     * BBC Micro 8-color logical palette.
+     */
+    public static final Color BBC_BLACK = new Color(0, 0, 0),
+            BBC_RED = new Color(255, 0, 0),
+            BBC_GREEN = new Color(0, 255, 0),
+            BBC_YELLOW = new Color(255, 255, 0),
+            BBC_BLUE = new Color(0, 0, 255),
+            BBC_MAGENTA = new Color(255, 0, 255),
+            BBC_CYAN = new Color(0, 255, 255),
+            BBC_WHITE = new Color(255, 255, 255);
+
+    /**
+     * IBM CGA 16-color RGBI palette.
+     */
+    public static final Color CGA_BLACK = new Color(0, 0, 0),
+            CGA_BLUE = new Color(0, 0, 170),
+            CGA_GREEN = new Color(0, 170, 0),
+            CGA_CYAN = new Color(0, 170, 170),
+            CGA_RED = new Color(170, 0, 0),
+            CGA_MAGENTA = new Color(170, 0, 170),
+            CGA_BROWN = new Color(170, 85, 0),
+            CGA_LIGHT_GRAY = new Color(170, 170, 170),
+            CGA_DARK_GRAY = new Color(85, 85, 85),
+            CGA_BRIGHT_BLUE = new Color(85, 85, 255),
+            CGA_BRIGHT_GREEN = new Color(85, 255, 85),
+            CGA_BRIGHT_CYAN = new Color(85, 255, 255),
+            CGA_BRIGHT_RED = new Color(255, 85, 85),
+            CGA_BRIGHT_MAGENTA = new Color(255, 85, 255),
+            CGA_YELLOW = new Color(255, 255, 85),
+            CGA_WHITE = new Color(255, 255, 255);
+
+    /**
+     * Nintendo Game Boy DMG 4-shade green palette.
+     */
+    public static final Color GB_DARK_GREEN = new Color(15, 56, 15),
+            GB_MEDIUM_DARK_GREEN = new Color(48, 98, 48),
+            GB_MEDIUM_LIGHT_GREEN = new Color(139, 172, 15),
+            GB_LIGHT_GREEN = new Color(155, 188, 15);
+
+    /**
+     * MSX/TMS9918-style 15-color palette.
+     */
+    public static final Color MSX_BLACK = new Color(0, 0, 0),
+            MSX_MEDIUM_GREEN = new Color(33, 200, 66),
+            MSX_LIGHT_GREEN = new Color(94, 220, 120),
+            MSX_DARK_BLUE = new Color(84, 85, 237),
+            MSX_LIGHT_BLUE = new Color(125, 118, 252),
+            MSX_DARK_RED = new Color(212, 82, 77),
+            MSX_CYAN = new Color(66, 235, 245),
+            MSX_MEDIUM_RED = new Color(252, 85, 84),
+            MSX_LIGHT_RED = new Color(255, 121, 120),
+            MSX_DARK_YELLOW = new Color(212, 193, 84),
+            MSX_LIGHT_YELLOW = new Color(230, 206, 128),
+            MSX_DARK_GREEN = new Color(33, 176, 59),
+            MSX_MAGENTA = new Color(201, 91, 186),
+            MSX_GRAY = new Color(204, 204, 204),
+            MSX_WHITE = new Color(255, 255, 255);
+
     private record DistinctColorKey(int index, int saturationBits) {
     }
 
-    static Map<DistinctColorKey, Color> distinctColorCache = new HashMap<>();
+    private static final Map<DistinctColorKey, Color> DISTINCT_COLOR_CACHE = new ConcurrentHashMap<>();
 
     /**
      * Returns a new distinct colour for each supplied index
@@ -141,7 +236,7 @@ public class Palette {
         float magicNumber = 0.6180339887f;
         float clampedSaturation = (float) Math.max(0.0, Math.min(1.0, saturation));
         DistinctColorKey key = new DistinctColorKey(index, Float.floatToIntBits(clampedSaturation));
-        return distinctColorCache.computeIfAbsent(key,
+        return DISTINCT_COLOR_CACHE.computeIfAbsent(key,
                 k -> new Color(Color.HSBtoRGB(((float) index) * magicNumber, clampedSaturation, 1.0f)));
 
     }

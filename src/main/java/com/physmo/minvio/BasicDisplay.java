@@ -35,14 +35,7 @@ public abstract class BasicDisplay {
     /** Index of the font-descent entry returned by {@link DrawingContext#getTextSize(String)}. */
     public static final int TEXT_SIZE_DESCENT = 2;
     /* TIMING ---------------------------------------------------------------*/
-    /**
-     * Start time used by {@link #getElapsedTime()} and {@link #repaint(int)}.
-     *
-     * <p>This mutable field is shared by all display instances for historical
-     * compatibility. Applications should normally leave it under display
-     * control.</p>
-     */
-    public static long repaintTimerStart = 0;
+    private static volatile long repaintTimerStart = 0;
     static final int FRAME_SLEEP_CHUNK_MS = 5;
     List<MouseConnector> mouseConnectors;
 
@@ -179,13 +172,17 @@ public abstract class BasicDisplay {
 
         repaint();
 
-        repaintTimerStart = System.nanoTime();
+        resetRepaintTimer();
     }
 
     static void sleepForFrameRemainder(double remainingTimeMs) throws InterruptedException {
         if (remainingTimeMs <= 0) return;
         long sleepMs = Math.min(FRAME_SLEEP_CHUNK_MS, Math.max(1L, (long) remainingTimeMs));
         Thread.sleep(sleepMs);
+    }
+
+    static void resetRepaintTimer() {
+        repaintTimerStart = System.nanoTime();
     }
 
     /**
