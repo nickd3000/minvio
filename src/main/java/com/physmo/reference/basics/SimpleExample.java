@@ -22,7 +22,7 @@ class SimpleExample extends MinvioApp {
 
         // Draw some text that moves across the screen
         int x = (int) (System.currentTimeMillis() / 20) % 200;
-        drawText("Hello, MinVio World!", x, 100);
+        drawText("Hello, MinVio World!", x + 200, 100);
 
         // Draw some simple shapes
         drawFilledRect(50, 150, 40, 40);

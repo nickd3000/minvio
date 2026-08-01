@@ -1,13 +1,12 @@
 package com.physmo.minvio.utils.ecs;
 
-import com.physmo.minvio.DrawingContext;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 class EntitySystemTest {
@@ -41,51 +40,76 @@ class EntitySystemTest {
     }
 
     @Test
-    void filtersByExactComponentTypeAndHandlesNull() {
+    void filtersByAssignableComponentTypeAndRejectsNull() {
         EntitySystem system = new EntitySystem();
         Entity first = new Entity().addComponent(new MarkerComponent());
         Entity second = new Entity().addComponent(new OtherComponent());
-        Entity third = new Entity().addComponent(new MarkerComponent());
+        Entity third = new Entity().addComponent(new DerivedMarkerComponent());
         system.addEntity(first);
         system.addEntity(second);
         system.addEntity(third);
 
         assertEquals(List.of(first, third), system.getEntitiesWithComponent(MarkerComponent.class));
         assertEquals(List.of(second), system.getEntitiesWithComponent(OtherComponent.class));
-        assertEquals(List.of(), system.getEntitiesWithComponent(Component.class));
-        assertNull(system.getEntitiesWithComponent(null));
+        assertEquals(List.of(first, second, third), system.getEntitiesWithComponent(UpdateComponent.class));
+        assertThrows(NullPointerException.class, () -> system.getEntitiesWithComponent(null));
+    }
+
+    @Test
+    void rejectsNullEntities() {
+        EntitySystem system = new EntitySystem();
+
+        assertThrows(NullPointerException.class, () -> system.addEntity(null));
     }
 
     private static Entity entityWithComponents(String name, List<String> calls) {
         return new Entity()
-                .addComponent(new NamedComponent("tick-" + name, calls))
-                .addDrawComponent(new NamedComponent("draw-" + name, calls));
+                .addComponent(new NamedUpdateComponent("tick-" + name, calls))
+                .addDrawComponent(new NamedDrawComponent("draw-" + name, calls));
     }
 
-    private static class NamedComponent extends Component {
+    private static class NamedUpdateComponent implements UpdateComponent {
         private final String name;
         private final List<String> calls;
 
-        private NamedComponent(String name, List<String> calls) {
+        private NamedUpdateComponent(String name, List<String> calls) {
             this.name = name;
             this.calls = calls;
         }
 
         @Override
-        public void tick(DrawingContext dc, Entity e, double t) {
+        public void update(Entity e, double t) {
             calls.add(name + "-" + t);
         }
     }
 
-    private static final class MarkerComponent extends Component {
+    private static final class NamedDrawComponent implements DrawComponent {
+        private final String name;
+        private final List<String> calls;
+
+        private NamedDrawComponent(String name, List<String> calls) {
+            this.name = name;
+            this.calls = calls;
+        }
+
         @Override
-        public void tick(DrawingContext dc, Entity e, double t) {
+        public void draw(com.physmo.minvio.DrawingContext dc, Entity entity, double delta) {
+            calls.add(name + "-" + delta);
         }
     }
 
-    private static final class OtherComponent extends Component {
+    private static class MarkerComponent implements UpdateComponent {
         @Override
-        public void tick(DrawingContext dc, Entity e, double t) {
+        public void update(Entity entity, double delta) {
+        }
+    }
+
+    private static final class DerivedMarkerComponent extends MarkerComponent {
+    }
+
+    private static final class OtherComponent implements UpdateComponent {
+        @Override
+        public void update(Entity entity, double delta) {
         }
     }
 }

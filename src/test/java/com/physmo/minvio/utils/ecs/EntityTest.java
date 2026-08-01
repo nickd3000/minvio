@@ -1,6 +1,5 @@
 package com.physmo.minvio.utils.ecs;
 
-import com.physmo.minvio.DrawingContext;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -8,6 +7,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -23,24 +23,25 @@ class EntityTest {
         assertEquals(0.0, entity.velocity.x);
         assertTrue(entity.getProperty("missing").isEmpty());
         assertNull(entity.getComponentOfType(null));
-        assertNull(entity.getComponentOfType(RecordingComponent.class));
+        assertNull(entity.getComponentOfType(RecordingUpdateComponent.class));
     }
 
     @Test
-    void componentsAreFluentTickedInInsertionOrderAndLookedUpExactly() {
+    void componentsAreFluentTickedInInsertionOrderAndLookedUpByAssignableType() {
         Entity entity = new Entity();
         List<String> calls = new ArrayList<>();
-        RecordingComponent first = new RecordingComponent("first", calls);
-        RecordingComponent second = new RecordingComponent("second", calls);
-        DerivedComponent derived = new DerivedComponent("derived", calls);
+        RecordingUpdateComponent first = new RecordingUpdateComponent("first", calls);
+        RecordingUpdateComponent second = new RecordingUpdateComponent("second", calls);
+        DerivedUpdateComponent derived = new DerivedUpdateComponent("derived", calls);
 
         assertSame(entity, entity.addComponent(first));
         entity.addComponent(second).addComponent(derived);
         entity.tick(null, 0.25);
 
         assertEquals(List.of("first", "second", "derived"), calls);
-        assertSame(first, entity.getComponentOfType(RecordingComponent.class));
-        assertSame(derived, entity.getComponentOfType(DerivedComponent.class));
+        assertSame(first, entity.getComponentOfType(RecordingUpdateComponent.class));
+        assertSame(first, entity.getComponentOfType(UpdateComponent.class));
+        assertSame(derived, entity.getComponentOfType(DerivedUpdateComponent.class));
         assertSame(entity, first.entity);
         assertEquals(0.25, first.delta);
     }
@@ -48,7 +49,7 @@ class EntityTest {
     @Test
     void drawComponentIsOptionalAndReceivesEntityAndDelta() {
         Entity entity = new Entity();
-        RecordingComponent draw = new RecordingComponent("draw", new ArrayList<>());
+        RecordingDrawComponent draw = new RecordingDrawComponent("draw", new ArrayList<>());
 
         entity.draw(null, 1.0);
         assertSame(entity, entity.addDrawComponent(draw));
@@ -57,6 +58,29 @@ class EntityTest {
         assertEquals(List.of("draw"), draw.calls);
         assertSame(entity, draw.entity);
         assertEquals(0.75, draw.delta);
+        assertSame(draw, entity.getDrawComponentOfType(RecordingDrawComponent.class));
+        assertSame(draw, entity.getDrawComponentOfType(DrawComponent.class));
+    }
+
+    @Test
+    void drawComponentCanBeClearedExplicitly() {
+        Entity entity = new Entity();
+        RecordingDrawComponent draw = new RecordingDrawComponent("draw", new ArrayList<>());
+
+        assertSame(entity, entity.addDrawComponent(draw));
+        assertSame(entity, entity.clearDrawComponent());
+
+        entity.draw(null, 1.0);
+        assertTrue(draw.calls.isEmpty());
+        assertNull(entity.getDrawComponentOfType(DrawComponent.class));
+    }
+
+    @Test
+    void rejectsNullComponents() {
+        Entity entity = new Entity();
+
+        assertThrows(NullPointerException.class, () -> entity.addComponent(null));
+        assertThrows(NullPointerException.class, () -> entity.addDrawComponent(null));
     }
 
     @Test
@@ -73,28 +97,47 @@ class EntityTest {
         assertTrue(entity.getProperty("score").isEmpty());
     }
 
-    private static class RecordingComponent extends Component {
+    private static class RecordingUpdateComponent implements UpdateComponent {
         private final String name;
         private final List<String> calls;
         private Entity entity;
         private double delta;
 
-        private RecordingComponent(String name, List<String> calls) {
+        private RecordingUpdateComponent(String name, List<String> calls) {
             this.name = name;
             this.calls = calls;
         }
 
         @Override
-        public void tick(DrawingContext dc, Entity e, double t) {
+        public void update(Entity e, double t) {
             calls.add(name);
             entity = e;
             delta = t;
         }
     }
 
-    private static final class DerivedComponent extends RecordingComponent {
-        private DerivedComponent(String name, List<String> calls) {
+    private static final class DerivedUpdateComponent extends RecordingUpdateComponent {
+        private DerivedUpdateComponent(String name, List<String> calls) {
             super(name, calls);
+        }
+    }
+
+    private static final class RecordingDrawComponent implements DrawComponent {
+        private final String name;
+        private final List<String> calls;
+        private Entity entity;
+        private double delta;
+
+        private RecordingDrawComponent(String name, List<String> calls) {
+            this.name = name;
+            this.calls = calls;
+        }
+
+        @Override
+        public void draw(com.physmo.minvio.DrawingContext dc, Entity entity, double delta) {
+            calls.add(name);
+            this.entity = entity;
+            this.delta = delta;
         }
     }
 }

@@ -1,21 +1,21 @@
 package com.physmo.reference.ecs;
 
 import com.physmo.minvio.DrawingContext;
-import com.physmo.minvio.utils.ecs.Component;
+import com.physmo.minvio.utils.ecs.DrawComponent;
 import com.physmo.minvio.utils.ecs.Entity;
 
 import java.awt.Color;
 
 // This component draws a simple colored circle for the entity.
-public class DrawComponent extends Component {
+public class CircleDrawComponent implements DrawComponent {
     Color color;
 
-    public DrawComponent(Color c) {
+    public CircleDrawComponent(Color c) {
         color = c;
     }
 
     @Override
-    public void tick(DrawingContext dc, Entity e, double d) {
+    public void draw(DrawingContext dc, Entity e, double d) {
         // Set the color and draw a circle at the entity's position.
         dc.setDrawColor(color);
         dc.drawFilledCircle(e.position.x, e.position.y, 20);

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -25,32 +26,41 @@ public class Entity {
     /** Mutable velocity initialized to zero. */
     public Vec3 velocity = new Vec3(0, 0, 0);
 
-    final List<Component> components = new ArrayList<>();
-    Component drawComponent;
+    final List<UpdateComponent> components = new ArrayList<>();
+    DrawComponent drawComponent;
     final Map<String, Object> properties = new HashMap<>();
 
     /**
      * Appends an update component.
      *
-     * <p>Duplicate instances and duplicate component classes are permitted.
-     * A null component is accepted but will fail when ticked or inspected.</p>
+     * <p>Duplicate instances and duplicate component classes are permitted.</p>
      *
      * @param c component to append
      * @return this entity for fluent construction
      */
-    public Entity addComponent(Component c) {
-        components.add(c);
+    public Entity addComponent(UpdateComponent c) {
+        components.add(Objects.requireNonNull(c, "component"));
         return this;
     }
 
     /**
      * Replaces the component invoked by {@link #draw(DrawingContext, double)}.
      *
-     * @param c replacement draw component, or {@code null} to disable drawing
+     * @param c replacement draw component
      * @return this entity for fluent construction
      */
-    public Entity addDrawComponent(Component c) {
-        drawComponent = c;
+    public Entity addDrawComponent(DrawComponent c) {
+        drawComponent = Objects.requireNonNull(c, "draw component");
+        return this;
+    }
+
+    /**
+     * Removes this entity's draw component.
+     *
+     * @return this entity for fluent construction
+     */
+    public Entity clearDrawComponent() {
+        drawComponent = null;
         return this;
     }
 
@@ -64,7 +74,7 @@ public class Entity {
      * @param t caller-defined time or delta value
      */
     public void tick(DrawingContext dc, double t) {
-        components.forEach(c -> c.tick(dc, this, t));
+        components.forEach(c -> c.update(this, t));
     }
 
     /**
@@ -75,7 +85,7 @@ public class Entity {
      */
     public void draw(DrawingContext dc, double t) {
         if (drawComponent != null) {
-            drawComponent.tick(dc, this, t);
+            drawComponent.draw(dc, this, t);
         }
     }
 
@@ -104,23 +114,33 @@ public class Entity {
     }
 
     /**
-     * Returns the first update component whose runtime class exactly equals the
-     * requested class.
+     * Returns the first update component assignable to the requested type.
      *
-     * <p>Superclass and interface matches are not considered, and the dedicated
-     * draw component is not searched.</p>
+     * <p>The dedicated draw component is not searched.</p>
      *
-     * @param clazz exact component implementation class, or {@code null}
-     * @return first exact match, or {@code null} when none exists or
+     * @param clazz component implementation class or interface, or {@code null}
+     * @return first assignable match, or {@code null} when none exists or
      * {@code clazz} is null
      */
-    public Component getComponentOfType(Class<?> clazz) {
+    public UpdateComponent getComponentOfType(Class<?> clazz) {
         if (clazz == null) return null;
-        for (Component component : components) {
-            if (component.getClass() == clazz) {
+        for (UpdateComponent component : components) {
+            if (clazz.isInstance(component)) {
                 return component;
             }
         }
         return null;
+    }
+
+    /**
+     * Returns the draw component when it is assignable to the requested type.
+     *
+     * @param clazz draw component implementation class or interface, or
+     *              {@code null}
+     * @return matching draw component, or {@code null}
+     */
+    public DrawComponent getDrawComponentOfType(Class<?> clazz) {
+        if (clazz == null || drawComponent == null) return null;
+        return clazz.isInstance(drawComponent) ? drawComponent : null;
     }
 }

@@ -3,23 +3,30 @@ package com.physmo.minvio.utils.ecs;
 import com.physmo.minvio.DrawingContext;
 
 /**
- * Unit of behavior attached to an {@link Entity}.
+ * Legacy update component abstraction.
  *
- * <p>This optional ECS helper does not manage component lifecycles or enforce
- * unique component types.</p>
+ * <p>Prefer implementing {@link UpdateComponent} for new logic components or
+ * {@link DrawComponent} for rendering components. This compatibility class
+ * adapts the older {@link #tick(DrawingContext, Entity, double)} method to the
+ * update path and supplies {@code null} for the drawing context.</p>
  */
-public abstract class Component {
+@Deprecated
+public abstract class Component implements UpdateComponent {
     /**
-     * Performs this component's update or draw behavior.
+     * Performs this component's update behavior using the legacy method shape.
      *
-     * <p>The time value is forwarded unchanged by {@link EntitySystem}. Minvio
-     * examples conventionally supply elapsed seconds, but callers may define a
-     * different meaning.</p>
+     * <p>The time value is forwarded unchanged by {@link EntitySystem}. The
+     * drawing context is {@code null} when invoked through the update path.</p>
      *
      * @param dc drawing context supplied by the caller; may be {@code null} if
-     *           the component does not draw
+     *           invoked through the update path
      * @param e  entity that owns or invokes this component
      * @param t  caller-supplied time or delta value
      */
     public abstract void tick(DrawingContext dc, Entity e, double t);
+
+    @Override
+    public void update(Entity entity, double delta) {
+        tick(null, entity, delta);
+    }
 }

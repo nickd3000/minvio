@@ -9,7 +9,6 @@ import com.physmo.minvio.utils.ecs.EntitySystem;
 import java.awt.Color;
 
 // Entity-Component system example.
-// NOTE: Moving mouse left and right changes tick speed.
 
 // Entity-Component System (ECS) is a way to organize code by separating data (Entities)
 // from behavior (Components). This example shows how to build objects by adding
@@ -40,7 +39,7 @@ public class EcsExample extends MinvioApp {
 
             // Every entity gets the ability to move and bounce off walls.
             newEntity.addComponent(new MoveComponent());
-            newEntity.addComponent(new BounceComponent());
+            newEntity.addComponent(new BounceComponent(400, 400, 20));
 
             // We can also set custom properties on entities that components can look for.
             if (i % 3 == 0) {
@@ -51,10 +50,10 @@ public class EcsExample extends MinvioApp {
             // - Even numbered entities get a specific color and gravity.
             // - Odd numbered entities get a flashy changing color.
             if (i % 2 == 0) {
-                newEntity.addDrawComponent(new DrawComponent(Palette.getDistinctColor(i, 1)));
+                newEntity.addDrawComponent(new CircleDrawComponent(Palette.getDistinctColor(i, 1)));
                 newEntity.addComponent(new GravityComponent());
             } else {
-                newEntity.addDrawComponent(new FlashyDrawComponent());
+                newEntity.addDrawComponent(new FlashySquareDrawComponent());
             }
 
             // Add the finished entity to our system.
@@ -66,8 +65,7 @@ public class EcsExample extends MinvioApp {
     @Override
     public void update(BasicDisplay bd, double delta) {
         // 'tickAll' updates the logic for every component in every entity.
-        // We multiply delta by the mouse position to allow controlling the speed.
-        entitySystem.tickAll(bd.getDrawingContext(), delta * bd.getMousePointNormalised().x);
+        entitySystem.tickAll(bd.getDrawingContext(), delta);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.physmo.minvio.DrawingContext;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Ordered collection of {@link Entity} instances with bulk update and draw
@@ -53,28 +54,26 @@ public class EntitySystem {
     /**
      * Appends an entity.
      *
-     * <p>Duplicate and null entries are accepted; a null entry will fail during
-     * a later bulk update, draw, or component query.</p>
+     * <p>Duplicate entries are accepted.</p>
      *
      * @param entity entity to append
      */
     public void addEntity(Entity entity) {
-        this.entities.add(entity);
+        this.entities.add(Objects.requireNonNull(entity, "entity"));
     }
 
     /**
      * Return a list of entities that contain a specific component type.
      *
      * <p>Matching uses {@link Entity#getComponentOfType(Class)} and therefore
-     * requires exact runtime-class equality. The returned list is a new mutable
-     * list and changes to it do not affect this system.</p>
+     * supports assignable/interface-aware matching. The returned list is a new
+     * mutable list and changes to it do not affect this system.</p>
      *
-     * @param clazz exact component implementation class
-     * @return entities containing an exact match, or {@code null} when
-     * {@code clazz} is null
+     * @param clazz component implementation class or interface
+     * @return entities containing an assignable match
      */
     public List<Entity> getEntitiesWithComponent(Class<?> clazz) {
-        if (clazz == null) return null;
+        Objects.requireNonNull(clazz, "component class");
 
         List<Entity> matched = new ArrayList<>();
         for (Entity entity : entities) {
