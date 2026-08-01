@@ -14,7 +14,7 @@ class ResizeExample extends MinvioApp {
 
     public static void main(String... args) {
         MinvioApp app = new ResizeExample();
-        app.start(400, 400, "ResizeExample", 60);
+        app.start(400, 400, "Resize Example", 60);
     }
 
 

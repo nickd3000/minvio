@@ -56,7 +56,7 @@ public class GravityParticles extends MinvioApp {
 
     public static void main(String... args) {
         MinvioApp app = new GravityParticles();
-        app.start(800, 800, "GravityParticles", 30);
+        app.start(800, 800, "Gravity Particles", 30);
     }
 
     @Override

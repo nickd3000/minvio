@@ -6,14 +6,6 @@ import com.physmo.minvio.utils.Gradient;
 
 import java.awt.Color;
 
-/**
- * The GradientExample class demonstrates an application that creates and displays
- * a vertical gradient using the MinvioApp framework.
- * <p>
- * The application initializes a gradient with specified colors at different points
- * and renders this gradient vertically on the screen.
- * Additionally, it draws a circle in the middle of the screen to represent the sun.
- */
 public class GradientExample extends MinvioApp {
 
     Gradient gradient = new Gradient();
@@ -41,7 +33,6 @@ public class GradientExample extends MinvioApp {
             setDrawColor(color);
             drawFilledRect(0, y, getWidth(), 1);
 
-            // Draw the sun for fun.
             if (y == getHeight() / 2) {
                 drawFilledCircle(getHeight() / 2, getHeight() / 2, 50);
             }

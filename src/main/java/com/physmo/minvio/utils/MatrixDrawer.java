@@ -25,6 +25,9 @@ public class MatrixDrawer {
      * @param height matrix height in cells
      */
     public MatrixDrawer(int width, int height) {
+        if (width <= 0 || height <= 0) {
+            throw new IllegalArgumentException("Matrix dimensions must be positive");
+        }
         this.width = width;
         this.height = height;
         preCalc();
@@ -33,9 +36,7 @@ public class MatrixDrawer {
     /**
      * Recalculates angle and normalized center-distance arrays.
      *
-     * <p>Zero widths can produce non-finite distance values, and the exact
-     * center cell can produce a non-finite angle because the zero-distance
-     * vector is normalized.</p>
+     * <p>The exact center cell uses angle and distance zero.</p>
      */
     public void preCalc() {
         int w = width;
@@ -55,10 +56,14 @@ public class MatrixDrawer {
                 double d = Math.sqrt((dx * dx) + (dy * dy));
                 distances[index] = d / distanceScale;
 
-                dx /= d;
-                dy /= d;
-
-                double angle1 = Math.atan2(dx, dy);
+                double angle1;
+                if (d == 0.0) {
+                    angle1 = 0.0;
+                } else {
+                    dx /= d;
+                    dy /= d;
+                    angle1 = Math.atan2(dx, dy);
+                }
                 if (angle1 < 0) angle1 += (Math.PI * 2);
                 angles[index] = angle1;
 

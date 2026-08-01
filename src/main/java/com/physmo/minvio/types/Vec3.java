@@ -1,5 +1,6 @@
 package com.physmo.minvio.types;
 
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -58,7 +59,7 @@ public class Vec3 {
 
     @Override
     public String toString() {
-        return String.format("Vec3{x=%.2f, y=%.2f, z=%.2f}", x, y, z);
+        return String.format(Locale.ROOT, "Vec3{x=%.2f, y=%.2f, z=%.2f}", x, y, z);
     }
 
     /**

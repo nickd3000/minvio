@@ -2,7 +2,11 @@ package com.physmo.minvio.utils;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -51,5 +55,38 @@ class NoiseTest {
         assertEquals(0.0, VoronoiNoise.rescale(-1));
         assertEquals(0.5, VoronoiNoise.rescale(0.5));
         assertEquals(1.0, VoronoiNoise.rescale(2));
+    }
+
+    @Test
+    void negativeVoronoiCoordinatesUseFloorCellLookup() {
+        double x = -0.25;
+        double y = -1.5;
+        double z = -2.75;
+        double[] floorExpected = expectedVoronoiDistances(x, y, z, true);
+        double[] truncationExpected = expectedVoronoiDistances(x, y, z, false);
+
+        assertArrayEquals(floorExpected, VoronoiNoise.getDistances(x, y, z), 1e-12);
+        assertFalse(Arrays.equals(floorExpected, truncationExpected));
+    }
+
+    private static double[] expectedVoronoiDistances(double x, double y, double z, boolean useFloor) {
+        int cellX = useFloor ? (int) Math.floor(x) : (int) x;
+        int cellY = useFloor ? (int) Math.floor(y) : (int) y;
+        int cellZ = useFloor ? (int) Math.floor(z) : (int) z;
+        double[] distances = new double[27];
+        int index = 0;
+        for (int zo = -1; zo < 2; zo++) {
+            for (int yo = -1; yo < 2; yo++) {
+                for (int xo = -1; xo < 2; xo++) {
+                    QuickRandom random = new QuickRandom(
+                            (cellX + xo) * 3333L + (cellZ + zo) * 4844L + (long) (cellY + yo) * 5525);
+                    double dx = (random.nextDouble() + cellX + xo) - x;
+                    double dy = (random.nextDouble() + cellY + yo) - y;
+                    double dz = (random.nextDouble() + cellZ + zo) - z;
+                    distances[index++] = VoronoiNoise.rescale(Math.sqrt(dx * dx + dy * dy + dz * dz));
+                }
+            }
+        }
+        return distances;
     }
 }

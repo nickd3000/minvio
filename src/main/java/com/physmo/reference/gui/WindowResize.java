@@ -17,7 +17,7 @@ public class WindowResize extends MinvioApp {
     public static void main(String... args) {
         MinvioApp app = new WindowResize();
 
-        app.start(300, 300, "WindowResize Example", 60);
+        app.start(300, 300, "Window Resize Example", 60);
     }
 
 

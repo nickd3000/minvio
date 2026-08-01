@@ -14,7 +14,7 @@ public class Ribbons extends MinvioApp {
     Point position = new Point(200, 100);
     Point tangent = new Point(Math.sin(1), Math.cos(1));
     double moveAngle = 0;
-    Gradient grad1 = new Gradient();
+    Gradient grad1;
     double runLength = 0;
     double spinAngle = 0;
     double trend = 0.01;
@@ -23,7 +23,7 @@ public class Ribbons extends MinvioApp {
 
     public static void main(String... args) {
         MinvioApp app = new Ribbons();
-        app.start(400, 400, "Ropes", 30);
+        app.start(400, 400, "Ribbons", 30);
     }
 
     @Override
@@ -31,8 +31,6 @@ public class Ribbons extends MinvioApp {
         DrawingContext dc = bd.getDrawingContext();
         dc.cls(Color.darkGray);
         dc.setDrawColor(Color.BLUE);
-        grad1.addColor(0, new Color(86, 84, 36));
-        grad1.addColor(1, new Color(231, 208, 87));
         setupNewRibbon(dc);
     }
 
@@ -43,6 +41,7 @@ public class Ribbons extends MinvioApp {
         float r = (float) (0.5f + (Math.random() * 0.5f));
         float g = (float) (0.5f + (Math.random() * 0.5f));
         float b = (float) (0.5f + (Math.random() * 0.5f));
+        grad1 = new Gradient();
         grad1.addColor(0, new Color(r, g, b));
         grad1.addColor(1, new Color(r / 2, g / 3, b / 3));
         grad1.addColor(0.3, Utils.lerp(new Color(r, g, b), Color.WHITE, 0.7));

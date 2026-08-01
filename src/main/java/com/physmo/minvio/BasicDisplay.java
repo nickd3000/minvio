@@ -1,9 +1,9 @@
 package com.physmo.minvio;
 
 import com.physmo.minvio.types.Point;
+import com.physmo.minvio.utils.MinvioLogger;
 import com.physmo.minvio.utils.gui.support.MouseConnector;
 
-import com.physmo.minvio.utils.MinvioLogger;
 import javax.imageio.ImageIO;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.IntBinaryOperator;
 
 /**
@@ -71,11 +72,15 @@ public abstract class BasicDisplay {
      * @throws IOException on file error
      */
     public static BufferedImage loadImage(String name) throws IOException {
+        Objects.requireNonNull(name, "Image resource name cannot be null");
         URL file = BasicDisplay.class.getResource(name);
-        BufferedImage image;
-
-        image = ImageIO.read(file);
-
+        if (file == null) {
+            throw new IOException("Image resource not found: " + name);
+        }
+        BufferedImage image = ImageIO.read(file);
+        if (image == null) {
+            throw new IOException("Unsupported image resource: " + name);
+        }
         return image;
     }
 
@@ -319,8 +324,7 @@ public abstract class BasicDisplay {
             File outputFile = new File(fullPath);
             ImageIO.write(bi, "png", outputFile);
         } catch (IOException e) {
-            MinvioLogger.error("Error writing to file: " + fullPath);
-            e.printStackTrace();
+            MinvioLogger.error("Error writing to file: " + fullPath + " - " + e.getMessage());
         }
     }
 

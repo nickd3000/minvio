@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.physmo.minvio.utils.gui.support.GuiMessage.MOUSE_BUTTON_DOWN;
 import static com.physmo.minvio.utils.gui.support.GuiMessage.MOUSE_BUTTON_UP;
@@ -56,7 +57,7 @@ public class GuiButton extends GuiContainer {
      * @param action the {@link Runnable} to be executed when the button is triggered.
      */
     public void addActionListener(Runnable action) {
-        this.actionListeners.add(action);
+        this.actionListeners.add(Objects.requireNonNull(action, "action"));
     }
 
     @Override

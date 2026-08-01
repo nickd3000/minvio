@@ -5,14 +5,6 @@ import com.physmo.minvio.utils.Palette;
 
 import java.awt.Color;
 
-/**
- * The DistinctColorExample class demonstrates an example of using distinct colors
- * within a grid of filled circles that dynamically update based on mouse position.
- * The number of rows/columns in the grid and the color saturation are determined
- * by the x and y coordinates of the mouse cursor, respectively.
- * <p>
- * This class extends the MinvioApp framework to create a graphical application.
- */
 class DistinctColorExample extends MinvioApp {
 
     public static void main(String... args) {

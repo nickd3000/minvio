@@ -12,8 +12,7 @@ public class RollingAverageExample extends MinvioApp {
 
     public static void main(String... args) {
         MinvioApp app = new RollingAverageExample();
-        // Start the app running with a window size of 200x200 pixels, at 60 frames per second.
-        app.start(200, 200, "RollingAverageExample", 60);
+        app.start(200, 200, "Rolling Average Example", 60);
     }
 
     @Override

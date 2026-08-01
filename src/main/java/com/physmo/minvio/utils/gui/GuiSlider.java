@@ -7,6 +7,7 @@ import com.physmo.minvio.utils.gui.support.MouseMessageData;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.DoubleConsumer;
 
 import static com.physmo.minvio.utils.gui.support.GuiMessage.MOUSE_BUTTON_DOWN;
@@ -24,9 +25,9 @@ public class GuiSlider extends GuiContainer {
     /**
      * Horizontal orientation value; the only fully implemented orientation.
      */
-    public static int SLIDER_HORIZONTAL = 1;
+    public static final int SLIDER_HORIZONTAL = 1;
     /** Vertical orientation value reserved for future support and not implemented. */
-    public static int SLIDER_VERTICAL = 2; // TODO
+    public static final int SLIDER_VERTICAL = 2;
 
 
     boolean grabbed = false;
@@ -60,6 +61,9 @@ public class GuiSlider extends GuiContainer {
      * @param val handle size; not validated
      */
     public void setHandleSize(int val) {
+        if (val <= 0) {
+            throw new IllegalArgumentException("Handle size must be greater than zero");
+        }
         handleSize = val;
         recalculateMetrics();
     }
@@ -121,7 +125,7 @@ public class GuiSlider extends GuiContainer {
      * @param onChanged listener receiving the new normalized value
      */
     public void addChangeListener(DoubleConsumer onChanged) {
-        this.changeListeners.add(onChanged);
+        this.changeListeners.add(Objects.requireNonNull(onChanged, "onChanged"));
     }
 
     /**

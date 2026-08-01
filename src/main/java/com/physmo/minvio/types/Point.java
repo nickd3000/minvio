@@ -1,5 +1,6 @@
 package com.physmo.minvio.types;
 
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -117,6 +118,6 @@ public class Point {
 
     @Override
     public String toString() {
-        return String.format("Point{x=%.2f, y=%.2f}", x, y);
+        return String.format(Locale.ROOT, "Point{x=%.2f, y=%.2f}", x, y);
     }
 }

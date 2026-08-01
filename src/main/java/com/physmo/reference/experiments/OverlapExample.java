@@ -6,7 +6,7 @@ import java.awt.Color;
 
 // NOTE: This class was created to visually test rectangle collision
 // overlap reporting for the garnet toolkit - October 18, 2023.
-class OverlapTest extends MinvioApp {
+class OverlapExample extends MinvioApp {
 
     RectD rect1 = new RectD(100, 100, 40, 40);
     RectD rect2 = new RectD(100, 100, 50, 50);
@@ -14,8 +14,8 @@ class OverlapTest extends MinvioApp {
     double gdy = 0;
 
     public static void main(String... args) {
-        MinvioApp app = new OverlapTest();
-        app.start(400, 400, "Overlap Test", 30);
+        MinvioApp app = new OverlapExample();
+        app.start(400, 400, "Overlap Example", 30);
     }
 
     @Override

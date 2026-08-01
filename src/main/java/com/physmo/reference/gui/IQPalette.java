@@ -1,19 +1,10 @@
 package com.physmo.reference.gui;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 /**
- * The IQPalette class represents a mathematical model to generate RGB color values
- * based on input parameters. It is specifically designed for interpolating or
- * transitioning color components using a series of control variables.
- * <p>
- * Features:
- * - Supports up to three separate color components (red, green, and blue).
- * - Utilizes a set of control parameters to determine the generated colors.
- * - Allows dynamic updating of control parameters.
- * <p>
- * The generation of color components is based on a mathematical cosine function
- * applied with parameters that control amplitude, frequency, and phase shifts.
- * <p>
- * Based on the method described by Inigo Quilez https://www.shadertoy.com/user/iq
+ * Cosine palette helper based on the method described by Inigo Quilez.
  */
 public class IQPalette {
     private static final int CONTROL_LENGTH = 20;
@@ -22,10 +13,12 @@ public class IQPalette {
     double[] controls = new double[CONTROL_LENGTH];
 
     public void setControls(double[] newValues) {
+        Objects.requireNonNull(newValues, "newValues");
         if (newValues.length > CONTROL_LENGTH) {
             throw new IllegalArgumentException("New values exceed control length.");
         }
         System.arraycopy(newValues, 0, controls, 0, newValues.length);
+        Arrays.fill(controls, newValues.length, controls.length, 0.0);
     }
 
     public int getRgb(double x) {
@@ -34,7 +27,6 @@ public class IQPalette {
             int index = component * 4;
             double value = getColorComponent(x, controls[index], controls[index + 1], controls[index + 2], controls[index + 3]);
 
-            // Clamping the value to [0, 255]
             int c = (int) (value * COLOR_MAX);
             c = Math.max(0, Math.min(c, COLOR_MAX));
 

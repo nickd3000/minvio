@@ -15,7 +15,7 @@ public class PanelWithButtons extends MinvioApp {
     public static void main(String... args) {
         MinvioApp app = new PanelWithButtons();
 
-        app.start(300, 200, "PanelWithButtons", 60);
+        app.start(300, 200, "Panel With Buttons", 60);
     }
 
     @Override

@@ -102,6 +102,17 @@ class DrawingContextAwtTest {
     }
 
     @Test
+    void sampledColorPreservesAlpha() {
+        DrawingContextAwt context = context();
+        Color translucent = new Color(10, 20, 30, 40);
+
+        context.setDrawColor(translucent);
+        context.drawFilledRect(1, 1, 1, 1);
+
+        assertEquals(translucent.getAlpha(), context.getColorAtPoint(1, 1).getAlpha());
+    }
+
+    @Test
     void drawsPolygonPolylineArcAndShapeOutlines() {
         DrawingContextAwt context = context();
         context.g2d.setRenderingHint(
@@ -215,6 +226,9 @@ class DrawingContextAwtTest {
         assertThrows(IllegalArgumentException.class, () -> context.setStrokeWidth(Double.NaN));
         assertThrows(IllegalArgumentException.class, () -> context.setAlpha(-0.1));
         assertThrows(IllegalArgumentException.class, () -> context.setAlpha(1.1));
+        assertThrows(NullPointerException.class, () -> context.setDrawColor(null));
+        assertThrows(NullPointerException.class, () -> context.setBackgroundColor(null));
+        assertThrows(NullPointerException.class, () -> context.setFont(null));
         assertThrows(NullPointerException.class, () -> context.setComposite(null));
         assertThrows(NullPointerException.class, () -> context.drawShape(null));
         assertThrows(NullPointerException.class, () -> context.drawFilledShape(null));

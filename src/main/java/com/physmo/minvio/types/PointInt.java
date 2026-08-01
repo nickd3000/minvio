@@ -1,6 +1,8 @@
 package com.physmo.minvio.types;
 
 
+import java.util.Objects;
+
 /**
  * Mutable two-dimensional point using integer coordinates.
  */
@@ -58,6 +60,19 @@ public class PointInt {
 
     public String toString() {
         return "[" + x + "," + y + "]";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        PointInt pointInt = (PointInt) obj;
+        return x == pointInt.x && y == pointInt.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 
 }

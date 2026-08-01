@@ -9,19 +9,6 @@ import java.awt.Color;
 import java.util.List;
 
 
-/**
- * Gasket2 is an application that extends MinvioApp to demonstrate a visual anchor-based effect.
- * It creates a dynamic fractal-like visualization by calculating intermediate points based on
- * anchored points and drawing them on the screen. The application uses the AnchorManager to manage
- * anchor points and perform various updates and drawings.
- * <p>
- * Key features include:
- * - Initialization of anchor points.
- * - Dynamic floating point calculations based on anchor points.
- * - Randomized color changes for visual effects.
- * - Drawing filled rectangles at calculated points.
- * - Connecting anchor points with lines.
- */
 public class Gasket2 extends MinvioApp {
 
     AnchorManager anchorManager;
@@ -30,7 +17,7 @@ public class Gasket2 extends MinvioApp {
 
     public static void main(String[] args) {
         MinvioApp app = new Gasket2();
-        app.start(250, 250, "Anchor Example", 60);
+        app.start(250, 250, "Gasket 2", 60);
     }
 
     @Override

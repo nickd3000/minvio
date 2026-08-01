@@ -5,14 +5,14 @@ import com.physmo.minvio.utils.BasicUtils;
 
 import java.awt.Color;
 
-class MapperTest extends MinvioApp {
+class MapperExample extends MinvioApp {
 
     private static final Color backgroundColour = new Color(20, 63, 88);
     private static final Color foregroundColour = new Color(200, 218, 105);
 
     public static void main(String... args) {
-        MinvioApp app = new MapperTest();
-        app.start(400, 400, "Mapper Test", 60);
+        MinvioApp app = new MapperExample();
+        app.start(400, 400, "Mapper Example", 60);
     }
 
     @Override

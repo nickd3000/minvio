@@ -16,8 +16,8 @@ class UtilsTest {
         assertEquals(12, Utils.lerp(10, 20, 0.25));
         assertEquals(12.5, Utils.lerp(10.0, 20.0, 0.25), DELTA);
         assertEquals(new Point(2.5, 5.0), Utils.lerp(new Point(0, 0), new Point(10, 20), 0.25));
-        assertEquals(new Color(127, 63, 31),
-                Utils.lerp(Color.BLACK, new Color(255, 127, 63), 0.5));
+        assertEquals(new Color(127, 63, 31, 127),
+                Utils.lerp(new Color(0, 0, 0, 0), new Color(255, 127, 63, 255), 0.5));
         assertEquals(Color.BLACK, Utils.lerp(Color.BLACK, Color.WHITE, -1.0));
         assertEquals(Color.WHITE, Utils.lerp(Color.BLACK, Color.WHITE, 2.0));
     }

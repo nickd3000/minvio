@@ -130,6 +130,16 @@ class ArrayTest {
         assertEquals(List.of("a", "b", "c"), toList(array));
     }
 
+    @Test
+    void addAllWithSelfAppendsOriginalSnapshot() {
+        Array<String> array = new Array<>(2);
+        array.addAll(List.of("a", "b"));
+
+        array.addAll(array);
+
+        assertEquals(List.of("a", "b", "a", "b"), toList(array));
+    }
+
     @ParameterizedTest(name = "contains({0}) is {1}")
     @MethodSource("elementPresenceCases")
     void containsReturnsExpectedValue(String element, boolean expected) {

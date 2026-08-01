@@ -8,8 +8,8 @@ import java.awt.image.BufferedImage;
 public final class TestBasicDisplay extends BasicDisplay {
     private final BufferedImage buffer;
     private final DrawingContext drawingContext;
-    private final int[] keyState = new int[256];
-    private final int[] previousKeyState = new int[256];
+    private final int[] keyState;
+    private final int[] previousKeyState;
     private int width;
     private int height;
     private int mouseX;
@@ -21,8 +21,14 @@ public final class TestBasicDisplay extends BasicDisplay {
     private String title = "test";
 
     public TestBasicDisplay(int width, int height) {
+        this(width, height, 256);
+    }
+
+    public TestBasicDisplay(int width, int height, int keyStateSize) {
         this.width = width;
         this.height = height;
+        keyState = new int[keyStateSize];
+        previousKeyState = new int[keyStateSize];
         buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         drawingContext = new DrawingContextAwt(buffer);
     }

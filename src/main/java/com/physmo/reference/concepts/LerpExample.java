@@ -11,8 +11,7 @@ class LerpExample extends MinvioApp {
 
     public static void main(String... args) {
         MinvioApp app = new LerpExample();
-        // Start the app running with a window size of 200x200 pixels, at 60 frames per second.
-        app.start(400, 400, "LerpExample", 60);
+        app.start(400, 400, "Lerp Example", 60);
     }
 
     @Override

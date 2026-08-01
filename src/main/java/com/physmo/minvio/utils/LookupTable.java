@@ -26,18 +26,18 @@ public class LookupTable {
         if (max <= min) {
             throw new IllegalArgumentException("Maximum must be greater than minimum");
         }
-        if (numItems <= 0) {
-            throw new IllegalArgumentException("Number of items must be greater than zero");
+        if (numItems < 2) {
+            throw new IllegalArgumentException("Number of items must be at least two");
         }
         Objects.requireNonNull(func, "func");
         this.min = min;
         this.numItems = numItems;
         double range = max - min;
-        numItems_range = numItems / range;
+        numItems_range = (numItems - 1) / range;
         values = new double[numItems];
+        double step = range / (double) (numItems - 1);
 
         for (int i = 0; i < numItems; i++) {
-            double step = range / (double) numItems;
             double pos = min + (i * step);
             values[i] = func.applyAsDouble(pos);
         }
@@ -90,8 +90,6 @@ public class LookupTable {
         return values[lowerIndex] * (1 - weight) + values[upperIndex] * weight;
     }
 
-    // TODO: getInterpolatedValue()
-    // TODO: getValue with no bounds checking?
-    // TODO: getWrappedValue() - for repeating functions like sine etc.
+    // Future candidates: unchecked lookup and wrapped lookup for repeating functions.
 
 }

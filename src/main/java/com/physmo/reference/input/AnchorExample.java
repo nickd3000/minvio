@@ -9,28 +9,6 @@ import com.physmo.minvio.utils.Palette;
 import java.awt.Color;
 import java.util.List;
 
-/**
- * The AnchorExample class demonstrates the functionality of the AnchorManager
- * within the context of the MinvioApp framework. This application creates an
- * interactive experience where users can manipulate anchors visually and
- * interact with them through custom-drawn graphics.
- * <p>
- * This class extends MinvioApp and overrides specific lifecycle methods to
- * initialize and render interactive anchor-based graphics.
- * <p>
- * Key Features:
- * - Initializes a set of anchors with predefined positions.
- * - Allows interaction with anchors, including grabbing and mouse-over effects.
- * - Uses custom drawing logic for anchor presentation.
- * - Connects anchors visually using lines.
- * <p>
- * Methods:
- * - init(BasicDisplay bd): Sets up the application, initializes the AnchorManager,
- * defines custom drawing behavior for the anchors, and adds anchors with specific
- * positions.
- * - draw(double delta): Handles the rendering logic. Clears the screen, updates
- * anchor states, draws lines connecting anchors, and invokes anchor rendering.
- */
 public class AnchorExample extends MinvioApp {
 
     AnchorManager anchorManager;
@@ -75,9 +53,6 @@ public class AnchorExample extends MinvioApp {
     public void draw(double delta) {
         cls(background);
         anchorManager.update(getBasicDisplay());
-
-
-        //setDrawColor(new Color(225, 209, 118));
 
         List<Point> anchors = anchorManager.getAnchors();
         for (int i = 0; i < anchors.size() - 1; i++) {

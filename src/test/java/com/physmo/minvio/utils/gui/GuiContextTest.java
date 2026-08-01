@@ -12,6 +12,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class GuiContextTest {
 
@@ -74,6 +75,27 @@ class GuiContextTest {
 
         assertSame(style, context.getGuiStyle());
         assertEquals(1, container.drawCount);
+    }
+
+    @Test
+    void addRefreshesHitTestListImmediately() {
+        TestBasicDisplay display = new TestBasicDisplay(100, 100);
+        GuiContext context = new GuiContext(display);
+        GuiContainerTest.RecordingContainer container = container(new Rect(10, 10, 20, 20));
+
+        context.add(container);
+
+        assertEquals(List.of(container), context.getListOfContainersAtPoint(15, 15));
+    }
+
+    @Test
+    void rejectsNullCoreObjects() {
+        TestBasicDisplay display = new TestBasicDisplay(100, 100);
+        GuiContext context = new GuiContext(display);
+
+        assertThrows(NullPointerException.class, () -> new GuiContext(null));
+        assertThrows(NullPointerException.class, () -> context.setGuiStyle(null));
+        assertThrows(NullPointerException.class, () -> context.add(null));
     }
 
     private static GuiContainerTest.RecordingContainer container(Rect rect) {

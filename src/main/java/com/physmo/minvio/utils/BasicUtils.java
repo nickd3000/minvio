@@ -64,6 +64,9 @@ public class BasicUtils {
      * @return remapped input value.
      */
     public static double mapper(double value, double inMin, double inMax, double outMin, double outMax) {
+        if (inMax - inMin == 0) {
+            throw new IllegalArgumentException("Input range must not be zero");
+        }
         if (outMax - outMin == 0) return 0;
         value = (value - inMin) / ((inMax - inMin) / (outMax - outMin));
         return value + outMin;
@@ -111,9 +114,6 @@ public class BasicUtils {
     /**
      * Finds the closest point strictly nearer than the supplied threshold.
      *
-     * <p>Search distances are also limited by the implementation's initial
-     * 10,000-unit sentinel.</p>
-     *
      * @param list points to search
      * @param targetPoint target point
      * @param threshHold exclusive distance threshold
@@ -121,7 +121,7 @@ public class BasicUtils {
      */
     public static int findClosestPointInList(List<Point> list, Point targetPoint, double threshHold) {
 
-        double minDist = 10000;
+        double minDist = Double.POSITIVE_INFINITY;
         int minId = -1;
 
         for (int i = 0; i < list.size(); i++) {

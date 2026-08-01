@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Root object for the retained GUI system.
@@ -37,7 +38,7 @@ public class GuiContext {
      * @param basicDisplay display used for mouse events and top-level drawing
      */
     public GuiContext(BasicDisplay basicDisplay) {
-        this.basicDisplay = basicDisplay;
+        this.basicDisplay = Objects.requireNonNull(basicDisplay, "basicDisplay");
         containers = new ArrayList<>();
         initMouseConnector();
         basicDisplay.addMouseConnector(mouseConnector);
@@ -87,10 +88,11 @@ public class GuiContext {
     /**
      * Replaces the GUI style used by controls.
      *
-     * @param guiStyle replacement style; not validated
+     * @param guiStyle replacement style
+     * @throws NullPointerException if {@code guiStyle} is null
      */
     public void setGuiStyle(GuiStyle guiStyle) {
-        this.guiStyle = guiStyle;
+        this.guiStyle = Objects.requireNonNull(guiStyle, "guiStyle");
     }
 
     /**
@@ -107,10 +109,12 @@ public class GuiContext {
     /**
      * Adds a top-level container.
      *
-     * @param container container to append; not validated
+     * @param container container to append
+     * @throws NullPointerException if {@code container} is null
      */
     public void add(GuiContainer container) {
-        containers.add(container);
+        containers.add(Objects.requireNonNull(container, "container"));
+        locateAll();
     }
 
     /**
@@ -194,6 +198,7 @@ public class GuiContext {
      * @return new mutable list of matching containers in location order
      */
     public List<GuiContainer> getListOfContainersAtPoint(int x, int y) {
+        locateAll();
         List<GuiContainer> list = new ArrayList<>();
         for (GuiContainer guiContainer : allChildren) {
             PointInt ip = guiContainer.getInheritedPosition();

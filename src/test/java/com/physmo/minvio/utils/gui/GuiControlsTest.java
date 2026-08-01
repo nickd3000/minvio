@@ -13,6 +13,7 @@ import static com.physmo.minvio.utils.gui.support.GuiMessage.MOUSE_BUTTON_UP;
 import static com.physmo.minvio.utils.gui.support.GuiMessage.MOUSE_MOVE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GuiControlsTest {
@@ -57,6 +58,13 @@ class GuiControlsTest {
         button.onMessage(MOUSE_BUTTON_UP, mouse(1, 1));
 
         assertEquals(List.of("first", "second"), calls);
+    }
+
+    @Test
+    void buttonRejectsNullListeners() {
+        GuiButton button = new GuiButton(new Rect(0, 0, 100, 30));
+
+        assertThrows(NullPointerException.class, () -> button.addActionListener(null));
     }
 
     @Test
@@ -110,6 +118,15 @@ class GuiControlsTest {
         slider.onMessage(MOUSE_MOVE, mouse(100, 10));
 
         assertEquals(0.0, slider.getValue());
+    }
+
+    @Test
+    void sliderRejectsInvalidHandleSizeAndNullListeners() {
+        GuiSlider slider = new GuiSlider(new Rect(0, 0, 20, 20));
+
+        assertThrows(IllegalArgumentException.class, () -> slider.setHandleSize(0));
+        assertThrows(IllegalArgumentException.class, () -> slider.setHandleSize(-1));
+        assertThrows(NullPointerException.class, () -> slider.addChangeListener(null));
     }
 
     @Test

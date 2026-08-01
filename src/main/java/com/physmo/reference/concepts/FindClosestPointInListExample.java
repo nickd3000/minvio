@@ -10,11 +10,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The FindClosestPointInListExample class extends the MinvioApp and provides an example application
- * that finds the closest point to the mouse pointer from a list of randomly generated points.
- * The closest point is highlighted in a different color.
- */
 public class FindClosestPointInListExample extends MinvioApp {
 
 
@@ -25,7 +20,6 @@ public class FindClosestPointInListExample extends MinvioApp {
 
     public static void main(String... args) {
         MinvioApp app = new FindClosestPointInListExample();
-        // Start the app running with a window size of 200x200 pixels, at 60 frames per second.
         app.start(400, 400, "Find Closest Point In List", 60);
     }
 

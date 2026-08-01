@@ -11,25 +11,13 @@ import com.physmo.minvio.utils.gui.support.GuiMessage;
 import com.physmo.minvio.utils.gui.support.MouseMessageData;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import static com.physmo.minvio.utils.gui.support.GuiMessage.MOUSE_BUTTON_DOWN;
 import static com.physmo.minvio.utils.gui.support.GuiMessage.MOUSE_BUTTON_UP;
 import static com.physmo.minvio.utils.gui.support.GuiMessage.MOUSE_MOVE;
 
-/**
- * The FunctionExplorer class extends the MinvioApp framework to create
- * an interactive graphical tool for visualizing mathematical functions
- * and noise-based patterns, such as Mandelbrot and custom fractals.
- * The application allows users to pan and zoom into the graphical representation
- * of the functions, providing dynamic exploration capabilities.
- * <p>
- * Key Features:
- * - Interactive visual exploration through panning and zooming.
- * - Support for rendering mathematical functions and noise patterns.
- * - Efficient rendering control using dirty flag and fine-grained rendering.
- * - GUI integration for intuitive user interaction.
- */
 public class FunctionExplorer extends MinvioApp {
     GuiContext guiContext;
     GuiPanel guiPanel;
@@ -157,7 +145,7 @@ public class FunctionExplorer extends MinvioApp {
     public void render() {
         long startTime = System.nanoTime();
 
-        var g = bufferedImage.getGraphics();
+        Graphics2D g = bufferedImage.createGraphics();
         int width = bufferedImage.getWidth();
         int height = bufferedImage.getHeight();
 
@@ -167,39 +155,37 @@ public class FunctionExplorer extends MinvioApp {
         double cx = centerX + scrollX - (200 * scale);
         double cy = centerY + scrollY - (200 * scale);
 
-        for (int y = renderRow; y < height; y += skip) {
-            System.out.println(y);
-            for (int x = 0; x < width; x += skip) {
-                double xx = x * scale;
-                double yy = y * scale;
-                //double noise = PerlinNoise.noise(cx + xx, cy + yy, 0);
-                //double noise = functionMandelbrot((float) (cx + xx), (float) (cy + yy));
-                //double noise = functionMandelbrotDist((float) (cx + xx), (float) (cy + yy));
-                double noise = functionMandelbrotTest((float) (cx + xx), (float) (cy + yy));
-                //double noise = voronioNoise((float) (cx + xx), (float) (cy + yy));
-                //double noise = functionNickbrot((float) (cx + xx), (float) (cy + yy));
+        try {
+            for (int y = renderRow; y < height; y += skip) {
+                for (int x = 0; x < width; x += skip) {
+                    double xx = x * scale;
+                    double yy = y * scale;
+                    double noise = functionMandelbrotTest((float) (cx + xx), (float) (cy + yy));
 
-                int c = (int) ((noise) % 255) & 0xff;
-                g.setColor(new Color(c, c, c));
-                g.fillRect(x, y, skip, skip);
+                    int c = (int) (noise % 255) & 0xff;
+                    g.setColor(new Color(c, c, c));
+                    g.fillRect(x, y, skip, skip);
 
-            }
-
-            renderRow = y;
-
-            if (y >= endHeight - 1) {
-                if (renderFine) {
-                    setRenderDirty(false);
-                } else {
-                    renderFine = true;
-                    renderRow = 0;
                 }
-            }
 
-            if (System.nanoTime() - startTime > (16670000) * 0.5) {
-                return;
-            }
+                renderRow = y;
 
+                if (y >= endHeight - 1) {
+                    if (renderFine) {
+                        setRenderDirty(false);
+                    } else {
+                        renderFine = true;
+                        renderRow = 0;
+                    }
+                }
+
+                if (System.nanoTime() - startTime > (16670000) * 0.5) {
+                    return;
+                }
+
+            }
+        } finally {
+            g.dispose();
         }
     }
 

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BasicUtilsTest {
@@ -17,6 +18,9 @@ class BasicUtilsTest {
         assertEquals(50.0, BasicUtils.mapper(5.0, 0.0, 10.0, 0.0, 100.0), DELTA);
         assertEquals(0.0, BasicUtils.mapper(5.0, 0.0, 10.0, 7.0, 7.0), DELTA);
         assertEquals(-1.0, BasicUtils.mapper(0.0, 0.0, 10.0, -1.0, 1.0), DELTA);
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> BasicUtils.mapper(5.0, 10.0, 10.0, 0.0, 100.0));
     }
 
     @Test
@@ -45,6 +49,13 @@ class BasicUtilsTest {
         assertEquals(0, BasicUtils.findClosestPointInList(points, new Point(1, 0), 2.0));
         assertEquals(-1, BasicUtils.findClosestPointInList(points, new Point(10, 0), 1.0));
         assertEquals(-1, BasicUtils.findClosestPointInList(List.of(), new Point(), 1.0));
+    }
+
+    @Test
+    void closestPointHandlesDistancesGreaterThanOldSentinel() {
+        List<Point> points = List.of(new Point(20_000, 0));
+
+        assertEquals(0, BasicUtils.findClosestPointInList(points, new Point(0, 0), 25_000.0));
     }
 
     @Test

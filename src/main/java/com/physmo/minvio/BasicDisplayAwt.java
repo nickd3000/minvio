@@ -77,19 +77,20 @@ public class BasicDisplayAwt extends BasicDisplay {
 
 
     /**
-     * Replaces the drawing buffer with a buffer of the requested size, copying
-     * the previous pixels at the top-left origin.
+     * Resizes the drawing buffer and updates the display's reported dimensions.
      *
-     * <p>This low-level method updates the drawing context and panel buffer but
-     * does not update the display's reported width and height fields or lay out
-     * the native window. It is used as one step of deferred resize processing.
-     * Calls are not synchronized with painting or AWT input delivery.</p>
+     * <p>Existing pixels are copied at the top-left origin. When a Swing panel is
+     * present, the panel is pointed at the new buffer and laid out at the new
+     * size. Calls are not synchronized with painting or AWT input delivery.</p>
      *
-     * @param w new buffer width; must be positive
-     * @param h new buffer height; must be positive
+     * @param w new display width; must be positive
+     * @param h new display height; must be positive
      * @throws IllegalArgumentException if either dimension is not positive
      */
     public void setDisplaySize(int w, int h) {
+        if (w <= 0 || h <= 0) {
+            throw new IllegalArgumentException("Display dimensions must be positive");
+        }
 
         BufferedImage newBuffer = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         Graphics2D resizeGraphics = newBuffer.createGraphics();
@@ -99,6 +100,8 @@ public class BasicDisplayAwt extends BasicDisplay {
             resizeGraphics.dispose();
         }
         drawBuffer = newBuffer;
+        width = w;
+        height = h;
 
         if (drawingContext == null) {
             drawingContext = new DrawingContextAwt(drawBuffer);
@@ -106,7 +109,12 @@ public class BasicDisplayAwt extends BasicDisplay {
             drawingContext.setImageBuffer(drawBuffer);
         }
 
-        if (panel != null) panel.setDrawBuffer(drawBuffer);
+        if (panel != null) {
+            panel.setDrawBuffer(drawBuffer);
+            panel.setSize(w, h);
+            panel.doLayout();
+        }
+        if (mainFrame != null) mainFrame.doLayout();
     }
 
 
@@ -121,14 +129,9 @@ public class BasicDisplayAwt extends BasicDisplay {
         resizeRequest = null; // Clear resize object once we have the size.
 
         setDisplaySize(newWidth, newHeight);
-        width = newWidth;
-        height = newHeight;
         if (resizeListener != null) {
             resizeListener.applyAsInt(newWidth, newHeight);
         }
-        panel.setSize(newWidth, newHeight);
-        panel.doLayout();
-        mainFrame.doLayout();
     }
 
     /**

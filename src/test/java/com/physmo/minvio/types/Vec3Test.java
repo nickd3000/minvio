@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.Locale;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -150,6 +151,18 @@ class Vec3Test {
     @Test
     void toStringProducesFormattedString() {
         assertEquals("Vec3{x=1.23, y=5.68, z=9.00}", new Vec3(1.234, 5.678, 9.0).toString());
+    }
+
+    @Test
+    void toStringUsesStableDecimalSeparatorAcrossLocales() {
+        Locale previous = Locale.getDefault();
+        try {
+            Locale.setDefault(Locale.FRANCE);
+
+            assertEquals("Vec3{x=1.23, y=5.68, z=9.00}", new Vec3(1.234, 5.678, 9.0).toString());
+        } finally {
+            Locale.setDefault(previous);
+        }
     }
 
     @Test

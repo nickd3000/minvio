@@ -13,6 +13,7 @@ import java.awt.Shape;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Objects;
 
 /**
  * Base application loop and drawing facade for a Minvio sketch.
@@ -40,6 +41,9 @@ public class MinvioApp implements DrawingContext {
     private int screenshotKey = KeyEvent.VK_F12;
     private boolean screenshotEnabled = true;
     private DrawingContext drawingContext;
+    private String screenshotAndQuitPath = null;
+    private int screenshotAndQuitFrame = -1;
+    private int frameCount = 0;
 
     /**
      * Returns the display currently attached to this application.
@@ -55,6 +59,32 @@ public class MinvioApp implements DrawingContext {
      */
     public void stop() {
         running = false;
+    }
+
+    /**
+     * Schedules a PNG screenshot after a specific rendered frame, then stops the app.
+     *
+     * <p>Frames are counted from {@code 1}. The screenshot is taken after the
+     * requested frame's {@link #draw(double)} call and any built-in overlays, so
+     * the image matches the final draw buffer for that frame. Call this before
+     * {@link #start(BasicDisplay)} or another {@code start} overload.</p>
+     *
+     * @param outputPath  destination PNG file path
+     * @param exitOnFrame frame number to capture and stop on; must be at least 1
+     * @return this application for fluent startup
+     */
+    public MinvioApp takeScreenshotAndQuit(String outputPath, int exitOnFrame) {
+        Objects.requireNonNull(outputPath, "outputPath");
+        if (outputPath.isBlank()) {
+            throw new IllegalArgumentException("Screenshot output path must not be blank");
+        }
+        if (exitOnFrame < 1) {
+            throw new IllegalArgumentException("Screenshot frame must be at least 1");
+        }
+
+        this.screenshotAndQuitPath = outputPath;
+        this.screenshotAndQuitFrame = exitOnFrame;
+        return this;
     }
 
 
@@ -113,6 +143,7 @@ public class MinvioApp implements DrawingContext {
         this.bd = bd;
         this.drawingContext = bd.getDrawingContext();
         running = true;
+        frameCount = 0;
 
         try {
             // Call init() once only.
@@ -165,6 +196,8 @@ public class MinvioApp implements DrawingContext {
 
                 if (displayFps) drawFps();
                 if (debugMode) drawDebugInfo();
+                frameCount++;
+                if (handleScreenshotAndQuit()) break;
                 bd.repaint();
 
                 bd.resizeIfRequested();
@@ -768,10 +801,16 @@ public class MinvioApp implements DrawingContext {
         int[] keyState = bd.getKeyState();
         int[] keyStatePrevious = bd.getKeyStatePrevious();
 
-        // Detect "just pressed" state for the screenshot key
-        if (keyState[screenshotKey] != 0 && keyStatePrevious[screenshotKey] == 0) {
+        // Detect "just pressed" state for the screenshot key.
+        if (isKeyJustPressed(keyState, keyStatePrevious, screenshotKey)) {
             takeScreenshot();
         }
+    }
+
+    private boolean isKeyJustPressed(int[] keyState, int[] previousKeyState, int keyCode) {
+        if (keyState == null || previousKeyState == null) return false;
+        if (keyCode < 0 || keyCode >= keyState.length || keyCode >= previousKeyState.length) return false;
+        return keyState[keyCode] != 0 && previousKeyState[keyCode] == 0;
     }
 
     private void takeScreenshot() {
@@ -791,5 +830,14 @@ public class MinvioApp implements DrawingContext {
 
         saveScreenshot(file.getAbsolutePath());
         MinvioLogger.info("Screenshot saved: " + file.getAbsolutePath());
+    }
+
+    private boolean handleScreenshotAndQuit() {
+        if (screenshotAndQuitFrame != frameCount) return false;
+
+        saveScreenshot(screenshotAndQuitPath);
+        MinvioLogger.info("Screenshot saved: " + new File(screenshotAndQuitPath).getAbsolutePath());
+        running = false;
+        return true;
     }
 }

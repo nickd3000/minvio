@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class PointIntTest {
 
@@ -50,6 +51,22 @@ class PointIntTest {
     @Test
     void toStringProducesFormattedString() {
         assertEquals("[5,42]", new PointInt(5, 42).toString());
+    }
+
+    @Test
+    void equalsAndHashCodeBehavior() {
+        PointInt first = new PointInt(5, 42);
+        PointInt equal = new PointInt(5, 42);
+        PointInt different = new PointInt(6, 42);
+
+        assertEquals(first, first);
+        assertEquals(first, equal);
+        assertEquals(equal, first);
+        assertEquals(first.hashCode(), equal.hashCode());
+        assertNotEquals(first, different);
+        assertNotEquals(first.hashCode(), different.hashCode());
+        assertNotEquals(null, first);
+        assertNotEquals("a string", first);
     }
 
     private static Stream<Arguments> distanceCases() {

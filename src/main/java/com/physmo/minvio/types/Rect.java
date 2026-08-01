@@ -1,5 +1,6 @@
 package com.physmo.minvio.types;
 
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -141,7 +142,7 @@ public class Rect {
 
     @Override
     public String toString() {
-        return String.format("Rect{x=%d, y=%d, w=%d, h=%d}", x, y, w, h);
+        return String.format(Locale.ROOT, "Rect{x=%d, y=%d, w=%d, h=%d}", x, y, w, h);
     }
 
     @Override

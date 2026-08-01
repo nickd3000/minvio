@@ -11,14 +11,14 @@ import com.physmo.minvio.utils.gui.GuiSlider;
 import com.physmo.minvio.utils.gui.layout.GridLayout;
 
 
-public class LayoutTestGridLayout extends MinvioApp {
+public class GridLayoutExample extends MinvioApp {
 
     GuiContext guiContext;
 
     public static void main(String... args) {
-        MinvioApp app = new LayoutTestGridLayout();
+        MinvioApp app = new GridLayoutExample();
 
-        app.start(300, 300, "LayoutTestGridLayout", 60);
+        app.start(300, 300, "Grid Layout Example", 60);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class LayoutTestGridLayout extends MinvioApp {
         guiPanel.add(new GuiButton(new Rect(10, 10, 50, 50)));
         guiPanel.add(new GuiSlider(new Rect(10, 10, 150, 20)));
 
-        // Create 4 buttons and add them as children of the panel.
+        // Create 8 buttons and add them as children of the panel.
         for (int i = 0; i < 8; i++) {
             GuiButton guiButton = new GuiButton(new Rect(10, 10, 50, 50));
             guiPanel.add(guiButton);

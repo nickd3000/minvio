@@ -11,7 +11,6 @@ class SaveScreenshotExample extends MinvioApp {
 
     public static void main(String... args) {
         MinvioApp app = new SaveScreenshotExample();
-        // Start the app running with a window size of 200x200 pixels, at 60 frames per second.
         app.start(200, 200, "Save Screenshot Example", 60);
     }
 
@@ -29,10 +28,6 @@ class SaveScreenshotExample extends MinvioApp {
             String filePath = "";
             filePath = System.getProperty("user.home") + File.separator + getTitle() + ".png";
             saveScreenshot(filePath);
-
-            // You could also use this version which saves to the
-            // user home folder with the app name as the file name.
-            // bd.saveScreenshot();
 
             saved = true;
         }

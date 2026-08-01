@@ -10,27 +10,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * NoseStyles is a graphical application that extends the MinvioApp framework.
- * It demonstrates the usage of a MatrixDrawer to render grid-based visual patterns
- * using dynamic gradients and noise functions.
- * <p>
- * This class creates a graphical display window and utilizes Perlin noise and other
- * mathematical visual functions to generate animated effects. Multiple gradients are
- * applied to different sections of the grid to provide varied visual aesthetics.
- * <p>
- * Features:
- * - Utilizes the MatrixDrawer for per-pixel rendering with color computation through lambdas.
- * - Demonstrates the application of Perlin noise for natural-looking animations.
- * - Supports custom gradients for rendering varied visual effects.
- * - Includes animated, grid-based visualizations with dynamic updates controlled by delta time.
- * <p>
- * Methods:
- * - main: Entry point for starting the application.
- * - init: Initializes the application state, including the MatrixDrawer and gradients.
- * - draw: Defines the per-frame rendering behavior, applying different visual functions
- * to the MatrixDrawer on different grid sections.
- */
 class NoseStyles extends MinvioApp {
 
     double time = 0;
@@ -39,7 +18,7 @@ class NoseStyles extends MinvioApp {
 
     public static void main(String... args) {
         MinvioApp app = new NoseStyles();
-        app.start(400, 400, "Matrix Drawer Example", 30);
+        app.start(400, 400, "Noise Styles", 30);
     }
 
     @Override
@@ -64,10 +43,8 @@ class NoseStyles extends MinvioApp {
 
         matrixDrawer.draw(this, 0, 0, 2, time, (x, y, a, d, t) -> {
             double xx = PerlinNoise.noise(x * 4, y * 4, t + 2.5);
-            double yy = PerlinNoise.noise(x * 4, y * 4, t + 2.5);
+            double yy = PerlinNoise.noise(x * 4, y * 4, t + 9.5);
             return PerlinNoise.noise((x + xx) * 2, (y + yy) * 2, t);
-
-            //return ((1.0 + Math.sin(t * 2 + a * 6)) + (1.0 + Math.cos(t * 5 + d * 6 + a * 3))) * 0.25;
         }, gradients.get(0));
 
         matrixDrawer.draw(this, 200, 0, 2, time, (x, y, a, d, t) ->

@@ -24,7 +24,8 @@ public class Utils {
         int r = lerp(c1.getRed(), c2.getRed(), pos);
         int g = lerp(c1.getGreen(), c2.getGreen(), pos);
         int b = lerp(c1.getBlue(), c2.getBlue(), pos);
-        return new Color(r, g, b);
+        int a = lerp(c1.getAlpha(), c2.getAlpha(), pos);
+        return new Color(r, g, b, a);
     }
 
     /**

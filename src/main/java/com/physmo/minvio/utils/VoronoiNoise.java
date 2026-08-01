@@ -103,9 +103,9 @@ public class VoronoiNoise {
      * @return newly allocated array of 27 distances
      */
     public static double[] getDistances(double x, double y, double z) {
-        int _x = (int) x;
-        int _y = (int) y;
-        int _z = (int) z;
+        int _x = (int) Math.floor(x);
+        int _y = (int) Math.floor(y);
+        int _z = (int) Math.floor(z);
 
         int pointsPerCell = 1;
 

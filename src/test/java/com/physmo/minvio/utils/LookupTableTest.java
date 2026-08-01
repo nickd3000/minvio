@@ -14,9 +14,9 @@ class LookupTableTest {
 
         assertEquals(0, table.getValue(-10), DELTA);
         assertEquals(0, table.getValue(0), DELTA);
-        assertEquals(4, table.getValue(5), DELTA);
-        assertEquals(8, table.getValue(10), DELTA);
-        assertEquals(8, table.getValue(100), DELTA);
+        assertEquals(5, table.getValue(5), DELTA);
+        assertEquals(10, table.getValue(10), DELTA);
+        assertEquals(10, table.getValue(100), DELTA);
     }
 
     @Test
@@ -26,8 +26,8 @@ class LookupTableTest {
         assertEquals(0, table.getInterpolatedValue(-10), DELTA);
         assertEquals(1, table.getInterpolatedValue(1), DELTA);
         assertEquals(5, table.getInterpolatedValue(5), DELTA);
-        assertEquals(8, table.getInterpolatedValue(10), DELTA);
-        assertEquals(8, table.getInterpolatedValue(100), DELTA);
+        assertEquals(10, table.getInterpolatedValue(10), DELTA);
+        assertEquals(10, table.getInterpolatedValue(100), DELTA);
     }
 
     @Test
@@ -42,6 +42,7 @@ class LookupTableTest {
         assertThrows(IllegalArgumentException.class, () -> new LookupTable(1, 1, 10, value -> value));
         assertThrows(IllegalArgumentException.class, () -> new LookupTable(2, 1, 10, value -> value));
         assertThrows(IllegalArgumentException.class, () -> new LookupTable(0, 1, 0, value -> value));
+        assertThrows(IllegalArgumentException.class, () -> new LookupTable(0, 1, 1, value -> value));
         assertThrows(NullPointerException.class, () -> new LookupTable(0, 1, 10, null));
     }
 }

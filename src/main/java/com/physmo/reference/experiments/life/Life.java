@@ -17,7 +17,7 @@ public class Life extends MinvioApp {
 
     public static void main(String[] args) {
         MinvioApp app = new Life();
-        app.start(400, 400, "Matrix Drawer Example", 30);
+        app.start(400, 400, "Life", 30);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class Life extends MinvioApp {
             public void onMessage(GuiMessage guiMessage, Object object) {
                 super.onMessage(guiMessage, object);
                 if (guiMessage == GuiMessage.MOUSE_BUTTON_DOWN) {
-                    //System.out.println("flaps");
+                    setDirty(true);
                 }
             }
         };

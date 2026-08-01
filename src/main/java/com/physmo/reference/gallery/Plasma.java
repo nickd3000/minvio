@@ -10,15 +10,6 @@ import java.awt.Color;
 import static com.physmo.minvio.utils.BasicUtils.mapper;
 import static com.physmo.minvio.utils.PerlinNoise.noise;
 
-/**
- * The Plasma class is an extension of the MinvioApp framework, responsible for creating
- * a procedural plasma-style visualization effect using Perlin noise and a customizable gradient.
- * The visualization is drawn dynamically on a graphical display.
- * <p>
- * This class demonstrates the use of noise functions, gradients, and drawing operations
- * to render fluid and visually pleasing effects. The behavior of the plasma is influenced
- * by the scrolling positions and gradient mapping.
- */
 public class Plasma extends MinvioApp {
 
     double scrollPosX = 0;

@@ -20,7 +20,7 @@ public class GuiRig extends MinvioApp {
     public static void main(String... args) {
         MinvioApp app = new GuiRig();
 
-        app.start(300, 300, "GuiRig", 60);
+        app.start(300, 300, "GUI Rig", 60);
     }
 
     @Override

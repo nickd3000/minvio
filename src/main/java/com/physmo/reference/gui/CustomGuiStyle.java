@@ -20,7 +20,7 @@ public class CustomGuiStyle extends MinvioApp {
     public static void main(String... args) {
         MinvioApp app = new CustomGuiStyle();
 
-        app.start(300, 200, "CustomGuiStyle", 60);
+        app.start(300, 200, "Custom GUI Style", 60);
     }
 
     @Override

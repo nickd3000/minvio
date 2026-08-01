@@ -8,7 +8,7 @@ import java.awt.Color;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-public class MinvioAppTimingTest extends MinvioApp {
+public class MinvioAppTimingExample extends MinvioApp {
 
     private final int rollingListSize = 20;
     NumberFormat formatter = new DecimalFormat("#0.0000000");
@@ -21,8 +21,8 @@ public class MinvioAppTimingTest extends MinvioApp {
 
 
     public static void main(String... args) {
-        MinvioApp app = new MinvioAppTimingTest();
-        app.start(600, 400, "MinvioAppTimingTest", 30);
+        MinvioApp app = new MinvioAppTimingExample();
+        app.start(600, 400, "MinvioApp Timing Example", 30);
     }
 
     @Override

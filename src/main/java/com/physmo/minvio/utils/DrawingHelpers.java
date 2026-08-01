@@ -22,9 +22,12 @@ public class DrawingHelpers {
      * @param width grid width
      * @param height grid height
      * @param numSegments positive segment count
-     * @throws ArithmeticException if {@code numSegments} is zero
+     * @throws IllegalArgumentException if {@code numSegments} is not positive
      */
     public static void drawGrid(BasicDisplay bd, int x, int y, int width, int height, int numSegments) {
+        if (numSegments <= 0) {
+            throw new IllegalArgumentException("Number of segments must be greater than zero");
+        }
         int horizontalSpace = width / numSegments;
         int verticalSpace = height / numSegments;
         DrawingContext dc = bd.getDrawingContext();

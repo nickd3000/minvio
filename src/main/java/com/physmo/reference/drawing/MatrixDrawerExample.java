@@ -54,7 +54,7 @@ class MatrixDrawerExample extends MinvioApp {
 
         matrixDrawer.draw(getDrawingContext(), 0, 200, 2, time, (x, y, a, d, t) -> {
             double xx = PerlinNoise.noise(x * 4, y * 4, t + 2.5);
-            double yy = PerlinNoise.noise(x * 4, y * 4, t + 2.5);
+            double yy = PerlinNoise.noise(x * 4, y * 4, t + 9.5);
             return PerlinNoise.noise((x + xx) * 2, (y + yy) * 2, t);
         }, null); // We can supply null if we don't want to use a gradient.
 

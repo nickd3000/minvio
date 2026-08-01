@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.Locale;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -119,6 +120,18 @@ class PointTest {
     @Test
     void toStringProducesFormattedString() {
         assertEquals("Point{x=1.23, y=5.68}", new Point(1.234, 5.678).toString());
+    }
+
+    @Test
+    void toStringUsesStableDecimalSeparatorAcrossLocales() {
+        Locale previous = Locale.getDefault();
+        try {
+            Locale.setDefault(Locale.FRANCE);
+
+            assertEquals("Point{x=1.23, y=5.68}", new Point(1.234, 5.678).toString());
+        } finally {
+            Locale.setDefault(previous);
+        }
     }
 
     private static Stream<Arguments> distanceCases() {

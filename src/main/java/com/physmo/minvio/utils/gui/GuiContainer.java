@@ -82,6 +82,7 @@ public abstract class GuiContainer {
 
         buffer = new BufferedImage(rect.w, rect.h, BufferedImage.TYPE_INT_ARGB);
         dc = new DrawingContextAwt(buffer);
+        dirty = true;
     }
 
     /**

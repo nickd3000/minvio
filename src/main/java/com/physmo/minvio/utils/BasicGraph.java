@@ -31,6 +31,9 @@ public class BasicGraph {
      *                  draw operations to work
      */
     public BasicGraph(int numPoints) {
+        if (numPoints <= 0) {
+            throw new IllegalArgumentException("Number of points must be greater than zero");
+        }
         this.numPoints = numPoints;
         values = new double[numPoints];
         headPos = 0;

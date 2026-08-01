@@ -131,7 +131,7 @@ public interface DrawingContext {
      */
     default Color getColorAtPoint(int x, int y) {
         int rgb = this.getRGBAtPoint(x, y);
-        return new Color(rgb);
+        return new Color(rgb, true);
     }
 
     /**

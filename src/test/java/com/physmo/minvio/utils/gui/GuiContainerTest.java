@@ -34,6 +34,7 @@ class GuiContainerTest {
 
         container.setRect(new Rect(2, 3, 30, 40));
         assertNotSame(originalContext, container.getDc());
+        assertTrue(container.getDirty());
         assertEquals(30, container.getDc().getWidth());
         assertEquals(40, container.getDc().getHeight());
     }

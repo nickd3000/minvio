@@ -1,10 +1,10 @@
 # Minvio Reference Examples
 
-Updated: 2026-07-24 00:56 BST
+Updated: 2026-08-01 17:27 BST
 
 These examples are compiled with the project but excluded from the published
-binary and Javadoc artifacts. They are intended as runnable reference material
-for learning Minvio, exploring the API, and testing ideas.
+binary, sources, and Javadoc artifacts. They are intended as runnable reference
+material for learning Minvio, exploring the API, and testing ideas.
 
 ## Recommended Style
 

@@ -38,8 +38,8 @@ public class DrawingContextAwt implements DrawingContext {
     Graphics2D g2d;
     int width = 0;
     int height = 0;
-    private Color drawColor;
-    private Color backgroundColor;
+    private Color drawColor = Color.BLACK;
+    private Color backgroundColor = Color.WHITE;
     final Map<Integer, Font> builtInFonts = new HashMap<>();
     private final Deque<AffineTransform> transformStack = new ArrayDeque<>();
     private final Deque<StyleState> styleStack = new ArrayDeque<>();
@@ -92,6 +92,8 @@ public class DrawingContextAwt implements DrawingContext {
         if (previousRenderingHints == null) {
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2d.setFont(new Font("window", Font.BOLD, 20));
+            g2d.setColor(drawColor);
+            g2d.setBackground(backgroundColor);
         } else {
             g2d.setRenderingHints(previousRenderingHints);
             g2d.setColor(previousColor);
@@ -127,6 +129,7 @@ public class DrawingContextAwt implements DrawingContext {
 
     @Override
     public Color setDrawColor(Color newCol) {
+        Objects.requireNonNull(newCol, "newCol");
         Color oldCol = drawColor;
         drawColor = newCol;
         g.setColor(newCol);
@@ -135,6 +138,7 @@ public class DrawingContextAwt implements DrawingContext {
 
     @Override
     public Color setBackgroundColor(Color newCol) {
+        Objects.requireNonNull(newCol, "newCol");
         Color oldCol = backgroundColor;
         backgroundColor = newCol;
         return oldCol;
@@ -358,6 +362,7 @@ public class DrawingContextAwt implements DrawingContext {
 
     @Override
     public void setFont(Font font) {
+        Objects.requireNonNull(font, "font");
         g.setFont(font);
     }
 

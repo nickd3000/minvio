@@ -4,10 +4,10 @@ import com.physmo.minvio.MinvioApp;
 
 import java.awt.Color;
 
-public class TestScreenshot extends MinvioApp {
+public class ScreenshotHotkeyExample extends MinvioApp {
     public static void main(String[] args) {
-        MinvioApp app = new TestScreenshot();
-        app.start(400, 400, "Test Screenshot", 60);
+        MinvioApp app = new ScreenshotHotkeyExample();
+        app.start(400, 400, "Screenshot Hotkey Example", 60);
     }
 
     @Override
