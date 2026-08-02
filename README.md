@@ -6,13 +6,12 @@
 
 ## Interactive 2D graphics in plain Java
 
-Minvio makes interactive 2D graphics simple in plain Java. It removes the
-repetitive Java2D setup while preserving a small API, no runtime dependencies,
-and direct access to standard types such as `BufferedImage`, `Color`, and
-`Font`.
+Minvio is a lightweight 2D sketching library for plain Java. It handles the
+repetitive Java2D setup, creates the application window, and runs the timed
+update/draw loop so you can focus on graphics, interaction, and experiments.
 
-Minvio creates the application window and runs the timed update and draw loop,
-leaving you to focus on your graphics and experiments.
+The API stays small, has no runtime dependencies beyond the JDK, and keeps direct
+access to standard Java types such as `BufferedImage`, `Color`, and `Font`.
 
 It is designed for:
 
@@ -39,7 +38,7 @@ Add the Maven dependency:
 <dependency>
     <groupId>io.github.nickd3000</groupId>
     <artifactId>minvio</artifactId>
-    <version>1.22</version>
+    <version>1.23</version>
 </dependency>
 ```
 
@@ -139,11 +138,13 @@ JAVA_HOME=$(/usr/libexec/java_home -v 17) PATH="$JAVA_HOME/bin:$PATH" mvn test
 
 ### Changelist
 
-###### Version PENDING
+###### Version 1.23 - August 2026
 
 * Added Screenshot Functionality
     * Implemented automatic screenshot saving using the F12 key in MinvioApp.
     * Added takeScreenshot() and saveScreenshot() methods with automatic file naming (e.g., AppName_1.png).
+  * Added takeScreenshotAndQuit(...) for agent-friendly screenshot capture from examples.
+  * Added screenshot APIs that can report success or throw when writing fails.
 * Enhanced Drawing Precision
     * Added overloaded drawing methods across MinvioApp and DrawingContext that accept double coordinates (e.g.,
       drawPoint, drawRect, drawText, drawImage) for more sub-pixel precision.
@@ -153,6 +154,14 @@ JAVA_HOME=$(/usr/libexec/java_home -v 17) PATH="$JAVA_HOME/bin:$PATH" mvn test
 * Added Rotations1 gallery example (concentric animated rings)
 * Added TransformationExample, FractalTreeExample, and KaleidoscopeExample gallery examples
 * Added Fractal Tile example
+* Added retro palette constants for C64, ZX Spectrum, BBC Micro, CGA, Game Boy, and MSX-style colors.
+* Made Palette color presets immutable constants.
+* Improved MinvioApp frame timing so updates run once per rendered frame and frame waits avoid busy-spinning.
+* Improved BasicDisplayAwt Swing/input handoff by routing Swing work through the EDT and snapshotting key state.
+* Added context-free ECS update methods and deprecated the old DrawingContext update overloads.
+* Improved Maven/release hygiene, documentation version references, and artifact contents.
+* Expanded automated test coverage for screenshots, ECS compatibility, frame cadence, input snapshots, and palette
+  constants.
 
 ###### Version 1.20 - Aug 2025
 

@@ -39,7 +39,7 @@ public class EntitySystem {
      * @param delta caller-defined time or delta value
      * @deprecated use {@link #tickAll(double)}
      */
-    @Deprecated(since = "1.22")
+    @Deprecated(since = "1.23")
     public void tickAll(DrawingContext dc, double delta) {
         tickAll(delta);
     }

@@ -86,7 +86,7 @@ public class Entity {
      * @param t  caller-defined time or delta value
      * @deprecated use {@link #tick(double)}
      */
-    @Deprecated(since = "1.22")
+    @Deprecated(since = "1.23")
     public void tick(DrawingContext dc, double t) {
         tick(t);
     }

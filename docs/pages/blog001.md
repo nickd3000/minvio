@@ -23,7 +23,7 @@ file:
 <dependency>
     <groupId>io.github.nickd3000</groupId>
     <artifactId>minvio</artifactId>
-    <version>1.22</version>
+    <version>1.23</version>
 </dependency>
 ```
 
