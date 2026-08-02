@@ -5,33 +5,45 @@ import com.physmo.minvio.DrawingContext;
 import com.physmo.minvio.MinvioApp;
 
 import java.awt.Color;
-import java.io.DataInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 
 // Experiment to decode atari st xenon data files
 public class FileDecoder extends MinvioApp {
 
-    String filePath = "/Volumes/DATA_2TB/Dropbox/Emulaton/unpacked/atariSt_xenon/sprit32.dat";
+    String filePath;
     Color background = new Color(218, 132, 78);
-    byte[] data = null;
+    byte[] data = createDemoData();
     int scale = 2;
     int stride = 128;
 
+    public FileDecoder() {
+    }
+
+    public FileDecoder(String filePath) {
+        this.filePath = filePath;
+    }
+
     public static void main(String[] args) {
-        MinvioApp app = new FileDecoder();
-        app.start(700, 700, "Anchor Example", 60);
+        String filePath = args.length > 0 ? args[0] : null;
+        MinvioApp app = new FileDecoder(filePath);
+        app.start(700, 700, "File Decoder", 60);
     }
 
     @Override
     public void init(BasicDisplay bd) {
         super.init(bd);
 
-        try {
-            data = readFile(filePath);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (filePath != null && !filePath.isBlank()) {
+            try {
+                data = readFile(filePath);
+            } catch (IOException e) {
+                data = createDemoData();
+                System.err.println("Could not load '" + filePath + "': " + e.getMessage());
+                System.err.println("Using generated demo data instead.");
+            }
         }
     }
 
@@ -81,6 +93,9 @@ public class FileDecoder extends MinvioApp {
         setDrawColor(Color.ORANGE);
         drawText("X:" + getMouseX(), 20, 20);
         drawText("Y:" + stride, 20, 40);
+        if (filePath == null || filePath.isBlank()) {
+            drawText("Pass a data-file path as the first argument to inspect real bytes.", 20, 60);
+        }
     }
 
 
@@ -155,14 +170,16 @@ public class FileDecoder extends MinvioApp {
 
 
     public byte[] readFile(String file) throws IOException {
-        DataInputStream reader = new DataInputStream(new FileInputStream(file));
-        int nBytesToRead = reader.available();
-        if (nBytesToRead > 0) {
-            byte[] bytes = new byte[nBytesToRead];
-            reader.read(bytes);
-            return bytes;
-        }
-        return new byte[0];
+        return Files.readAllBytes(Path.of(file));
     }
 
+    private static byte[] createDemoData() {
+        byte[] bytes = new byte[16 * 1024];
+        for (int i = 0; i < bytes.length; i++) {
+            int x = i & 0xff;
+            int y = (i >> 8) & 0xff;
+            bytes[i] = (byte) ((x ^ (y * 17) ^ (x * y)) & 0xff);
+        }
+        return bytes;
+    }
 }

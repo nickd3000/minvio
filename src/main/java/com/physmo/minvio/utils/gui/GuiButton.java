@@ -7,6 +7,9 @@ import com.physmo.minvio.utils.gui.support.MouseMessageData;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import static com.physmo.minvio.utils.gui.support.GuiMessage.MOUSE_BUTTON_DOWN;
 import static com.physmo.minvio.utils.gui.support.GuiMessage.MOUSE_BUTTON_UP;
@@ -25,26 +28,36 @@ public class GuiButton extends GuiContainer {
     private final Font font = new Font("Verdana", Font.PLAIN, 15);
     boolean visiblyPressed = false;
     boolean buttonActivated = false;
-    Runnable action = null;
+    private final List<Runnable> actionListeners = new ArrayList<>();
     private String text = null;
 
+    /**
+     * Creates a button with no label.
+     *
+     * @param rect button bounds
+     */
     public GuiButton(Rect rect) {
         super(rect);
     }
 
+    /**
+     * Creates a button with a label.
+     *
+     * @param rect button bounds
+     * @param text label text
+     */
     public GuiButton(Rect rect, String text) {
         super(rect);
         this.text = text;
     }
 
     /**
-     * Sets the action to be executed when the button is activated.
+     * Adds an action listener to the button.
      *
      * @param action the {@link Runnable} to be executed when the button is triggered.
-     *               If set to null, no action will be performed upon activation.
      */
-    public void setAction(Runnable action) {
-        this.action = action;
+    public void addActionListener(Runnable action) {
+        this.actionListeners.add(Objects.requireNonNull(action, "action"));
     }
 
     @Override
@@ -66,6 +79,13 @@ public class GuiButton extends GuiContainer {
         }
     }
 
+    /**
+     * Tests a local point against inclusive button bounds.
+     *
+     * @param x local x-coordinate
+     * @param y local y-coordinate
+     * @return {@code true} when inside or on the right/bottom edge
+     */
     public boolean isPointInside(int x, int y) {
         if (x < 0 || y < 0) return false;
         return x <= rect.w && y <= rect.h;
@@ -95,7 +115,9 @@ public class GuiButton extends GuiContainer {
         if (guiMessage == MOUSE_BUTTON_UP) {
             MouseMessageData md = (MouseMessageData) object;
             if (isPointInside(md.x, md.y)) {
-                if (action != null) action.run();
+                for (Runnable actionListener : actionListeners) {
+                    actionListener.run();
+                }
             }
 
             this.dirty = true;

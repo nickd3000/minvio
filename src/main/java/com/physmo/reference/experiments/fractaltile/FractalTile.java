@@ -24,7 +24,7 @@ public class FractalTile extends MinvioApp {
 
     public static void main(String[] args) {
         MinvioApp app = new FractalTile();
-        app.start(600, 600, "FractalTile", 30);
+        app.start(600, 600, "Fractal Tile", 30);
     }
 
 

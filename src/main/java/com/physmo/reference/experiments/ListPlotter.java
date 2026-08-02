@@ -8,7 +8,7 @@ public class ListPlotter extends MinvioApp {
 
     public static void main(String... args) {
         MinvioApp app = new ListPlotter();
-        app.start(400, 400, "Mapper Test", 60);
+        app.start(400, 400, "List Plotter", 60);
     }
 
     @Override

@@ -27,6 +27,11 @@ public class RollingAverage {
         values = new double[size];
     }
 
+    /**
+     * Adds a value, replacing the oldest value once the window is full.
+     *
+     * @param v value to add
+     */
     public void add(double v) {
         sum -= values[index];
         sum += v;
@@ -36,10 +41,19 @@ public class RollingAverage {
         average = sum / count;            // Average based on number of elements
     }
 
+    /**
+     * @return sum of values currently represented by the rolling window
+     */
     public double getSum() {
         return sum;
     }
 
+    /**
+     * Returns the current average.
+     *
+     * @return zero before the first value, otherwise the average of populated
+     * entries up to the configured window size
+     */
     public double getAverage() {
         return average;
     }

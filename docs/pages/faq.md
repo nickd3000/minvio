@@ -31,7 +31,7 @@ Maven (pom.xml):
 <dependency>
     <groupId>io.github.nickd3000</groupId>
     <artifactId>minvio</artifactId>
-    <version>1.21</version>
+    <version>1.23</version>
 </dependency>
 ```
 
@@ -39,7 +39,7 @@ Gradle (Kotlin DSL):
 
 ```kotlin
 dependencies {
-    implementation("io.github.nickd3000:minvio:1.21")
+    implementation("io.github.nickd3000:minvio:1.23")
 }
 ```
 
@@ -47,7 +47,7 @@ Gradle (Groovy DSL):
 
 ```groovy
 dependencies {
-    implementation 'io.github.nickd3000:minvio:1.21'
+    implementation 'io.github.nickd3000:minvio:1.23'
 }
 ```
 
@@ -147,7 +147,7 @@ See LICENCE.TXT in the repository root for full details.
 ## I added the dependency but Maven/Gradle can’t resolve it.
 
 - Ensure you have Maven Central enabled in your build.
-- Double-check the group/artifact/version: `io.github.nickd3000:minvio:1.21`.
+- Double-check the group/artifact/version: `io.github.nickd3000:minvio:1.23`.
 - Refresh your IDE/build (e.g., "Reload All Maven Projects" in IntelliJ, or `./gradlew --refresh-dependencies`).
 
 ## My program runs but I see a black/blank window.

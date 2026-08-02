@@ -1,22 +1,57 @@
 package com.physmo.minvio;
 
+import com.physmo.minvio.utils.MinvioLogger;
 import com.physmo.minvio.utils.RollingAverage;
+import com.physmo.minvio.utils.ecs.Entity;
+import com.physmo.minvio.utils.ecs.EntitySystem;
 
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Shape;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Objects;
 
+/**
+ * Base application loop and drawing facade for a Minvio sketch.
+ *
+ * <p>Call one of the {@code start} methods to attach a display, invoke
+ * {@link #init(BasicDisplay)}, and run updates and drawing on the calling
+ * thread until the application is stopped or the display closes. Input events
+ * for the standard display are delivered by AWT and are not synchronized with
+ * the application loop.</p>
+ *
+ * <p>The drawing methods delegate to the active display's
+ * {@link DrawingContext}. Methods that require a display or drawing context
+ * must not be called before startup attaches one.</p>
+ */
 public class MinvioApp implements DrawingContext {
 
     final RollingAverage tickRollingAverage = new RollingAverage(30);
     final Font fpsFont = new Font("Verdana", Font.PLAIN, 12);
     BasicDisplay bd = null;
-    boolean running = true;
-    int targetFps = 60;
+    volatile boolean running = true;
+    volatile int targetFps = 60;
     boolean displayFps = false;
+    boolean debugMode = false;
+    EntitySystem debugEntitySystem = null;
+    private int screenshotKey = KeyEvent.VK_F12;
+    private boolean screenshotEnabled = true;
     private DrawingContext drawingContext;
+    private String screenshotAndQuitPath = null;
+    private int screenshotAndQuitFrame = -1;
+    private int frameCount = 0;
 
+    /**
+     * Returns the display currently attached to this application.
+     *
+     * @return active display, or {@code null} before {@link #start(BasicDisplay)}
+     */
     public BasicDisplay getBasicDisplay() {
         return bd;
     }
@@ -24,9 +59,34 @@ public class MinvioApp implements DrawingContext {
     /**
      * Stop the application.
      */
-    // TODO: This should call a user implemented destroy method.
     public void stop() {
         running = false;
+    }
+
+    /**
+     * Schedules a PNG screenshot after a specific rendered frame, then stops the app.
+     *
+     * <p>Frames are counted from {@code 1}. The screenshot is taken after the
+     * requested frame's {@link #draw(double)} call and any built-in overlays, so
+     * the image matches the final draw buffer for that frame. Call this before
+     * {@link #start(BasicDisplay)} or another {@code start} overload.</p>
+     *
+     * @param outputPath  destination PNG file path
+     * @param exitOnFrame frame number to capture and stop on; must be at least 1
+     * @return this application for fluent startup
+     */
+    public MinvioApp takeScreenshotAndQuit(String outputPath, int exitOnFrame) {
+        Objects.requireNonNull(outputPath, "outputPath");
+        if (outputPath.isBlank()) {
+            throw new IllegalArgumentException("Screenshot output path must not be blank");
+        }
+        if (exitOnFrame < 1) {
+            throw new IllegalArgumentException("Screenshot frame must be at least 1");
+        }
+
+        this.screenshotAndQuitPath = outputPath;
+        this.screenshotAndQuitFrame = exitOnFrame;
+        return this;
     }
 
 
@@ -38,17 +98,17 @@ public class MinvioApp implements DrawingContext {
      * @param fps   Frames-per-second of the draw loop.
      */
     public void start(BasicDisplay bd, String title, int fps) {
+        setFpsTarget(fps);
         this.bd = bd;
         bd.setTitle(title);
         bd.getDrawingContext().cls();
-        this.targetFps = fps;
         start(bd);
     }
 
     /**
      * Starts the MinvioApp by creating the application window and starting the main draw loop running.
      *
-     * @param width The width of the application window.
+     * @param width  The width of the application window.
      * @param height The height of the application window.
      * @return The MinvioApp instance.
      */
@@ -68,10 +128,10 @@ public class MinvioApp implements DrawingContext {
      * @return The MinvioApp instance.
      */
     public MinvioApp start(int width, int height, String title, int fps) {
+        setFpsTarget(fps);
         BasicDisplayAwt bd = new BasicDisplayAwt(width, height);
         bd.setTitle(title);
         bd.getDrawingContext().cls();
-        this.targetFps = fps;
         start(bd);
         return this;
     }
@@ -84,52 +144,71 @@ public class MinvioApp implements DrawingContext {
     public void start(BasicDisplay bd) {
         this.bd = bd;
         this.drawingContext = bd.getDrawingContext();
+        running = true;
+        frameCount = 0;
 
-        // Call init() once only.
-        init(bd);
+        try {
+            // Call init() once only.
+            init(bd);
 
-        long lastUpdateTime = System.nanoTime();
-        long lastDrawTime = System.nanoTime();
+            long lastUpdateTime = System.nanoTime();
+            long lastDrawTime = System.nanoTime();
 
-        int msPerFrame = 1000 / targetFps; // e.g.g 33.3 for 30fps
-        double delta;
+            double delta;
 
-        while (running) {
-            while (bd.getElapsedTime() < msPerFrame) {
-                int remainingTime = (int) (msPerFrame - bd.getElapsedTime());
+            while (running && bd.isVisible()) {
+                double msPerFrame = 1000.0 / targetFps;
 
-                try {
-                    if (remainingTime < 10) {
-                        if (remainingTime > 0) Thread.sleep(remainingTime);
-                        continue;
+                // Check for system-level triggers (like screenshots)
+                handleSystemInputs();
+
+                // Synchronize keyboard/mouse state for the current frame
+                bd.tickInput();
+
+                long currentUpdateTime = System.nanoTime();
+                delta = (double) (currentUpdateTime - lastUpdateTime);
+                lastUpdateTime = currentUpdateTime;
+                update(bd, (delta) / 1_000_000_000.0);
+
+                double remainingTime = msPerFrame - bd.getElapsedTime();
+                while (running && bd.isVisible() && remainingTime > 0) {
+
+                    try {
+                        BasicDisplay.sleepForFrameRemainder(remainingTime);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        running = false;
                     }
-
-                    Thread.sleep(5);
-                    delta = (double) (System.nanoTime() - lastUpdateTime);
-                    lastUpdateTime = System.nanoTime();
-                    update(bd, (delta) / 1_000_000_000.0);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    remainingTime = msPerFrame - bd.getElapsedTime();
                 }
+
+                if (!running || !bd.isVisible()) break;
+
+                long currentTime = System.nanoTime();
+                long lDelta = currentTime - lastDrawTime;
+                delta = (double) lDelta;
+
+                tickRollingAverage.add(lDelta / (double) 1000_000);
+                lastDrawTime = currentTime;
+                BasicDisplay.resetRepaintTimer();
+                draw((delta) / 1_000_000_000.0);
+
+                if (displayFps) drawFps();
+                if (debugMode) drawDebugInfo();
+                frameCount++;
+                if (handleScreenshotAndQuit()) break;
+                bd.repaint();
+
+                bd.resizeIfRequested();
             }
-
-            long lDelta = System.nanoTime() - lastDrawTime;
-            delta = (double) lDelta;
-
-            tickRollingAverage.add(lDelta / (double) 1000_000);
-            lastDrawTime = System.nanoTime();
-            BasicDisplay.repaintTimerStart = System.nanoTime();
-            draw((delta) / 1_000_000_000.0);
-
-            if (displayFps) drawFps();
-            bd.repaint();
-
-            bd.resizeIfRequested();
-
-            //bd.repaintTimerStart = System.nanoTime();
+        } finally {
+            running = false;
+            try {
+                destroy(bd);
+            } finally {
+                bd.close();
+            }
         }
-
-
     }
 
     /**
@@ -151,6 +230,15 @@ public class MinvioApp implements DrawingContext {
     public void update(BasicDisplay bd, double delta) {
     }
 
+    /**
+     * Skeleton destroy function - override this to release application resources.
+     * This is called once when the application loop exits, including after an exception.
+     *
+     * @param bd the instance of BasicDisplay.
+     */
+    public void destroy(BasicDisplay bd) {
+    }
+
 
     /**
      * The main draw function of your app, you must override this in your MinvioApp based
@@ -164,16 +252,52 @@ public class MinvioApp implements DrawingContext {
 
 
     private void drawFps() {
+        drawTextWithShadow(String.format("FPS: %.2f", 1000.0 / tickRollingAverage.getAverage()), 10, 15);
+    }
+
+    private void drawDebugInfo() {
         DrawingContext dc = bd.getDrawingContext();
         Font currentFont = dc.getFont();
         Color currentColor = dc.getDrawColor();
         dc.setFont(fpsFont);
+
         String fpsText = String.format("FPS: %.2f", 1000.0 / tickRollingAverage.getAverage());
-        dc.setDrawColor(Color.BLACK);
-        dc.drawText(fpsText, 11, 16);
-        dc.setDrawColor(Color.WHITE);
-        dc.drawText(fpsText, 10, 15);
+        String mouseText = String.format("Mouse: %d, %d", getMouseX(), getMouseY());
+
+        drawTextWithShadow(fpsText, 10, 15);
+        drawTextWithShadow(mouseText, 10, 30);
+
+        if (debugEntitySystem != null) {
+            drawEntityDebug();
+        }
+
         dc.setFont(currentFont);
+        dc.setDrawColor(currentColor);
+    }
+
+    private void drawTextWithShadow(String text, int x, int y) {
+        DrawingContext dc = bd.getDrawingContext();
+        Font currentFont = dc.getFont();
+        Color currentColor = dc.getDrawColor();
+
+        dc.setDrawColor(Color.BLACK);
+        dc.drawText(text, x + 1, y + 1);
+        dc.setDrawColor(Color.WHITE);
+        dc.drawText(text, x, y);
+
+        dc.setDrawColor(currentColor);
+    }
+
+    private void drawEntityDebug() {
+        if (debugEntitySystem == null) return;
+        DrawingContext dc = bd.getDrawingContext();
+        Color currentColor = dc.getDrawColor();
+
+        dc.setDrawColor(Color.RED);
+        for (Entity entity : debugEntitySystem.getEntities()) {
+            dc.drawRect(entity.position.x - 5, entity.position.y - 5, 10, 10);
+        }
+
         dc.setDrawColor(currentColor);
     }
 
@@ -183,6 +307,9 @@ public class MinvioApp implements DrawingContext {
      * @param targetFps integer frames per second target.
      */
     public void setFpsTarget(int targetFps) {
+        if (targetFps <= 0) {
+            throw new IllegalArgumentException("Target FPS must be greater than zero");
+        }
         this.targetFps = targetFps;
     }
 
@@ -204,14 +331,60 @@ public class MinvioApp implements DrawingContext {
         displayFps = set;
     }
 
+    /**
+     * Enable or disable debug mode.
+     * When enabled, displays FPS and mouse coordinates.
+     *
+     * @param set Boolean value representing desired debug state.
+     */
+    public void setDebugMode(boolean set) {
+        debugMode = set;
+    }
+
+    /**
+     * Returns whether debug mode is enabled.
+     *
+     * @return true if debug mode is enabled.
+     */
+    public boolean isDebugMode() {
+        return debugMode;
+    }
+
+    /**
+     * Attach an EntitySystem for debug visualization.
+     * When debug mode is enabled, it will draw markers for entities.
+     *
+     * @param entitySystem The EntitySystem to monitor.
+     */
+    public void setDebugEntitySystem(EntitySystem entitySystem) {
+        this.debugEntitySystem = entitySystem;
+    }
+
+    /**
+     * Returns the drawing context used by this application.
+     *
+     * @return active drawing context, or {@code null} before startup
+     */
     public DrawingContext getDrawingContext() {
         return drawingContext;
     }
 
+    /**
+     * Returns the current horizontal mouse coordinate from the active display.
+     *
+     * @return horizontal mouse coordinate in display pixels
+     * @throws NullPointerException if no display has been attached
+     */
     public int getMouseX() {
         return bd.getMouseX();
     }
 
+    /**
+     * Returns the current vertical mouse coordinate from the active display.
+     *
+     * @return vertical mouse coordinate in display pixels
+     * @throws NullPointerException if no display has been attached
+     */
     public int getMouseY() {
         return bd.getMouseY();
     }
@@ -246,8 +419,36 @@ public class MinvioApp implements DrawingContext {
         drawingContext.drawImage(sourceImage, x, y);
     }
 
+    /**
+     * Draw an image to the display.
+     * Coordinates are cast to integers.
+     *
+     * @param sourceImage Source image as a Buffered Image
+     * @param x           x-coordinate
+     * @param y           y-coordinate
+     */
+    @Override
+    public void drawImage(BufferedImage sourceImage, double x, double y) {
+        drawingContext.drawImage(sourceImage, x, y);
+    }
+
     @Override
     public void drawImage(BufferedImage sourceImage, int x, int y, int w, int h) {
+        drawingContext.drawImage(sourceImage, x, y, w, h);
+    }
+
+    /**
+     * Draw an image to the display.
+     * Coordinates are cast to integers.
+     *
+     * @param sourceImage Source image as a Buffered Image
+     * @param x           x-coordinate
+     * @param y           y-coordinate
+     * @param w           width
+     * @param h           height
+     */
+    @Override
+    public void drawImage(BufferedImage sourceImage, double x, double y, double w, double h) {
         drawingContext.drawImage(sourceImage, x, y, w, h);
     }
 
@@ -256,8 +457,35 @@ public class MinvioApp implements DrawingContext {
         return drawingContext.getRGBAtPoint(x, y);
     }
 
+    /**
+     * Get the color in RGB packed integer format at the defined position.
+     * <p>
+     * Format in hex: 0xAARRGGBB
+     * Coordinates are cast to integers.
+     *
+     * @param x x-coordinate
+     * @param y y-coordinate
+     * @return integer RGB value
+     */
+    @Override
+    public int getRGBAtPoint(double x, double y) {
+        return drawingContext.getRGBAtPoint(x, y);
+    }
+
     @Override
     public void drawPoint(int x, int y) {
+        drawingContext.drawPoint(x, y);
+    }
+
+    /**
+     * Drawing function - Draw a pixel using current draw color.
+     * Coordinates are cast to integers.
+     *
+     * @param x x-coordinate
+     * @param y y-coordinate
+     */
+    @Override
+    public void drawPoint(double x, double y) {
         drawingContext.drawPoint(x, y);
     }
 
@@ -276,14 +504,87 @@ public class MinvioApp implements DrawingContext {
         drawingContext.drawFilledRect(x, y, width, height);
     }
 
+    /**
+     * Drawing function - draw a filled rectangle
+     * Coordinates are cast to integers.
+     *
+     * @param x      x-coordinate
+     * @param y      y-coordinate
+     * @param width  width
+     * @param height height
+     */
+    @Override
+    public void drawFilledRect(double x, double y, double width, double height) {
+        drawingContext.drawFilledRect(x, y, width, height);
+    }
+
     @Override
     public void drawRect(int x, int y, int width, int height) {
+        drawingContext.drawRect(x, y, width, height);
+    }
+
+    /**
+     * Drawing function - draw an unfilled rectangle
+     * Coordinates are cast to integers.
+     *
+     * @param x      x-coordinate
+     * @param y      y-coordinate
+     * @param width  width
+     * @param height height
+     */
+    @Override
+    public void drawRect(double x, double y, double width, double height) {
         drawingContext.drawRect(x, y, width, height);
     }
 
     @Override
     public void drawFilledPolygon(int[] xPoints, int[] yPoints, int numPoints) {
         drawingContext.drawFilledPolygon(xPoints, yPoints, numPoints);
+    }
+
+    @Override
+    public void drawPolygon(int[] xPoints, int[] yPoints, int numPoints) {
+        drawingContext.drawPolygon(xPoints, yPoints, numPoints);
+    }
+
+    @Override
+    public void drawPolyline(int[] xPoints, int[] yPoints, int numPoints) {
+        drawingContext.drawPolyline(xPoints, yPoints, numPoints);
+    }
+
+    @Override
+    public void drawEllipse(double x, double y, double width, double height) {
+        drawingContext.drawEllipse(x, y, width, height);
+    }
+
+    @Override
+    public void drawFilledEllipse(double x, double y, double width, double height) {
+        drawingContext.drawFilledEllipse(x, y, width, height);
+    }
+
+    @Override
+    public void drawTriangle(double x1, double y1, double x2, double y2, double x3, double y3) {
+        drawingContext.drawTriangle(x1, y1, x2, y2, x3, y3);
+    }
+
+    @Override
+    public void drawFilledTriangle(double x1, double y1, double x2, double y2, double x3, double y3) {
+        drawingContext.drawFilledTriangle(x1, y1, x2, y2, x3, y3);
+    }
+
+    @Override
+    public void drawArc(double x, double y, double width, double height, double startAngle, double arcAngle) {
+        drawingContext.drawArc(x, y, width, height, startAngle, arcAngle);
+    }
+
+    @Override
+    public void drawShape(Shape shape) {
+        drawingContext.drawShape(shape);
+    }
+
+    @Override
+    public void drawFilledShape(Shape shape) {
+        drawingContext.drawFilledShape(shape);
     }
 
     @Override
@@ -298,6 +599,19 @@ public class MinvioApp implements DrawingContext {
 
     @Override
     public void drawText(String str, int x, int y) {
+        drawingContext.drawText(str, x, y);
+    }
+
+    /**
+     * Draw the supplied string using the active font.
+     * Coordinates are cast to integers.
+     *
+     * @param str text to draw
+     * @param x   x-coordinate
+     * @param y   y-coordinate
+     */
+    @Override
+    public void drawText(String str, double x, double y) {
         drawingContext.drawText(str, x, y);
     }
 
@@ -332,6 +646,61 @@ public class MinvioApp implements DrawingContext {
     }
 
     @Override
+    public double setStrokeWidth(double width) {
+        return drawingContext.setStrokeWidth(width);
+    }
+
+    @Override
+    public double getStrokeWidth() {
+        return drawingContext.getStrokeWidth();
+    }
+
+    @Override
+    public void setAlpha(double alpha) {
+        drawingContext.setAlpha(alpha);
+    }
+
+    @Override
+    public double getAlpha() {
+        return drawingContext.getAlpha();
+    }
+
+    @Override
+    public Composite setComposite(Composite composite) {
+        return drawingContext.setComposite(composite);
+    }
+
+    @Override
+    public Composite getComposite() {
+        return drawingContext.getComposite();
+    }
+
+    @Override
+    public void setClip(double x, double y, double width, double height) {
+        drawingContext.setClip(x, y, width, height);
+    }
+
+    @Override
+    public void clearClip() {
+        drawingContext.clearClip();
+    }
+
+    @Override
+    public Shape getClip() {
+        return drawingContext.getClip();
+    }
+
+    @Override
+    public void pushStyle() {
+        drawingContext.pushStyle();
+    }
+
+    @Override
+    public void popStyle() {
+        drawingContext.popStyle();
+    }
+
+    @Override
     public Image getDrawBuffer() {
         return drawingContext.getDrawBuffer();
     }
@@ -344,11 +713,152 @@ public class MinvioApp implements DrawingContext {
         return bd.getHeight();
     }
 
+    /**
+     * Saves the current transformation state onto a stack.
+     */
+    @Override
+    public void pushMatrix() {
+        drawingContext.pushMatrix();
+    }
+
+    /**
+     * Restores the last saved transformation state from the stack.
+     */
+    @Override
+    public void popMatrix() {
+        drawingContext.popMatrix();
+    }
+
+    /**
+     * Moves the origin of the coordinate system.
+     *
+     * @param x The distance to move along the x-axis.
+     * @param y The distance to move along the y-axis.
+     */
+    @Override
+    public void translate(double x, double y) {
+        drawingContext.translate(x, y);
+    }
+
+    /**
+     * Rotates the coordinate system.
+     *
+     * @param angle The angle of rotation in radians.
+     */
+    @Override
+    public void rotate(double angle) {
+        drawingContext.rotate(angle);
+    }
+
+    /**
+     * Scales the coordinate system uniformly.
+     *
+     * @param s The scale factor.
+     */
+    @Override
+    public void scale(double s) {
+        drawingContext.scale(s);
+    }
+
+    /**
+     * Scales the coordinate system non-uniformly.
+     *
+     * @param x The scale factor along the x-axis.
+     * @param y The scale factor along the y-axis.
+     */
+    @Override
+    public void scale(double x, double y) {
+        drawingContext.scale(x, y);
+    }
+
+    /**
+     * Returns the title of the active display.
+     *
+     * @return current display title
+     * @throws NullPointerException if no display has been attached
+     */
     public String getTitle() {
         return bd.getTitle();
     }
 
+    /**
+     * Requests a PNG screenshot of the active display at the supplied path.
+     *
+     * @param path destination file path
+     * @throws NullPointerException if no display has been attached
+     */
     public void saveScreenshot(String path) {
         bd.saveScreenshot(path);
+    }
+
+    /**
+     * Attempts to write a PNG screenshot of the active display at the supplied path.
+     *
+     * @param path destination file path
+     * @return {@code true} if the image was written successfully
+     * @throws NullPointerException if no display has been attached
+     */
+    public boolean trySaveScreenshot(String path) {
+        return bd.trySaveScreenshot(path);
+    }
+
+    /**
+     * Writes a PNG screenshot of the active display at the supplied path.
+     *
+     * @param path destination file path
+     * @return the supplied destination path
+     * @throws IOException          if the image cannot be written
+     * @throws NullPointerException if no display has been attached
+     */
+    public Path saveScreenshot(Path path) throws IOException {
+        return bd.saveScreenshot(path);
+    }
+
+    private void handleSystemInputs() {
+        if (!screenshotEnabled) return;
+
+        int[] keyState = bd.getKeyState();
+        int[] keyStatePrevious = bd.getKeyStatePrevious();
+
+        // Detect "just pressed" state for the screenshot key.
+        if (isKeyJustPressed(keyState, keyStatePrevious, screenshotKey)) {
+            takeScreenshot();
+        }
+    }
+
+    private boolean isKeyJustPressed(int[] keyState, int[] previousKeyState, int keyCode) {
+        if (keyState == null || previousKeyState == null) return false;
+        if (keyCode < 0 || keyCode >= keyState.length || keyCode >= previousKeyState.length) return false;
+        return keyState[keyCode] != 0 && previousKeyState[keyCode] == 0;
+    }
+
+    private void takeScreenshot() {
+        String title = getTitle().replaceAll("\\s+", ""); // Remove spaces
+        if (title.isEmpty()) title = "screenshot";
+
+        String fileName = title + ".png";
+        File file = new File(fileName);
+        int count = 1;
+
+        // Increment number until we find a name that doesn't exist
+        while (file.exists()) {
+            fileName = title + "_" + count + ".png";
+            file = new File(fileName);
+            count++;
+        }
+
+        if (trySaveScreenshot(file.getAbsolutePath())) {
+            MinvioLogger.info("Screenshot saved: " + file.getAbsolutePath());
+        }
+    }
+
+    private boolean handleScreenshotAndQuit() {
+        if (screenshotAndQuitFrame != frameCount) return false;
+
+        if (trySaveScreenshot(screenshotAndQuitPath)) {
+            MinvioLogger.info("Screenshot saved: " + new File(screenshotAndQuitPath).getAbsolutePath());
+        }
+        running = false;
+        return true;
     }
 }

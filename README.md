@@ -4,34 +4,49 @@
 
 ![GitHub](https://img.shields.io/github/license/nickd3000/minvio)
 
-Processing-style sketches in plain Java. Minvio handles the window + draw loop so you can focus on graphics and
-experiments.
+## Interactive 2D graphics in plain Java
 
-Minvio handles creating the application window and timed draw loop and exposes a host of drawing and input
-functionality.
+Minvio is a lightweight 2D sketching library for plain Java. It handles the
+repetitive Java2D setup, creates the application window, and runs the timed
+update/draw loop so you can focus on graphics, interaction, and experiments.
 
-Great for Programmatic Art, Experiments, POC's, Algorithm Development, Toys, Learning.
+The API stays small, has no runtime dependencies beyond the JDK, and keeps direct
+access to standard Java types such as `BufferedImage`, `Color`, and `Font`.
 
-Find examples here: https://github.com/nickd3000/minvio-examples
+It is designed for:
+
+- Generative and programmatic art
+- Algorithm visualization and development
+- Experiments and proofs of concept
+- Teaching and learning
+- Small interactive desktop tools and toys
+
+Minvio is deliberately a lightweight 2D sketch library, not a game engine. For
+projects that require 3D rendering, GPU shaders, physics, audio, or mobile and
+web deployment, a larger framework such as Processing, OPENRNDR, libGDX, or
+FXGL may be a better fit.
+
+Additional examples are available here: https://github.com/nickd3000/minvio-examples
 
 **Website with FAQ and Blog posts on the project: https://nickd3000.github.io/minvio/**
 
-Add maven dependency:
+## Installation
+
+Add the Maven dependency:
 
 ``` xml
 <dependency>
     <groupId>io.github.nickd3000</groupId>
     <artifactId>minvio</artifactId>
-    <version>1.22</version>
+    <version>1.23</version>
 </dependency>
 ```
 
-**Minimal example**
+## Minimal Example
 
 ``` java
 import com.physmo.minvio.MinvioApp;
-
-import java.awt.Color;
+import com.physmo.minvio.utils.Palette;
 
 class SimpleExample extends MinvioApp {
 
@@ -58,15 +73,95 @@ class SimpleExample extends MinvioApp {
 
 ![Image Simple Example](docs/wiki/simpleExample.png)
 
+## 2D Drawing API
+
+Minvio includes common outline and filled primitives for circles, ellipses,
+rectangles, triangles, polygons, polylines, and Java2D `Shape` objects. Arcs use
+radians, matching the transform API.
+
+Drawing state includes color, font, stroke width, alpha, composite, and
+rectangular clipping. Use `pushStyle()` and `popStyle()` to make temporary style
+changes without manually restoring each value:
+
+```java
+void drawStyledShape() {
+    pushStyle();
+    setDrawColor(new Color(70, 170, 255));
+    setStrokeWidth(4);
+    setAlpha(0.65);
+    setClip(20, 20, 160, 100);
+    drawFilledEllipse(0, 0, 220, 140);
+    popStyle();
+}
+```
+
+Transforms use their own independent `pushMatrix()` and `popMatrix()` stack.
+
+## Examples
+
+Most examples use the high-level `MinvioApp` style: extend `MinvioApp`, override
+`init`, `update`, and/or `draw`, then call `start(...)`. This is the recommended
+way to write Minvio sketches and small applications.
+
+Examples in this repository live under `src/main/java/com/physmo/reference/` and
+are organized by topic:
+
+- `beginner`: Java language basics taught with simple visual examples.
+- `basics`: core Minvio app, image, text, resize, timing, and screenshot examples.
+- `input`: keyboard, mouse, and interaction examples.
+- `drawing`: drawing API, style, shape, helper, and pixel-sampling examples.
+- `concepts`: common creative-coding ideas such as particles, forces, collision,
+  color interpolation, transforms, and noise.
+- `lowlevel`: a small set of direct `BasicDisplay` examples for advanced/manual
+  display-loop control.
+- `gallery`, `gui`, `ecs`, `experiments`, `wiki`, and `rigs`: larger sketches,
+  GUI/ECS demos, exploratory tools, and docs-linked examples.
+
+See `src/main/java/com/physmo/reference/README.md` for a fuller guide to the
+example packages.
+
+The separate examples repository is here:
+https://github.com/nickd3000/minvio-examples
+
+## Development
+
+Minvio targets Java 17. When running Maven locally, use JDK 17 to avoid JaCoCo
+trying to instrument newer JDK runtime classes:
+
+```sh
+JAVA_HOME=$(/usr/libexec/java_home -v 17) PATH="$JAVA_HOME/bin:$PATH" mvn test
+```
+
 ## More Example Images
 
 ![Image Palette Example](docs/IQPalette.png)
 
 ### Changelist
 
-###### Version 1.22 - Sep 2025
+###### Version 1.23 - August 2026
 
+* Added Screenshot Functionality
+    * Implemented automatic screenshot saving using the F12 key in MinvioApp.
+    * Added takeScreenshot() and saveScreenshot() methods with automatic file naming (e.g., AppName_1.png).
+  * Added takeScreenshotAndQuit(...) for agent-friendly screenshot capture from examples.
+  * Added screenshot APIs that can report success or throw when writing fails.
+* Enhanced Drawing Precision
+    * Added overloaded drawing methods across MinvioApp and DrawingContext that accept double coordinates (e.g.,
+      drawPoint, drawRect, drawText, drawImage) for more sub-pixel precision.
+* Added Transformation and State Management (pushMatrix, popMatrix, translate, rotate, scale)
+* Added ellipses, triangles, polygon outlines, polylines, arcs, and Java2D Shape drawing.
+* Added stroke width, alpha/composite, clipping, and pushStyle/popStyle state management.
+* Added Rotations1 gallery example (concentric animated rings)
+* Added TransformationExample, FractalTreeExample, and KaleidoscopeExample gallery examples
 * Added Fractal Tile example
+* Added retro palette constants for C64, ZX Spectrum, BBC Micro, CGA, Game Boy, and MSX-style colors.
+* Made Palette color presets immutable constants.
+* Improved MinvioApp frame timing so updates run once per rendered frame and frame waits avoid busy-spinning.
+* Improved BasicDisplayAwt Swing/input handoff by routing Swing work through the EDT and snapshotting key state.
+* Added context-free ECS update methods and deprecated the old DrawingContext update overloads.
+* Improved Maven/release hygiene, documentation version references, and artifact contents.
+* Expanded automated test coverage for screenshots, ECS compatibility, frame cadence, input snapshots, and palette
+  constants.
 
 ###### Version 1.20 - Aug 2025
 

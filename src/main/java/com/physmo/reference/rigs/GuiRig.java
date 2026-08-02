@@ -20,7 +20,7 @@ public class GuiRig extends MinvioApp {
     public static void main(String... args) {
         MinvioApp app = new GuiRig();
 
-        app.start(300, 300, "GuiRig", 60);
+        app.start(300, 300, "GUI Rig", 60);
     }
 
     @Override
@@ -33,17 +33,17 @@ public class GuiRig extends MinvioApp {
 
         // Create the first button, add an action then add it as a child of the panel.
         GuiButton guiButton1 = new GuiButton(new Rect(10, 10, 50, 50));
-        guiButton1.setAction(() -> counter--);
+        guiButton1.addActionListener(() -> counter--);
         guiPanel.add(guiButton1);
 
         // Create the second button, add an action then add it as a child of the panel.
         GuiButton guiButton2 = new GuiButton(new Rect(70, 10, 50, 50));
-        guiButton2.setAction(() -> counter++);
+        guiButton2.addActionListener(() -> counter++);
         guiPanel.add(guiButton2);
 
         // Create the third button, add an action then add it as a child of the panel.
         GuiButton guiButton3 = new GuiButton(new Rect(130, 10, 70, 25), "reset");
-        guiButton3.setAction(() -> counter = 0);
+        guiButton3.addActionListener(() -> counter = 0);
         guiPanel.add(guiButton3);
 
         GuiLabel guiLabel1 = new GuiLabel(new Rect(10, 140, 150, 30), "Label 1");
@@ -52,7 +52,7 @@ public class GuiRig extends MinvioApp {
         guiPanel.add(guiLabel2);
 
         GuiSlider guiSlider1 = new GuiSlider(new Rect(10, 100, 150, 20));
-        guiSlider1.setOnChangedHandler(value -> {
+        guiSlider1.addChangeListener(value -> {
             guiLabel2.setText(String.format("%.2f", value));
         });
         guiPanel.add(guiSlider1);

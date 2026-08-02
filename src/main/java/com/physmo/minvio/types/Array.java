@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -17,7 +18,18 @@ import java.util.function.Predicate;
  */
 public class Array<T> implements Iterable<T> {
 
+    /**
+     * @deprecated Direct backing-array access bypasses this collection's
+     * invariants. This field will become private in a future major release.
+     */
+    @Deprecated
     public T[] array;
+
+    /**
+     * @deprecated Use {@link #size()} instead. This field will become private
+     * in a future major release.
+     */
+    @Deprecated
     public int size;
 
     /**
@@ -28,6 +40,9 @@ public class Array<T> implements Iterable<T> {
      *                 (i.e., the maximum number of elements it can hold before resizing).
      */
     public Array(int capacity) {
+        if (capacity < 0) {
+            throw new IllegalArgumentException("Capacity must be non-negative");
+        }
         array = (T[]) new Object[capacity];
         size = 0;
     }
@@ -42,7 +57,8 @@ public class Array<T> implements Iterable<T> {
     }
 
     private void doubleArrayCapacity() {
-        T[] newArray = (T[]) new Object[array.length * 2];
+        int newCapacity = Math.max(1, array.length * 2);
+        T[] newArray = (T[]) new Object[newCapacity];
         System.arraycopy(array, 0, newArray, 0, array.length);
         array = newArray;
     }
@@ -72,16 +88,15 @@ public class Array<T> implements Iterable<T> {
         Objects.requireNonNull(filter);
         boolean removed = false;
 
-        int readPos = 0;
         int writePos = 0;
         for (int i = 0; i < size; i++) {
             if (filter.test(array[i])) {
-                readPos++;
                 removed = true;
                 continue;
             }
-            array[writePos++] = array[readPos++];
+            array[writePos++] = array[i];
         }
+        Arrays.fill(array, writePos, size, null);
         size = writePos;
         return removed;
     }
@@ -93,11 +108,23 @@ public class Array<T> implements Iterable<T> {
      * @throws NullPointerException if the specified list is null
      */
     public void addAll(List<T> list) {
+        Objects.requireNonNull(list, "List cannot be null");
         for (T t : list) add(t);
     }
 
+    /**
+     * Appends the logical contents of another array in index order.
+     *
+     * <p>Null elements are retained. Passing this array itself appends one
+     * snapshot of the original logical contents.</p>
+     *
+     * @param list array whose logical elements are appended
+     * @throws NullPointerException if {@code list} is null
+     */
     public void addAll(Array<T> list) {
-        for (int i = 0; i < list.size(); i++) add(list.get(i));
+        Objects.requireNonNull(list, "Array cannot be null");
+        int sourceSize = list.size();
+        for (int i = 0; i < sourceSize; i++) add(list.get(i));
     }
 
     /**
@@ -150,7 +177,7 @@ public class Array<T> implements Iterable<T> {
      */
     public boolean contains(T element) {
         for (int i = 0; i < size; i++) {
-            if (array[i].equals(element)) return true;
+            if (Objects.equals(array[i], element)) return true;
         }
         return false;
     }
@@ -163,7 +190,7 @@ public class Array<T> implements Iterable<T> {
      */
     public int indexOf(T element) {
         for (int i = 0; i < size; i++) {
-            if (array[i].equals(element)) return i;
+            if (Objects.equals(array[i], element)) return i;
         }
         return -1;
     }
@@ -181,6 +208,7 @@ public class Array<T> implements Iterable<T> {
      *                                        of the array).
      */
     public T get(int index) {
+        checkIndex(index);
         return array[index];
     }
 
@@ -193,14 +221,17 @@ public class Array<T> implements Iterable<T> {
      * @throws ArrayIndexOutOfBoundsException if the index is out of bounds
      *                                        (i.e., less than 0 or greater than or equal to the current size
      *                                        of the array).
-     * @throws NullPointerException           if the provided element is null.
      */
     public void setAt(int index, T element) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Index out of bounds: " + index);
-        }
-        Objects.requireNonNull(element, "Element cannot be null");
+        checkIndex(index);
         array[index] = element;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException(
+                    "Index " + index + " out of bounds for size " + size);
+        }
     }
 
     /**
@@ -221,10 +252,8 @@ public class Array<T> implements Iterable<T> {
 
             @Override
             public T next() {
-                if (hasNext()) {
-                    return array[index++];
-                }
-                return null;
+                if (!hasNext()) throw new NoSuchElementException();
+                return array[index++];
             }
         };
     }

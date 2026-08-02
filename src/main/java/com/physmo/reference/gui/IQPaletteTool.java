@@ -17,23 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * The IQPaletteTool class is a graphical interface for experimenting
- * with an IQPalette, enabling users to manipulate palette controls
- * using sliders and observe the resulting color transitions.
- * It extends MinvioApp, providing a GUI-based application.
- * <p>
- * This application includes:
- * <p>
- * - A graphical panel where generated colors and RGB component visualizations are displayed.
- * - A series of sliders for controlling the parameters of the IQPalette.
- * - A randomization button to set sliders to random values.
- * <p>
- * Features:
- * - Real-time updates to the color palette based on user slider input.
- * - Randomization of slider values to explore various settings.
- * - Default slider settings option for a predefined starting point.
- */
 public class IQPaletteTool extends MinvioApp {
 
     GuiContext guiContext;
@@ -98,7 +81,7 @@ public class IQPaletteTool extends MinvioApp {
 
             GuiSlider slider = new GuiSlider(new Rect(10 + (column * (sliderWidth + 10)), (row * (sliderHeight + 5)), sliderWidth, sliderHeight));
             int finalI = i;
-            slider.setOnChangedHandler(val -> {
+            slider.addChangeListener(val -> {
                 sliderValues[finalI] = val;
                 updateIQPaletteControls();
             });
@@ -111,11 +94,11 @@ public class IQPaletteTool extends MinvioApp {
         retrieveAllSliderValues();
 
         GuiButton randomizeButton = new GuiButton(new Rect(10, 370, 110, 25), "Randomize");
-        randomizeButton.setAction(this::randomizeSliders);
+        randomizeButton.addActionListener(this::randomizeSliders);
         sliderPanel.add(randomizeButton);
 
         GuiButton exportButton = new GuiButton(new Rect(10 + 150, 370, 110, 25), "Export");
-        exportButton.setAction(this::export);
+        exportButton.addActionListener(this::export);
         sliderPanel.add(exportButton);
 
         componentColors = new Color[3];

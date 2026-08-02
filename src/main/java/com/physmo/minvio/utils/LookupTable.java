@@ -1,5 +1,6 @@
 package com.physmo.minvio.utils;
 
+import java.util.Objects;
 import java.util.function.DoubleUnaryOperator;
 
 /**
@@ -22,19 +23,35 @@ public class LookupTable {
      * @param func     DoubleUnaryOperator Lambda function
      */
     public LookupTable(double min, double max, int numItems, DoubleUnaryOperator func) {
+        if (max <= min) {
+            throw new IllegalArgumentException("Maximum must be greater than minimum");
+        }
+        if (numItems < 2) {
+            throw new IllegalArgumentException("Number of items must be at least two");
+        }
+        Objects.requireNonNull(func, "func");
         this.min = min;
         this.numItems = numItems;
         double range = max - min;
-        numItems_range = numItems / range;
+        numItems_range = (numItems - 1) / range;
         values = new double[numItems];
+        double step = range / (double) (numItems - 1);
 
         for (int i = 0; i < numItems; i++) {
-            double step = range / (double) numItems;
             double pos = min + (i * step);
             values[i] = func.applyAsDouble(pos);
         }
     }
 
+    /**
+     * Returns the nearest lower sampled value for an input.
+     *
+     * <p>Inputs outside the configured range are clamped to the first or last
+     * table entry.</p>
+     *
+     * @param x input value
+     * @return sampled function value
+     */
     public double getValue(double x) {
         int index = (int) ((x - min) * (numItems_range));
         if (index < 0) index = 0;
@@ -42,8 +59,23 @@ public class LookupTable {
         return values[index];
     }
 
+    /**
+     * Returns a linearly interpolated value between adjacent samples.
+     *
+     * <p>Inputs outside the sampled range are clamped to the first or last
+     * table entry.</p>
+     *
+     * @param x input value
+     * @return interpolated function value
+     */
     public double getInterpolatedValue(double x) {
         double scaledIndex = (x - min) * numItems_range;
+        if (scaledIndex <= 0) {
+            return values[0];
+        }
+        if (scaledIndex >= numItems - 1) {
+            return values[numItems - 1];
+        }
         int lowerIndex = Math.max(0, Math.min(numItems - 1, (int) scaledIndex));
         int upperIndex = Math.min(numItems - 1, lowerIndex + 1);
 
@@ -58,8 +90,6 @@ public class LookupTable {
         return values[lowerIndex] * (1 - weight) + values[upperIndex] * weight;
     }
 
-    // TODO: getInterpolatedValue()
-    // TODO: getValue with no bounds checking?
-    // TODO: getWrappedValue() - for repeating functions like sine etc.
+    // Future candidates: unchecked lookup and wrapped lookup for repeating functions.
 
 }

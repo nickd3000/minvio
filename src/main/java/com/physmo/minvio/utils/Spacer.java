@@ -3,6 +3,7 @@ package com.physmo.minvio.utils;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * A utility class that provides values at evenly spaced increments.
@@ -26,8 +27,14 @@ public class Spacer<T extends Number> implements Iterator<T>, Iterable<T> {
      * @param segments the number of segments (spaces between points)
      */
     public Spacer(T start, T end, int segments) {
-        this.start = start;
-        this.end = end;
+        this.start = Objects.requireNonNull(start, "start");
+        this.end = Objects.requireNonNull(end, "end");
+        if (segments <= 0) {
+            throw new IllegalArgumentException("Segments must be greater than zero");
+        }
+        if (!start.getClass().equals(end.getClass())) {
+            throw new IllegalArgumentException("Start and end must use the same numeric type");
+        }
         this.segments = segments;
         this.totalPoints = segments + 1; // Number of points is one more than segments
     }

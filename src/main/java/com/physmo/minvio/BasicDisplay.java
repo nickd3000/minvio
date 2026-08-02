@@ -1,17 +1,20 @@
 package com.physmo.minvio;
 
 import com.physmo.minvio.types.Point;
+import com.physmo.minvio.utils.MinvioLogger;
 import com.physmo.minvio.utils.gui.support.MouseConnector;
 
 import javax.imageio.ImageIO;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.IntBinaryOperator;
 
 /**
@@ -23,15 +26,24 @@ import java.util.function.IntBinaryOperator;
  */
 public abstract class BasicDisplay {
 
+    /**
+     * Index of the text-width entry returned by {@link DrawingContext#getTextSize(String)}.
+     */
     public static final int TEXT_SIZE_WIDTH = 0;
+    /** Index of the font-ascent entry returned by {@link DrawingContext#getTextSize(String)}. */
     public static final int TEXT_SIZE_ASCENT = 1;
+    /** Index of the font-descent entry returned by {@link DrawingContext#getTextSize(String)}. */
     public static final int TEXT_SIZE_DESCENT = 2;
     /* TIMING ---------------------------------------------------------------*/
-    public static long repaintTimerStart = 0;
+    private static volatile long repaintTimerStart = 0;
+    static final int FRAME_SLEEP_CHUNK_MS = 5;
     List<MouseConnector> mouseConnectors;
 
     IntBinaryOperator resizeListener;
 
+    /**
+     * Creates a display abstraction with an empty mouse-connector collection.
+     */
     public BasicDisplay() {
         mouseConnectors = new ArrayList<>();
     }
@@ -55,20 +67,42 @@ public abstract class BasicDisplay {
      * @throws IOException on file error
      */
     public static BufferedImage loadImage(String name) throws IOException {
+        Objects.requireNonNull(name, "Image resource name cannot be null");
         URL file = BasicDisplay.class.getResource(name);
-        BufferedImage image;
-
-        image = ImageIO.read(file);
-
+        if (file == null) {
+            throw new IOException("Image resource not found: " + name);
+        }
+        BufferedImage image = ImageIO.read(file);
+        if (image == null) {
+            throw new IOException("Unsupported image resource: " + name);
+        }
         return image;
     }
 
     /* COLOR ----------------------------------------------------------------*/
 
+    /**
+     * Registers a connector that receives subsequent mouse movement and button
+     * events from implementations that support connectors.
+     *
+     * <p>Connectors accumulate and this API does not provide removal. The
+     * base class does not reject {@code null}; implementations may fail later
+     * while dispatching an event if a null connector is registered.</p>
+     *
+     * @param mouseConnector connector to append
+     */
     public void addMouseConnector(MouseConnector mouseConnector) {
         mouseConnectors.add(mouseConnector);
     }
 
+    /**
+     * Returns the drawing context associated with this display.
+     *
+     * <p>The returned context is owned by the display and normally remains
+     * connected to its current draw buffer.</p>
+     *
+     * @return display drawing context
+     */
     public abstract DrawingContext getDrawingContext();
 
     /**
@@ -119,24 +153,35 @@ public abstract class BasicDisplay {
      * @param fps frames per second
      */
     public void repaint(int fps) {
+        if (fps <= 0) {
+            throw new IllegalArgumentException("FPS must be greater than zero");
+        }
 
-        int msPerFrame = 1000 / fps; // e.g.g 33.3 for 30fps
-        while (getElapsedTime() < msPerFrame) {
-
-            int remainingTime = (int) (msPerFrame - getElapsedTime());
-
-            if (remainingTime < 5) continue;
+        double msPerFrame = 1000.0 / fps;
+        double remainingTime = msPerFrame - getElapsedTime();
+        while (remainingTime > 0) {
             try {
-                Thread.sleep(5);
-
+                sleepForFrameRemainder(remainingTime);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
+                return;
             }
+            remainingTime = msPerFrame - getElapsedTime();
 
         }
 
         repaint();
 
+        resetRepaintTimer();
+    }
+
+    static void sleepForFrameRemainder(double remainingTimeMs) throws InterruptedException {
+        if (remainingTimeMs <= 0) return;
+        long sleepMs = Math.min(FRAME_SLEEP_CHUNK_MS, Math.max(1L, (long) remainingTimeMs));
+        Thread.sleep(sleepMs);
+    }
+
+    static void resetRepaintTimer() {
         repaintTimerStart = System.nanoTime();
     }
 
@@ -154,41 +199,122 @@ public abstract class BasicDisplay {
      */
     public abstract void repaint();
 
-    // Input and output.
-    // Update previous keys with current keys so we can tell what changed next time.
+    /**
+     * Advances implementation-specific input history.
+     *
+     * <p>The AWT implementation copies the current key-state array into the
+     * previous-state array. {@link MinvioApp} calls this once near the start of
+     * each frame, after handling its own system input and before application
+     * updates and drawing.</p>
+     */
     public abstract void tickInput();
 
+    /**
+     * Returns current keyboard state indexed by AWT key code.
+     *
+     * <p>Implementations may return live mutable storage rather than a copy.
+     * Callers must not modify the returned array and must check its length
+     * before indexing it.</p>
+     *
+     * @return current key-state array, where a non-zero entry means pressed
+     */
     public abstract int[] getKeyState();
 
+    /**
+     * Returns the keyboard state captured by the most recent
+     * {@link #tickInput()} call.
+     *
+     * <p>Implementations may return live mutable storage rather than a copy.
+     * Callers must not modify the returned array and must check its length
+     * before indexing it.</p>
+     *
+     * @return previous key-state array, where a non-zero entry means pressed
+     */
     public abstract int[] getKeyStatePrevious();
 
+    /**
+     * Returns the current mouse position in display pixel coordinates.
+     *
+     * @return a new mutable point containing the current mouse coordinates
+     */
     public Point getMousePoint() {
         return new Point(getMouseX(), getMouseY());
     }
 
+    /**
+     * Returns the current horizontal mouse coordinate in display pixels.
+     *
+     * @return horizontal mouse coordinate
+     */
     public abstract int getMouseX();
 
+    /**
+     * Returns the current mouse position divided by the display width and
+     * height.
+     *
+     * <p>The result is not clamped. A zero display dimension follows Java
+     * floating-point division rules and can therefore produce an infinite or
+     * {@code NaN} coordinate.</p>
+     *
+     * @return a new mutable point containing normalized mouse coordinates
+     */
     public Point getMousePointNormalised() {
         return new Point((double) getMouseX() / getDisplaySize().x, (double) getMouseY() / getDisplaySize().y);
     }
 
+    /**
+     * Returns the current vertical mouse coordinate in display pixels.
+     *
+     * @return vertical mouse coordinate
+     */
     public abstract int getMouseY();
 
+    /**
+     * Reports whether the primary mouse button is currently pressed.
+     *
+     * @return {@code true} while the left mouse button is pressed
+     */
     public abstract boolean getMouseButtonLeft();
 
+    /**
+     * Reports whether the middle mouse button is currently pressed.
+     *
+     * @return {@code true} while the middle mouse button is pressed
+     */
     public abstract boolean getMouseButtonMiddle();
 
+    /**
+     * Reports whether the secondary mouse button is currently pressed.
+     *
+     * @return {@code true} while the right mouse button is pressed
+     */
     public abstract boolean getMouseButtonRight();
 
     /**
      * Write an image file of the current BasicDisplay window to the users home folder.
      */
     public void saveScreenshot() {
-        String filePath = System.getProperty("user.home");
-        filePath += File.separator + getTitle().replaceAll("\\s+", "") + ".png";
-        saveScreenshot(filePath);
+        Path outputPath = getDefaultScreenshotPath();
+        MinvioLogger.info("Saving screenshot to: " + outputPath);
+        trySaveScreenshot(outputPath);
     }
 
+    /**
+     * Attempts to write an image file of the current BasicDisplay window to the
+     * user's home folder.
+     *
+     * @return {@code true} if the image was written successfully
+     */
+    public boolean trySaveScreenshot() {
+        return trySaveScreenshot(getDefaultScreenshotPath());
+    }
+
+    /**
+     * Returns the display title.
+     *
+     * @return current title; implementations may return a synthetic title in
+     * headless mode
+     */
     public abstract String getTitle();
 
     /**
@@ -204,13 +330,60 @@ public abstract class BasicDisplay {
      * @param fullPath Path to new image file.
      */
     public void saveScreenshot(String fullPath) {
+        trySaveScreenshot(fullPath);
+    }
+
+    /**
+     * Attempts to write an image file of the current BasicDisplay window to the
+     * supplied path.
+     *
+     * @param fullPath path to new image file
+     * @return {@code true} if the image was written successfully
+     */
+    public boolean trySaveScreenshot(String fullPath) {
+        Objects.requireNonNull(fullPath, "Screenshot path cannot be null");
+        return trySaveScreenshot(Path.of(fullPath));
+    }
+
+    /**
+     * Attempts to write an image file of the current BasicDisplay window to the
+     * supplied path.
+     *
+     * @param outputPath path to new image file
+     * @return {@code true} if the image was written successfully
+     */
+    public boolean trySaveScreenshot(Path outputPath) {
         try {
-            BufferedImage bi = (BufferedImage) getDrawBuffer();
-            File outputFile = new File(fullPath);
-            ImageIO.write(bi, "png", outputFile);
+            saveScreenshot(outputPath);
+            return true;
         } catch (IOException e) {
-            System.out.println("Error writing to file: ");
+            MinvioLogger.error("Error writing to file: " + outputPath + " - " + e.getMessage());
+            return false;
         }
+    }
+
+    /**
+     * Writes an image file of the current BasicDisplay window to the supplied path.
+     *
+     * @param outputPath path to new image file
+     * @return the supplied output path
+     * @throws IOException if the image cannot be written
+     */
+    public Path saveScreenshot(Path outputPath) throws IOException {
+        Objects.requireNonNull(outputPath, "Screenshot path cannot be null");
+        Path parent = outputPath.toAbsolutePath().getParent();
+        if (parent != null && !Files.isDirectory(parent)) {
+            throw new IOException("Screenshot directory does not exist: " + parent);
+        }
+        BufferedImage bi = (BufferedImage) getDrawBuffer();
+        if (!ImageIO.write(bi, "png", outputPath.toFile())) {
+            throw new IOException("No PNG ImageIO writer is available");
+        }
+        return outputPath;
+    }
+
+    private Path getDefaultScreenshotPath() {
+        return Path.of(System.getProperty("user.home"), getTitle().replaceAll("\\s+", "") + ".png");
     }
 
     /**
@@ -220,10 +393,26 @@ public abstract class BasicDisplay {
      */
     public abstract Image getDrawBuffer();
 
+    /**
+     * Sets the callback invoked after an implementation applies a deferred
+     * resize.
+     *
+     * <p>Registration replaces any previous listener. The callback receives
+     * the new width and height; its integer result is ignored. Passing
+     * {@code null} clears the listener.</p>
+     *
+     * @param resizeListener replacement resize callback, or {@code null}
+     */
     public void addResizeListener(IntBinaryOperator resizeListener) {
         this.resizeListener = resizeListener;
     }
 
-    // When the main window is resized, we don't respond until outside of the draw loop.
+    /**
+     * Applies a pending native-window resize, if any.
+     *
+     * <p>Implementations may defer native resize events so buffer replacement
+     * occurs outside the event callback. Calling this method when no resize is
+     * pending has no effect.</p>
+     */
     public abstract void resizeIfRequested();
 }

@@ -18,12 +18,26 @@ public class MatrixDrawer {
     double[] angles;
     double[] distances;
 
+    /**
+     * Creates a matrix and precomputes per-cell angle and distance values.
+     *
+     * @param width  matrix width in cells
+     * @param height matrix height in cells
+     */
     public MatrixDrawer(int width, int height) {
+        if (width <= 0 || height <= 0) {
+            throw new IllegalArgumentException("Matrix dimensions must be positive");
+        }
         this.width = width;
         this.height = height;
         preCalc();
     }
 
+    /**
+     * Recalculates angle and normalized center-distance arrays.
+     *
+     * <p>The exact center cell uses angle and distance zero.</p>
+     */
     public void preCalc() {
         int w = width;
         int h = height;
@@ -42,10 +56,14 @@ public class MatrixDrawer {
                 double d = Math.sqrt((dx * dx) + (dy * dy));
                 distances[index] = d / distanceScale;
 
-                dx /= d;
-                dy /= d;
-
-                double angle1 = Math.atan2(dx, dy);
+                double angle1;
+                if (d == 0.0) {
+                    angle1 = 0.0;
+                } else {
+                    dx /= d;
+                    dy /= d;
+                    angle1 = Math.atan2(dx, dy);
+                }
                 if (angle1 < 0) angle1 += (Math.PI * 2);
                 angles[index] = angle1;
 
@@ -55,6 +73,17 @@ public class MatrixDrawer {
 
     }
 
+    /**
+     * Calculates and draws every matrix cell.
+     *
+     * @param dc target drawing context
+     * @param xPos destination x-coordinate
+     * @param yPos destination y-coordinate
+     * @param scale square cell size in pixels
+     * @param time caller-supplied time value
+     * @param worker callback producing each scalar value
+     * @param gradient optional gradient; {@code null} draws grayscale values
+     */
     public void draw(DrawingContext dc, int xPos, int yPos, int scale, double time, MonoPixelWorker worker, Gradient gradient) {
 
         for (int y = 0; y < height; y++) {

@@ -4,17 +4,12 @@ import com.physmo.minvio.types.Point;
 
 import java.awt.Color;
 
+/**
+ * General interpolation, clamping, mapping, and color helpers.
+ *
+ * <p>Methods are stateless and do not require a running Minvio application.</p>
+ */
 public class Utils {
-
-    /**
-     * Returns a new distinct colour for each supplied index
-     * Colours will be the same for a given index each time it is called.
-     *
-     * @param index      integer representing the distinct colour
-     * @param saturation 0..1 double value
-     * @return A distinct color.
-     */
-
 
     /**
      * Return a blended color between c1 and c2 at position pos.
@@ -29,7 +24,8 @@ public class Utils {
         int r = lerp(c1.getRed(), c2.getRed(), pos);
         int g = lerp(c1.getGreen(), c2.getGreen(), pos);
         int b = lerp(c1.getBlue(), c2.getBlue(), pos);
-        return new Color(r, g, b);
+        int a = lerp(c1.getAlpha(), c2.getAlpha(), pos);
+        return new Color(r, g, b, a);
     }
 
     /**
@@ -92,9 +88,10 @@ public class Utils {
      * @return the inverted distance value
      */
     public static double invertDistance(double distance, double max) {
-        if (distance > max) {
-            distance = max;
+        if (max <= 0) {
+            throw new IllegalArgumentException("Maximum distance must be greater than zero");
         }
+        distance = clamp(0.0, max, distance);
         return (max - distance) / max;
     }
 }

@@ -3,8 +3,16 @@ package com.physmo.minvio.utils.gui;
 import com.physmo.minvio.types.Rect;
 import com.physmo.minvio.utils.gui.support.GuiMessage;
 
+/**
+ * Simple panel that fills its retained buffer with the current background color.
+ */
 public class GuiPanel extends GuiContainer {
 
+    /**
+     * Creates a panel.
+     *
+     * @param rect panel bounds
+     */
     public GuiPanel(Rect rect) {
         super(rect);
     }

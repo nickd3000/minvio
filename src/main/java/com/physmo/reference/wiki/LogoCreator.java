@@ -1,6 +1,7 @@
 package com.physmo.reference.wiki;
 
 import com.physmo.minvio.BasicDisplay;
+import com.physmo.minvio.BasicDisplayAwt;
 import com.physmo.minvio.MinvioApp;
 import com.physmo.minvio.utils.Gradient;
 import com.physmo.minvio.utils.MatrixDrawer;
@@ -8,7 +9,8 @@ import com.physmo.minvio.utils.VoronoiNoise;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * This class is used to generate example images for the wiki
@@ -77,13 +79,20 @@ class LogoCreator extends MinvioApp {
 
 
     public void runExample(int width, int height, String fileName, Runnable code) {
-        String filePath = "/tmp/"; //System.getProperty("user.home");
-        filePath += File.separator + imageSubPath + fileName + ".png";
+        Path outputPath = Path.of("/tmp", imageSubPath, fileName + ".png");
 
+        if (getBasicDisplay() instanceof BasicDisplayAwt awtDisplay) {
+            awtDisplay.setDisplaySize(width, height);
+        }
         getBasicDisplay().reset();
         cls();
         code.run();
         getBasicDisplay().repaint();
-        saveScreenshot(filePath);
+        try {
+            Files.createDirectories(outputPath.getParent());
+        } catch (java.io.IOException e) {
+            throw new IllegalStateException("Could not create output directory " + outputPath.getParent(), e);
+        }
+        saveScreenshot(outputPath.toString());
     }
 }
